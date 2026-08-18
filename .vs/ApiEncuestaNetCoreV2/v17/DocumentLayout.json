@@ -1,0 +1,623 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\encuestas\\apiencuestanetcorev2\\apiweb\\controllers\\encuestacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|solutionrelative:apiweb\\controllers\\encuestacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\encuestas\\apiencuestanetcorev2\\apiweb\\controllers\\locationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|solutionrelative:apiweb\\controllers\\locationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{033A013B-763F-42ED-9156-C617AC2A9754}|Domain\\Domain.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\encuestas\\apiencuestanetcorev2\\domain\\ffmpegbootstrapper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{033A013B-763F-42ED-9156-C617AC2A9754}|Domain\\Domain.csproj|solutionrelative:domain\\ffmpegbootstrapper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\encuestas\\apiencuestanetcorev2\\apiweb\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|solutionrelative:apiweb\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{033A013B-763F-42ED-9156-C617AC2A9754}|Domain\\Domain.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\encuestas\\apiencuestanetcorev2\\domain\\audioconverter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{033A013B-763F-42ED-9156-C617AC2A9754}|Domain\\Domain.csproj|solutionrelative:domain\\audioconverter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E531FCBF-BAE0-4B6E-956A-1EA36CD6C79A}|Application\\Application.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\encuestas\\apiencuestanetcorev2\\application\\encuesta\\encuestaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E531FCBF-BAE0-4B6E-956A-1EA36CD6C79A}|Application\\Application.csproj|solutionrelative:application\\encuesta\\encuestaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{033A013B-763F-42ED-9156-C617AC2A9754}|Domain\\Domain.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\encuestas\\apiencuestanetcorev2\\domain\\archivo\\s3uploaderbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{033A013B-763F-42ED-9156-C617AC2A9754}|Domain\\Domain.csproj|solutionrelative:domain\\archivo\\s3uploaderbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\encuestas\\apiencuestanetcorev2\\apiweb\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|solutionrelative:apiweb\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{57E0C9C9-EDE5-42CF-9C88-F209F62D2D4D}|Infrastructure\\Infrastructure.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\encuestas\\apiencuestanetcorev2\\infrastructure\\conexion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{57E0C9C9-EDE5-42CF-9C88-F209F62D2D4D}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\conexion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\encuestas\\apiencuestanetcorev2\\apiweb\\node\\index.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|solutionrelative:apiweb\\node\\index.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\encuestas\\apiencuestanetcorev2\\apiweb\\controllers\\encuestapreguntacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|solutionrelative:apiweb\\controllers\\encuestapreguntacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E531FCBF-BAE0-4B6E-956A-1EA36CD6C79A}|Application\\Application.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\encuestas\\apiencuestanetcorev2\\application\\auth\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E531FCBF-BAE0-4B6E-956A-1EA36CD6C79A}|Application\\Application.csproj|solutionrelative:application\\auth\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{033A013B-763F-42ED-9156-C617AC2A9754}|Domain\\Domain.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\encuestas\\apiencuestanetcorev2\\domain\\audio.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{033A013B-763F-42ED-9156-C617AC2A9754}|Domain\\Domain.csproj|solutionrelative:domain\\audio.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4A5C7A4E-3755-402E-BD36-77271FE0A741}|Dtos\\Dtos.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\encuestas\\apiencuestanetcorev2\\dtos\\whatsapp\\whatsappbridgeoptions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4A5C7A4E-3755-402E-BD36-77271FE0A741}|Dtos\\Dtos.csproj|solutionrelative:dtos\\whatsapp\\whatsappbridgeoptions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E531FCBF-BAE0-4B6E-956A-1EA36CD6C79A}|Application\\Application.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\encuestas\\apiencuestanetcorev2\\application\\usuario\\usuarioservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E531FCBF-BAE0-4B6E-956A-1EA36CD6C79A}|Application\\Application.csproj|solutionrelative:application\\usuario\\usuarioservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{57E0C9C9-EDE5-42CF-9C88-F209F62D2D4D}|Infrastructure\\Infrastructure.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\encuestas\\apiencuestanetcorev2\\infrastructure\\dusuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{57E0C9C9-EDE5-42CF-9C88-F209F62D2D4D}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\dusuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\encuestas\\apiencuestanetcorev2\\apiweb\\apiweb.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|",
+      "RelativeMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|solutionrelative:apiweb\\apiweb.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\encuestas\\apiencuestanetcorev2\\apiweb\\controllers\\usuariocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|solutionrelative:apiweb\\controllers\\usuariocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{57E0C9C9-EDE5-42CF-9C88-F209F62D2D4D}|Infrastructure\\Infrastructure.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\encuestas\\apiencuestanetcorev2\\infrastructure\\capadatos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{57E0C9C9-EDE5-42CF-9C88-F209F62D2D4D}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\capadatos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\encuestas\\apiencuestanetcorev2\\apiweb\\controllers\\encuestaadmincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|solutionrelative:apiweb\\controllers\\encuestaadmincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{57E0C9C9-EDE5-42CF-9C88-F209F62D2D4D}|Infrastructure\\Infrastructure.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\encuestas\\apiencuestanetcorev2\\infrastructure\\dauth.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{57E0C9C9-EDE5-42CF-9C88-F209F62D2D4D}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\dauth.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{033A013B-763F-42ED-9156-C617AC2A9754}|Domain\\Domain.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\encuestas\\apiencuestanetcorev2\\domain\\nodebridgeprocessmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{033A013B-763F-42ED-9156-C617AC2A9754}|Domain\\Domain.csproj|solutionrelative:domain\\nodebridgeprocessmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{57E0C9C9-EDE5-42CF-9C88-F209F62D2D4D}|Infrastructure\\Infrastructure.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\encuestas\\apiencuestanetcorev2\\infrastructure\\dwabulk.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{57E0C9C9-EDE5-42CF-9C88-F209F62D2D4D}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\dwabulk.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\encuestas\\apiencuestanetcorev2\\apiweb\\controllers\\whatsappcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|solutionrelative:apiweb\\controllers\\whatsappcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{57E0C9C9-EDE5-42CF-9C88-F209F62D2D4D}|Infrastructure\\Infrastructure.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\encuestas\\apiencuestanetcorev2\\infrastructure\\datributopregunta.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{57E0C9C9-EDE5-42CF-9C88-F209F62D2D4D}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\datributopregunta.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\encuestas\\apiencuestanetcorev2\\apiweb\\apiweb.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
+      "RelativeMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|solutionrelative:apiweb\\apiweb.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\encuestas\\apiencuestanetcorev2\\apiweb\\node\\package-lock.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|solutionrelative:apiweb\\node\\package-lock.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\encuestas\\apiencuestanetcorev2\\apiweb\\controllers\\grupocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|solutionrelative:apiweb\\controllers\\grupocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\encuestas\\apiencuestanetcorev2\\apiweb\\controllers\\atributopreguntacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|solutionrelative:apiweb\\controllers\\atributopreguntacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{57E0C9C9-EDE5-42CF-9C88-F209F62D2D4D}|Infrastructure\\Infrastructure.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\encuestas\\apiencuestanetcorev2\\infrastructure\\dencuestapregunta.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{57E0C9C9-EDE5-42CF-9C88-F209F62D2D4D}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\dencuestapregunta.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E531FCBF-BAE0-4B6E-956A-1EA36CD6C79A}|Application\\Application.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\encuestas\\apiencuestanetcorev2\\application\\encuestapregunta\\encuestapreguntaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E531FCBF-BAE0-4B6E-956A-1EA36CD6C79A}|Application\\Application.csproj|solutionrelative:application\\encuestapregunta\\encuestapreguntaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E531FCBF-BAE0-4B6E-956A-1EA36CD6C79A}|Application\\Application.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\encuestas\\apiencuestanetcorev2\\application\\atributopregunta\\atributopreguntaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E531FCBF-BAE0-4B6E-956A-1EA36CD6C79A}|Application\\Application.csproj|solutionrelative:application\\atributopregunta\\atributopreguntaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\Application\\Whatsapp\\WaBulkWorker.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Application\\Whatsapp\\WaBulkWorker.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4A5C7A4E-3755-402E-BD36-77271FE0A741}|Dtos\\Dtos.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\encuestas\\apiencuestanetcorev2\\dtos\\whatsapp\\sendresp.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4A5C7A4E-3755-402E-BD36-77271FE0A741}|Dtos\\Dtos.csproj|solutionrelative:dtos\\whatsapp\\sendresp.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 20,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:133:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:135:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:12:0:{2456bd12-ecf7-4988-a4a6-67d49173f565}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:14:0:{2456bd12-ecf7-4988-a4a6-67d49173f565}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:13:0:{2456bd12-ecf7-4988-a4a6-67d49173f565}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:131:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Conexion.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\Infrastructure\\Conexion.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\Conexion.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\Infrastructure\\Conexion.cs",
+              "RelativeToolTip": "Infrastructure\\Conexion.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAgwCMAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-04T03:18:49.662Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "index.js",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\ApiWeb\\Node\\index.js",
+              "RelativeDocumentMoniker": "ApiWeb\\Node\\index.js",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\ApiWeb\\Node\\index.js",
+              "RelativeToolTip": "ApiWeb\\Node\\index.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-03-05T11:24:48.808Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "AudioConverter.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\Domain\\AudioConverter.cs",
+              "RelativeDocumentMoniker": "Domain\\AudioConverter.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\Domain\\AudioConverter.cs",
+              "RelativeToolTip": "Domain\\AudioConverter.cs",
+              "ViewState": "AgIAADIAAAAAAAAAAAAQwE4AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-05T01:54:08.073Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "WhatsAppBridgeOptions.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\Dtos\\Whatsapp\\WhatsAppBridgeOptions.cs",
+              "RelativeDocumentMoniker": "Dtos\\Whatsapp\\WhatsAppBridgeOptions.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\Dtos\\Whatsapp\\WhatsAppBridgeOptions.cs",
+              "RelativeToolTip": "Dtos\\Whatsapp\\WhatsAppBridgeOptions.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-29T18:12:13.798Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "S3UploaderBase.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\Domain\\Archivo\\S3UploaderBase.cs",
+              "RelativeDocumentMoniker": "Domain\\Archivo\\S3UploaderBase.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\Domain\\Archivo\\S3UploaderBase.cs",
+              "RelativeToolTip": "Domain\\Archivo\\S3UploaderBase.cs",
+              "ViewState": "AgIAACsAAAAAAAAAAAAQwDgAAAA1AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-17T14:08:25.187Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "EncuestaService.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\Application\\Encuesta\\EncuestaService.cs",
+              "RelativeDocumentMoniker": "Application\\Encuesta\\EncuestaService.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\Application\\Encuesta\\EncuestaService.cs",
+              "RelativeToolTip": "Application\\Encuesta\\EncuestaService.cs",
+              "ViewState": "AgIAAHoBAAAAAAAAAAAowIABAAAyAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-01T20:20:23.86Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "LocationController.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\ApiWeb\\Controllers\\LocationController.cs",
+              "RelativeDocumentMoniker": "ApiWeb\\Controllers\\LocationController.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\ApiWeb\\Controllers\\LocationController.cs",
+              "RelativeToolTip": "ApiWeb\\Controllers\\LocationController.cs",
+              "ViewState": "AgIAACEAAAAAAAAAAAAowDQAAAA9AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-23T15:44:45.203Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "EncuestaController.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\ApiWeb\\Controllers\\EncuestaController.cs",
+              "RelativeDocumentMoniker": "ApiWeb\\Controllers\\EncuestaController.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\ApiWeb\\Controllers\\EncuestaController.cs",
+              "RelativeToolTip": "ApiWeb\\Controllers\\EncuestaController.cs",
+              "ViewState": "AgIAAOEAAAAAAAAAAAAuwPoAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-24T14:16:29.826Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "FfmpegBootstrapper.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\Domain\\FfmpegBootstrapper.cs",
+              "RelativeDocumentMoniker": "Domain\\FfmpegBootstrapper.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\Domain\\FfmpegBootstrapper.cs",
+              "RelativeToolTip": "Domain\\FfmpegBootstrapper.cs",
+              "ViewState": "AgIAABEAAAAAAAAAAAAxwBgAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-27T20:00:21.714Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\ApiWeb\\Program.cs",
+              "RelativeDocumentMoniker": "ApiWeb\\Program.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\ApiWeb\\Program.cs",
+              "RelativeToolTip": "ApiWeb\\Program.cs",
+              "ViewState": "AgIAAI4AAAAAAAAAAAAAwJoAAAA8AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-27T20:01:48.001Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\ApiWeb\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "ApiWeb\\Controllers\\AuthController.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\ApiWeb\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "ApiWeb\\Controllers\\AuthController.cs",
+              "ViewState": "AgIAAC4AAAAAAAAAAAAAADwAAAAPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-16T19:49:49.472Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "EncuestaPreguntaController.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\ApiWeb\\Controllers\\EncuestaPreguntaController.cs",
+              "RelativeDocumentMoniker": "ApiWeb\\Controllers\\EncuestaPreguntaController.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\ApiWeb\\Controllers\\EncuestaPreguntaController.cs",
+              "RelativeToolTip": "ApiWeb\\Controllers\\EncuestaPreguntaController.cs",
+              "ViewState": "AgIAAC0AAAAAAAAAAAAAADQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-16T18:11:35.694Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "DUsuario.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\Infrastructure\\DUsuario.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\DUsuario.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\Infrastructure\\DUsuario.cs",
+              "RelativeToolTip": "Infrastructure\\DUsuario.cs",
+              "ViewState": "AgIAABsAAAAAAAAAAAAEwDcAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-16T18:47:42.187Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "Audio.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\Domain\\Audio.cs",
+              "RelativeDocumentMoniker": "Domain\\Audio.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\Domain\\Audio.cs",
+              "RelativeToolTip": "Domain\\Audio.cs",
+              "ViewState": "AgIAAGAAAAAAAAAAAAAiwD4AAAAsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-27T19:43:52.194Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "AuthService.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\Application\\Auth\\AuthService.cs",
+              "RelativeDocumentMoniker": "Application\\Auth\\AuthService.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\Application\\Auth\\AuthService.cs",
+              "RelativeToolTip": "Application\\Auth\\AuthService.cs",
+              "ViewState": "AgIAADEAAAAAAAAAAADwv0AAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-01T20:17:18.958Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "UsuarioService.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\Application\\Usuario\\UsuarioService.cs",
+              "RelativeDocumentMoniker": "Application\\Usuario\\UsuarioService.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\Application\\Usuario\\UsuarioService.cs",
+              "RelativeToolTip": "Application\\Usuario\\UsuarioService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACQAAABEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-16T18:59:46.771Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "CapaDatos.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\Infrastructure\\CapaDatos.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\CapaDatos.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\Infrastructure\\CapaDatos.cs",
+              "RelativeToolTip": "Infrastructure\\CapaDatos.cs",
+              "ViewState": "AgIAAEIAAAAAAAAAAIBJwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-22T13:41:59.559Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "ApiWeb",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\ApiWeb\\ApiWeb.csproj",
+              "RelativeDocumentMoniker": "ApiWeb\\ApiWeb.csproj",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\ApiWeb\\ApiWeb.csproj",
+              "RelativeToolTip": "ApiWeb\\ApiWeb.csproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-02-24T14:28:01.43Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "EncuestaAdminController.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\ApiWeb\\Controllers\\EncuestaAdminController.cs",
+              "RelativeDocumentMoniker": "ApiWeb\\Controllers\\EncuestaAdminController.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\ApiWeb\\Controllers\\EncuestaAdminController.cs",
+              "RelativeToolTip": "ApiWeb\\Controllers\\EncuestaAdminController.cs",
+              "ViewState": "AgIAABUAAAAAAAAAAAAnwCgAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-23T15:44:12.295Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "NodeBridgeProcessManager.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\Domain\\NodeBridgeProcessManager.cs",
+              "RelativeDocumentMoniker": "Domain\\NodeBridgeProcessManager.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\Domain\\NodeBridgeProcessManager.cs",
+              "RelativeToolTip": "Domain\\NodeBridgeProcessManager.cs",
+              "ViewState": "AgIAACAAAAAAAAAAAAAYwDUAAAAPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-23T17:44:03.039Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "UsuarioController.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\ApiWeb\\Controllers\\UsuarioController.cs",
+              "RelativeDocumentMoniker": "ApiWeb\\Controllers\\UsuarioController.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\ApiWeb\\Controllers\\UsuarioController.cs",
+              "RelativeToolTip": "ApiWeb\\Controllers\\UsuarioController.cs",
+              "ViewState": "AgIAAB8AAAAAAAAAAIBJwCUAAAA0AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-23T15:44:46.803Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "DAuth.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\Infrastructure\\DAuth.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\DAuth.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\Infrastructure\\DAuth.cs",
+              "RelativeToolTip": "Infrastructure\\DAuth.cs",
+              "ViewState": "AgIAAD0AAAAAAAAAAAAawEsAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-23T14:12:03.095Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "WhatsAppController.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\ApiWeb\\Controllers\\WhatsAppController.cs",
+              "RelativeDocumentMoniker": "ApiWeb\\Controllers\\WhatsAppController.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\ApiWeb\\Controllers\\WhatsAppController.cs",
+              "RelativeToolTip": "ApiWeb\\Controllers\\WhatsAppController.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAxwBoAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-23T17:47:09.402Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "DWaBulk.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\Infrastructure\\DWaBulk.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\DWaBulk.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\Infrastructure\\DWaBulk.cs",
+              "RelativeToolTip": "Infrastructure\\DWaBulk.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-29T18:38:30.571Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 33,
+              "Title": "SendResp.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\Dtos\\Whatsapp\\SendResp.cs",
+              "RelativeDocumentMoniker": "Dtos\\Whatsapp\\SendResp.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\Dtos\\Whatsapp\\SendResp.cs",
+              "RelativeToolTip": "Dtos\\Whatsapp\\SendResp.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-29T18:12:35.151Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 32,
+              "Title": "WaBulkWorker.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\Application\\Whatsapp\\WaBulkWorker.cs",
+              "RelativeDocumentMoniker": "Application\\Whatsapp\\WaBulkWorker.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\Application\\Whatsapp\\WaBulkWorker.cs",
+              "RelativeToolTip": "Application\\Whatsapp\\WaBulkWorker.cs",
+              "ViewState": "AgIAAIgAAAAAAAAAAAAgwJ4AAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-29T18:32:57.722Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "DAtributoPregunta.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\Infrastructure\\DAtributoPregunta.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\DAtributoPregunta.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\Infrastructure\\DAtributoPregunta.cs",
+              "RelativeToolTip": "Infrastructure\\DAtributoPregunta.cs",
+              "ViewState": "AgIAAJMAAAAAAAAAAAAowK4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-16T18:30:31.335Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "ApiWeb.http",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\ApiWeb\\ApiWeb.http",
+              "RelativeDocumentMoniker": "ApiWeb\\ApiWeb.http",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\ApiWeb\\ApiWeb.http",
+              "RelativeToolTip": "ApiWeb\\ApiWeb.http",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
+              "WhenOpened": "2025-12-29T12:36:51.653Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "package-lock.json",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\ApiWeb\\Node\\package-lock.json",
+              "RelativeDocumentMoniker": "ApiWeb\\Node\\package-lock.json",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\ApiWeb\\Node\\package-lock.json",
+              "RelativeToolTip": "ApiWeb\\Node\\package-lock.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAxwA8AAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-12-29T12:36:45.552Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "GrupoController.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\ApiWeb\\Controllers\\GrupoController.cs",
+              "RelativeDocumentMoniker": "ApiWeb\\Controllers\\GrupoController.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\ApiWeb\\Controllers\\GrupoController.cs",
+              "RelativeToolTip": "ApiWeb\\Controllers\\GrupoController.cs",
+              "ViewState": "AgIAABUAAAAAAAAAAAAowBQAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-23T15:44:43.042Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "AtributoPreguntaController.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\ApiWeb\\Controllers\\AtributoPreguntaController.cs",
+              "RelativeDocumentMoniker": "ApiWeb\\Controllers\\AtributoPreguntaController.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\ApiWeb\\Controllers\\AtributoPreguntaController.cs",
+              "RelativeToolTip": "ApiWeb\\Controllers\\AtributoPreguntaController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAGQAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-16T18:31:30.611Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "DEncuestaPregunta.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\Infrastructure\\DEncuestaPregunta.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\DEncuestaPregunta.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\Infrastructure\\DEncuestaPregunta.cs",
+              "RelativeToolTip": "Infrastructure\\DEncuestaPregunta.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwCQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-16T17:53:14.486Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 30,
+              "Title": "EncuestaPreguntaService.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\Application\\EncuestaPregunta\\EncuestaPreguntaService.cs",
+              "RelativeDocumentMoniker": "Application\\EncuestaPregunta\\EncuestaPreguntaService.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\Application\\EncuestaPregunta\\EncuestaPreguntaService.cs",
+              "RelativeToolTip": "Application\\EncuestaPregunta\\EncuestaPreguntaService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-22T13:42:23.972Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 31,
+              "Title": "AtributoPreguntaService.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\Application\\AtributoPregunta\\AtributoPreguntaService.cs",
+              "RelativeDocumentMoniker": "Application\\AtributoPregunta\\AtributoPreguntaService.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\encuestas\\ApiEncuestaNetCoreV2\\Application\\AtributoPregunta\\AtributoPreguntaService.cs",
+              "RelativeToolTip": "Application\\AtributoPregunta\\AtributoPreguntaService.cs",
+              "ViewState": "AgIAAEwAAAAAAAAAAAAWwFYAAAAsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-15T19:23:44.783Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

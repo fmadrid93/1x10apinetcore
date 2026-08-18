@@ -1,0 +1,412 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\SeguimientoVoto\\ApiSeguimientoVoto\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{E531FCBF-BAE0-4B6E-956A-1EA36CD6C79A}|Application\\Application.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\seguimientovoto\\apiseguimientovoto\\application\\mensaje\\mensajeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E531FCBF-BAE0-4B6E-956A-1EA36CD6C79A}|Application\\Application.csproj|solutionrelative:application\\mensaje\\mensajeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E531FCBF-BAE0-4B6E-956A-1EA36CD6C79A}|Application\\Application.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\seguimientovoto\\apiseguimientovoto\\application\\alerta\\alertaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E531FCBF-BAE0-4B6E-956A-1EA36CD6C79A}|Application\\Application.csproj|solutionrelative:application\\alerta\\alertaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\seguimientovoto\\apiseguimientovoto\\apiweb\\web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|solutionrelative:apiweb\\web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E531FCBF-BAE0-4B6E-956A-1EA36CD6C79A}|Application\\Application.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\seguimientovoto\\apiseguimientovoto\\application\\job\\alertasbackgroundservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E531FCBF-BAE0-4B6E-956A-1EA36CD6C79A}|Application\\Application.csproj|solutionrelative:application\\job\\alertasbackgroundservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\seguimientovoto\\apiseguimientovoto\\apiweb\\controllers\\mensajecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|solutionrelative:apiweb\\controllers\\mensajecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\seguimientovoto\\apiseguimientovoto\\apiweb\\controllers\\notificacioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|solutionrelative:apiweb\\controllers\\notificacioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E531FCBF-BAE0-4B6E-956A-1EA36CD6C79A}|Application\\Application.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\seguimientovoto\\apiseguimientovoto\\application\\notificacion\\notificacionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E531FCBF-BAE0-4B6E-956A-1EA36CD6C79A}|Application\\Application.csproj|solutionrelative:application\\notificacion\\notificacionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{57E0C9C9-EDE5-42CF-9C88-F209F62D2D4D}|Infrastructure\\Infrastructure.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\seguimientovoto\\apiseguimientovoto\\infrastructure\\dnotificacion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{57E0C9C9-EDE5-42CF-9C88-F209F62D2D4D}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\dnotificacion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{57E0C9C9-EDE5-42CF-9C88-F209F62D2D4D}|Infrastructure\\Infrastructure.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\seguimientovoto\\apiseguimientovoto\\infrastructure\\conexion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{57E0C9C9-EDE5-42CF-9C88-F209F62D2D4D}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\conexion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4A5C7A4E-3755-402E-BD36-77271FE0A741}|Dtos\\Dtos.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\seguimientovoto\\apiseguimientovoto\\dtos\\notificacion\\registrartokenrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4A5C7A4E-3755-402E-BD36-77271FE0A741}|Dtos\\Dtos.csproj|solutionrelative:dtos\\notificacion\\registrartokenrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{57E0C9C9-EDE5-42CF-9C88-F209F62D2D4D}|Infrastructure\\Infrastructure.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\seguimientovoto\\apiseguimientovoto\\infrastructure\\dmensaje.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{57E0C9C9-EDE5-42CF-9C88-F209F62D2D4D}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\dmensaje.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4A5C7A4E-3755-402E-BD36-77271FE0A741}|Dtos\\Dtos.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\seguimientovoto\\apiseguimientovoto\\dtos\\personamovilizada\\personamovilizadaupdaterequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4A5C7A4E-3755-402E-BD36-77271FE0A741}|Dtos\\Dtos.csproj|solutionrelative:dtos\\personamovilizada\\personamovilizadaupdaterequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\seguimientovoto\\apiseguimientovoto\\apiweb\\controllers\\personamovilizadacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|solutionrelative:apiweb\\controllers\\personamovilizadacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{57E0C9C9-EDE5-42CF-9C88-F209F62D2D4D}|Infrastructure\\Infrastructure.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\seguimientovoto\\apiseguimientovoto\\infrastructure\\dpersonamovilizada.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{57E0C9C9-EDE5-42CF-9C88-F209F62D2D4D}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\dpersonamovilizada.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4A5C7A4E-3755-402E-BD36-77271FE0A741}|Dtos\\Dtos.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\seguimientovoto\\apiseguimientovoto\\dtos\\personamovilizada\\personamovilizadadeleterequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4A5C7A4E-3755-402E-BD36-77271FE0A741}|Dtos\\Dtos.csproj|solutionrelative:dtos\\personamovilizada\\personamovilizadadeleterequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\seguimientovoto\\apiseguimientovoto\\apiweb\\controllers\\alertacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|solutionrelative:apiweb\\controllers\\alertacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\seguimientovoto\\apiseguimientovoto\\apiweb\\controllers\\dashboardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|solutionrelative:apiweb\\controllers\\dashboardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\seguimientovoto\\apiseguimientovoto\\apiweb\\controllers\\territoriocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|solutionrelative:apiweb\\controllers\\territoriocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\seguimientovoto\\apiseguimientovoto\\apiweb\\controllers\\usuariocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|solutionrelative:apiweb\\controllers\\usuariocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E531FCBF-BAE0-4B6E-956A-1EA36CD6C79A}|Application\\Application.csproj|d:\\poyectos\\repos\\mis desarrollos de prueba\\seguimientovoto\\apiseguimientovoto\\application\\reportes\\excelexportservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E531FCBF-BAE0-4B6E-956A-1EA36CD6C79A}|Application\\Application.csproj|solutionrelative:application\\reportes\\excelexportservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 20,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "web.config",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\SeguimientoVoto\\ApiSeguimientoVoto\\ApiWeb\\web.config",
+              "RelativeDocumentMoniker": "ApiWeb\\web.config",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\SeguimientoVoto\\ApiSeguimientoVoto\\ApiWeb\\web.config",
+              "RelativeToolTip": "ApiWeb\\web.config",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
+              "WhenOpened": "2026-04-03T17:30:15.45Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AlertasBackgroundService.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\SeguimientoVoto\\ApiSeguimientoVoto\\Application\\Job\\AlertasBackgroundService.cs",
+              "RelativeDocumentMoniker": "Application\\Job\\AlertasBackgroundService.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\SeguimientoVoto\\ApiSeguimientoVoto\\Application\\Job\\AlertasBackgroundService.cs",
+              "RelativeToolTip": "Application\\Job\\AlertasBackgroundService.cs",
+              "ViewState": "AgIAACgAAAAAAAAAAAAAADwAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-03T17:28:49.472Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AlertaService.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\SeguimientoVoto\\ApiSeguimientoVoto\\Application\\Alerta\\AlertaService.cs",
+              "RelativeDocumentMoniker": "Application\\Alerta\\AlertaService.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\SeguimientoVoto\\ApiSeguimientoVoto\\Application\\Alerta\\AlertaService.cs",
+              "RelativeToolTip": "Application\\Alerta\\AlertaService.cs",
+              "ViewState": "AgIAACIAAAAAAAAAAAAiwEgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-03T16:29:10.061Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:133:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:135:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:12:0:{2456bd12-ecf7-4988-a4a6-67d49173f565}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:14:0:{2456bd12-ecf7-4988-a4a6-67d49173f565}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:13:0:{2456bd12-ecf7-4988-a4a6-67d49173f565}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:131:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Conexion.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\SeguimientoVoto\\ApiSeguimientoVoto\\Infrastructure\\Conexion.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\Conexion.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\SeguimientoVoto\\ApiSeguimientoVoto\\Infrastructure\\Conexion.cs",
+              "RelativeToolTip": "Infrastructure\\Conexion.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-03T15:48:00.889Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "DNotificacion.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\SeguimientoVoto\\ApiSeguimientoVoto\\Infrastructure\\DNotificacion.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\DNotificacion.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\SeguimientoVoto\\ApiSeguimientoVoto\\Infrastructure\\DNotificacion.cs",
+              "RelativeToolTip": "Infrastructure\\DNotificacion.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-03T15:46:14.868Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "RegistrarTokenRequest.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\SeguimientoVoto\\ApiSeguimientoVoto\\Dtos\\Notificacion\\RegistrarTokenRequest.cs",
+              "RelativeDocumentMoniker": "Dtos\\Notificacion\\RegistrarTokenRequest.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\SeguimientoVoto\\ApiSeguimientoVoto\\Dtos\\Notificacion\\RegistrarTokenRequest.cs",
+              "RelativeToolTip": "Dtos\\Notificacion\\RegistrarTokenRequest.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-03T15:23:55.244Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "MensajeController.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\SeguimientoVoto\\ApiSeguimientoVoto\\ApiWeb\\Controllers\\MensajeController.cs",
+              "RelativeDocumentMoniker": "ApiWeb\\Controllers\\MensajeController.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\SeguimientoVoto\\ApiSeguimientoVoto\\ApiWeb\\Controllers\\MensajeController.cs",
+              "RelativeToolTip": "ApiWeb\\Controllers\\MensajeController.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAASwBMAAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-02T03:37:37.886Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MensajeService.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\SeguimientoVoto\\ApiSeguimientoVoto\\Application\\Mensaje\\MensajeService.cs",
+              "RelativeDocumentMoniker": "Application\\Mensaje\\MensajeService.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\SeguimientoVoto\\ApiSeguimientoVoto\\Application\\Mensaje\\MensajeService.cs",
+              "RelativeToolTip": "Application\\Mensaje\\MensajeService.cs",
+              "ViewState": "AgIAACIAAAAAAAAAAAAiwDAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-02T03:36:25.26Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "NotificacionService.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\SeguimientoVoto\\ApiSeguimientoVoto\\Application\\Notificacion\\NotificacionService.cs",
+              "RelativeDocumentMoniker": "Application\\Notificacion\\NotificacionService.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\SeguimientoVoto\\ApiSeguimientoVoto\\Application\\Notificacion\\NotificacionService.cs",
+              "RelativeToolTip": "Application\\Notificacion\\NotificacionService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-03T16:04:22.032Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "NotificacionController.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\SeguimientoVoto\\ApiSeguimientoVoto\\ApiWeb\\Controllers\\NotificacionController.cs",
+              "RelativeDocumentMoniker": "ApiWeb\\Controllers\\NotificacionController.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\SeguimientoVoto\\ApiSeguimientoVoto\\ApiWeb\\Controllers\\NotificacionController.cs",
+              "RelativeToolTip": "ApiWeb\\Controllers\\NotificacionController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACEAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-03T16:06:32.792Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "DMensaje.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\SeguimientoVoto\\ApiSeguimientoVoto\\Infrastructure\\DMensaje.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\DMensaje.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\SeguimientoVoto\\ApiSeguimientoVoto\\Infrastructure\\DMensaje.cs",
+              "RelativeToolTip": "Infrastructure\\DMensaje.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAYwBkAAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-02T03:32:57.4Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "PersonaMovilizadaController.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\SeguimientoVoto\\ApiSeguimientoVoto\\ApiWeb\\Controllers\\PersonaMovilizadaController.cs",
+              "RelativeDocumentMoniker": "ApiWeb\\Controllers\\PersonaMovilizadaController.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\SeguimientoVoto\\ApiSeguimientoVoto\\ApiWeb\\Controllers\\PersonaMovilizadaController.cs",
+              "RelativeToolTip": "ApiWeb\\Controllers\\PersonaMovilizadaController.cs",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAuwDAAAABRAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-30T19:29:22.538Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "DPersonaMovilizada.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\SeguimientoVoto\\ApiSeguimientoVoto\\Infrastructure\\DPersonaMovilizada.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\DPersonaMovilizada.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\SeguimientoVoto\\ApiSeguimientoVoto\\Infrastructure\\DPersonaMovilizada.cs",
+              "RelativeToolTip": "Infrastructure\\DPersonaMovilizada.cs",
+              "ViewState": "AgIAAFQAAAAAAAAAAAAAAFYAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-01T22:58:46.538Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "PersonaMovilizadaUpdateRequest.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\SeguimientoVoto\\ApiSeguimientoVoto\\Dtos\\PersonaMovilizada\\PersonaMovilizadaUpdateRequest.cs",
+              "RelativeDocumentMoniker": "Dtos\\PersonaMovilizada\\PersonaMovilizadaUpdateRequest.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\SeguimientoVoto\\ApiSeguimientoVoto\\Dtos\\PersonaMovilizada\\PersonaMovilizadaUpdateRequest.cs",
+              "RelativeToolTip": "Dtos\\PersonaMovilizada\\PersonaMovilizadaUpdateRequest.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwA4AAAA9AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-01T22:57:22.654Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "PersonaMovilizadaDeleteRequest.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\SeguimientoVoto\\ApiSeguimientoVoto\\Dtos\\PersonaMovilizada\\PersonaMovilizadaDeleteRequest.cs",
+              "RelativeDocumentMoniker": "Dtos\\PersonaMovilizada\\PersonaMovilizadaDeleteRequest.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\SeguimientoVoto\\ApiSeguimientoVoto\\Dtos\\PersonaMovilizada\\PersonaMovilizadaDeleteRequest.cs",
+              "RelativeToolTip": "Dtos\\PersonaMovilizada\\PersonaMovilizadaDeleteRequest.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-01T22:57:06.784Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "AlertaController.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\SeguimientoVoto\\ApiSeguimientoVoto\\ApiWeb\\Controllers\\AlertaController.cs",
+              "RelativeDocumentMoniker": "ApiWeb\\Controllers\\AlertaController.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\SeguimientoVoto\\ApiSeguimientoVoto\\ApiWeb\\Controllers\\AlertaController.cs",
+              "RelativeToolTip": "ApiWeb\\Controllers\\AlertaController.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAswBUAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-01T05:41:38.494Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "DashboardController.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\SeguimientoVoto\\ApiSeguimientoVoto\\ApiWeb\\Controllers\\DashboardController.cs",
+              "RelativeDocumentMoniker": "ApiWeb\\Controllers\\DashboardController.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\SeguimientoVoto\\ApiSeguimientoVoto\\ApiWeb\\Controllers\\DashboardController.cs",
+              "RelativeToolTip": "ApiWeb\\Controllers\\DashboardController.cs",
+              "ViewState": "AgIAAC0AAAAAAAAAAAAAADIAAAAzAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-01T02:44:33.513Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "UsuarioController.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\SeguimientoVoto\\ApiSeguimientoVoto\\ApiWeb\\Controllers\\UsuarioController.cs",
+              "RelativeDocumentMoniker": "ApiWeb\\Controllers\\UsuarioController.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\SeguimientoVoto\\ApiSeguimientoVoto\\ApiWeb\\Controllers\\UsuarioController.cs",
+              "RelativeToolTip": "ApiWeb\\Controllers\\UsuarioController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAABxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-30T17:58:05.653Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "TerritorioController.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\SeguimientoVoto\\ApiSeguimientoVoto\\ApiWeb\\Controllers\\TerritorioController.cs",
+              "RelativeDocumentMoniker": "ApiWeb\\Controllers\\TerritorioController.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\SeguimientoVoto\\ApiSeguimientoVoto\\ApiWeb\\Controllers\\TerritorioController.cs",
+              "RelativeToolTip": "ApiWeb\\Controllers\\TerritorioController.cs",
+              "ViewState": "AgIAABsAAAAAAAAAAAAkwDQAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-30T17:55:51.913Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "ExcelExportService.cs",
+              "DocumentMoniker": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\SeguimientoVoto\\ApiSeguimientoVoto\\Application\\Reportes\\ExcelExportService.cs",
+              "RelativeDocumentMoniker": "Application\\Reportes\\ExcelExportService.cs",
+              "ToolTip": "D:\\Poyectos\\repos\\mis desarrollos de prueba\\SeguimientoVoto\\ApiSeguimientoVoto\\Application\\Reportes\\ExcelExportService.cs",
+              "RelativeToolTip": "Application\\Reportes\\ExcelExportService.cs",
+              "ViewState": "AgIAAAIAAAAAAAAAAAAhwBMAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-30T17:55:51.925Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

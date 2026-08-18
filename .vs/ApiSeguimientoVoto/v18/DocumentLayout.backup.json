@@ -1,0 +1,281 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\git\\Seguimiento\\Api\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{57E0C9C9-EDE5-42CF-9C88-F209F62D2D4D}|Infrastructure\\Infrastructure.csproj|d:\\git\\seguimiento\\api\\infrastructure\\conexion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{57E0C9C9-EDE5-42CF-9C88-F209F62D2D4D}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\conexion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|d:\\git\\seguimiento\\api\\apiweb\\controllers\\botcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|solutionrelative:apiweb\\controllers\\botcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E531FCBF-BAE0-4B6E-956A-1EA36CD6C79A}|Application\\Application.csproj|d:\\git\\seguimiento\\api\\application\\bot\\botservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E531FCBF-BAE0-4B6E-956A-1EA36CD6C79A}|Application\\Application.csproj|solutionrelative:application\\bot\\botservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E531FCBF-BAE0-4B6E-956A-1EA36CD6C79A}|Application\\Application.csproj|d:\\git\\seguimiento\\api\\application\\application.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{E531FCBF-BAE0-4B6E-956A-1EA36CD6C79A}|Application\\Application.csproj|solutionrelative:application\\application.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|d:\\git\\seguimiento\\api\\apiweb\\controllers\\votantecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|solutionrelative:apiweb\\controllers\\votantecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|d:\\git\\seguimiento\\api\\apiweb\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|solutionrelative:apiweb\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|d:\\git\\seguimiento\\api\\apiweb\\controllers\\territoriocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|solutionrelative:apiweb\\controllers\\territoriocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E531FCBF-BAE0-4B6E-956A-1EA36CD6C79A}|Application\\Application.csproj|d:\\git\\seguimiento\\api\\application\\recinto\\recintoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E531FCBF-BAE0-4B6E-956A-1EA36CD6C79A}|Application\\Application.csproj|solutionrelative:application\\recinto\\recintoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|d:\\git\\seguimiento\\api\\apiweb\\controllers\\personamovilizadacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|solutionrelative:apiweb\\controllers\\personamovilizadacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|d:\\git\\seguimiento\\api\\apiweb\\controllers\\alertacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|solutionrelative:apiweb\\controllers\\alertacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|d:\\git\\seguimiento\\api\\apiweb\\controllers\\usuariocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|solutionrelative:apiweb\\controllers\\usuariocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|d:\\git\\seguimiento\\api\\apiweb\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|solutionrelative:apiweb\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|d:\\git\\seguimiento\\api\\apiweb\\web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{13BD640B-CBC8-4B57-8D4D-AD25DD9AB590}|ApiWeb\\ApiWeb.csproj|solutionrelative:apiweb\\web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 18,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:133:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:135:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:12:0:{2456bd12-ecf7-4988-a4a6-67d49173f565}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:14:0:{2456bd12-ecf7-4988-a4a6-67d49173f565}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:13:0:{2456bd12-ecf7-4988-a4a6-67d49173f565}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:131:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "BotController.cs",
+              "DocumentMoniker": "D:\\git\\Seguimiento\\Api\\ApiWeb\\Controllers\\BotController.cs",
+              "RelativeDocumentMoniker": "ApiWeb\\Controllers\\BotController.cs",
+              "ToolTip": "D:\\git\\Seguimiento\\Api\\ApiWeb\\Controllers\\BotController.cs",
+              "RelativeToolTip": "ApiWeb\\Controllers\\BotController.cs",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAAwBcAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-11T23:53:49.126Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "BotService.cs",
+              "DocumentMoniker": "D:\\git\\Seguimiento\\Api\\Application\\Bot\\BotService.cs",
+              "RelativeDocumentMoniker": "Application\\Bot\\BotService.cs",
+              "ToolTip": "D:\\git\\Seguimiento\\Api\\Application\\Bot\\BotService.cs",
+              "RelativeToolTip": "Application\\Bot\\BotService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-11T23:52:04.564Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "VotanteController.cs",
+              "DocumentMoniker": "D:\\git\\Seguimiento\\Api\\ApiWeb\\Controllers\\VotanteController.cs",
+              "RelativeDocumentMoniker": "ApiWeb\\Controllers\\VotanteController.cs",
+              "ToolTip": "D:\\git\\Seguimiento\\Api\\ApiWeb\\Controllers\\VotanteController.cs",
+              "RelativeToolTip": "ApiWeb\\Controllers\\VotanteController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAA/AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-18T09:08:27.376Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "TerritorioController.cs",
+              "DocumentMoniker": "D:\\git\\Seguimiento\\Api\\ApiWeb\\Controllers\\TerritorioController.cs",
+              "RelativeDocumentMoniker": "ApiWeb\\Controllers\\TerritorioController.cs",
+              "ToolTip": "D:\\git\\Seguimiento\\Api\\ApiWeb\\Controllers\\TerritorioController.cs",
+              "RelativeToolTip": "ApiWeb\\Controllers\\TerritorioController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-18T08:21:23.032Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "RecintoService.cs",
+              "DocumentMoniker": "D:\\git\\Seguimiento\\Api\\Application\\Recinto\\RecintoService.cs",
+              "RelativeDocumentMoniker": "Application\\Recinto\\RecintoService.cs",
+              "ToolTip": "D:\\git\\Seguimiento\\Api\\Application\\Recinto\\RecintoService.cs",
+              "RelativeToolTip": "Application\\Recinto\\RecintoService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-18T08:20:58.412Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Conexion.cs",
+              "DocumentMoniker": "D:\\git\\Seguimiento\\Api\\Infrastructure\\Conexion.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\Conexion.cs",
+              "ToolTip": "D:\\git\\Seguimiento\\Api\\Infrastructure\\Conexion.cs",
+              "RelativeToolTip": "Infrastructure\\Conexion.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAABpAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-18T01:21:46.883Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\git\\Seguimiento\\Api\\ApiWeb\\Program.cs",
+              "RelativeDocumentMoniker": "ApiWeb\\Program.cs",
+              "ToolTip": "D:\\git\\Seguimiento\\Api\\ApiWeb\\Program.cs",
+              "RelativeToolTip": "ApiWeb\\Program.cs",
+              "ViewState": "AgIAAIsAAAAAAAAAAAAIwKoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-17T19:55:17.323Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "web.config",
+              "DocumentMoniker": "D:\\git\\Seguimiento\\Api\\ApiWeb\\web.config",
+              "RelativeDocumentMoniker": "ApiWeb\\web.config",
+              "ToolTip": "D:\\git\\Seguimiento\\Api\\ApiWeb\\web.config",
+              "RelativeToolTip": "ApiWeb\\web.config",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
+              "WhenOpened": "2026-07-17T19:55:16.413Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Application.csproj",
+              "DocumentMoniker": "D:\\git\\Seguimiento\\Api\\Application\\Application.csproj",
+              "RelativeDocumentMoniker": "Application\\Application.csproj",
+              "ToolTip": "D:\\git\\Seguimiento\\Api\\Application\\Application.csproj",
+              "RelativeToolTip": "Application\\Application.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAA+AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-06-20T14:32:01.439Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "D:\\git\\Seguimiento\\Api\\ApiWeb\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "ApiWeb\\Controllers\\AuthController.cs",
+              "ToolTip": "D:\\git\\Seguimiento\\Api\\ApiWeb\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "ApiWeb\\Controllers\\AuthController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-20T14:18:18.501Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "UsuarioController.cs",
+              "DocumentMoniker": "D:\\git\\Seguimiento\\Api\\ApiWeb\\Controllers\\UsuarioController.cs",
+              "RelativeDocumentMoniker": "ApiWeb\\Controllers\\UsuarioController.cs",
+              "ToolTip": "D:\\git\\Seguimiento\\Api\\ApiWeb\\Controllers\\UsuarioController.cs",
+              "RelativeToolTip": "ApiWeb\\Controllers\\UsuarioController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-17T20:04:49.107Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "AlertaController.cs",
+              "DocumentMoniker": "D:\\git\\Seguimiento\\Api\\ApiWeb\\Controllers\\AlertaController.cs",
+              "RelativeDocumentMoniker": "ApiWeb\\Controllers\\AlertaController.cs",
+              "ToolTip": "D:\\git\\Seguimiento\\Api\\ApiWeb\\Controllers\\AlertaController.cs",
+              "RelativeToolTip": "ApiWeb\\Controllers\\AlertaController.cs",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAowBoAAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-20T14:18:09.787Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "PersonaMovilizadaController.cs",
+              "DocumentMoniker": "D:\\git\\Seguimiento\\Api\\ApiWeb\\Controllers\\PersonaMovilizadaController.cs",
+              "RelativeDocumentMoniker": "ApiWeb\\Controllers\\PersonaMovilizadaController.cs",
+              "ToolTip": "D:\\git\\Seguimiento\\Api\\ApiWeb\\Controllers\\PersonaMovilizadaController.cs",
+              "RelativeToolTip": "ApiWeb\\Controllers\\PersonaMovilizadaController.cs",
+              "ViewState": "AgIAADEAAAAAAAAAAAAYwEEAAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-16T04:18:40.279Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
