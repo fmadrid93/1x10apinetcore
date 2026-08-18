@@ -17,5 +17,6 @@ namespace Dtos.Usuario
         public string? Celular { get; set; }
         public string? Email { get; set; }
         public bool Activo { get; set; } = true;
+        public string? Motivo { get; set; }
     }
 }

@@ -1,13 +1,15 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using System.Data;
 using Infrastructure;
 
 namespace Application.Usuario
 {
     /// <summary>
-    /// Se lanza cuando un admin territorial intenta ver/modificar un usuario
-    /// que no le pertenece (no fue creado por él). Ver §40 del manual de
-    /// estándares (autorización por recurso / ownership).
+    /// Se lanza cuando un admin/gerente territorial intenta ver/modificar un
+    /// usuario que no le pertenece, o intenta una accion fuera de su
+    /// alcance de rol (p.ej. un gerente creando otro gerente). Ver §40 del
+    /// manual de estándares (autorización por recurso / ownership).
     /// </summary>
     public class AccesoDenegadoException : Exception
     {
@@ -16,6 +18,11 @@ namespace Application.Usuario
 
     public class UsuarioService
     {
+        private const int RolGerente = 2;
+        private const int RolMovilizador = 3;
+        private const int RolVerificadorVoto = 1003;
+        private const string NombreRolGerente = "GERENTE";
+
         private readonly DUsuario _data = new DUsuario();
 
         public DataTable Insertar(
@@ -29,17 +36,45 @@ namespace Application.Usuario
             string? celular,
             string? email,
             int idUsuarioCreador,
-            int? idTerritorioCreador)
+            int? idTerritorioCreador,
+            string rolCreador)
         {
-            // Un admin territorial (idTerritorioCreador != null) solo puede crear
-            // usuarios dentro de su propio territorio: se ignora lo que haya
-            // mandado el request y se fuerza al territorio del creador. Un super
-            // admin (idTerritorioCreador == null) mantiene libertad total,
-            // incluyendo dejar el territorio en blanco.
-            int? idTerritorioFinal = idTerritorioCreador ?? idTerritorio;
+            int? idTerritorioFinal = idTerritorio;
+            int? idUsuarioSupervisorFinal = idUsuarioSupervisor;
+
+            if (rolCreador == NombreRolGerente)
+            {
+                if (idRol != RolMovilizador && idRol != RolVerificadorVoto)
+                {
+                    throw new AccesoDenegadoException("Un gerente solo puede registrar movilizadores o verificadores.");
+                }
+
+                // El gerente es siempre "el encargado": no elige territorio ni supervisor.
+                idTerritorioFinal = idTerritorioCreador;
+                idUsuarioSupervisorFinal = idRol == RolMovilizador ? idUsuarioCreador : (int?)null;
+            }
+            else if (idTerritorioCreador.HasValue)
+            {
+                // Admin territorial: territorio siempre fijo al suyo.
+                idTerritorioFinal = idTerritorioCreador;
+
+                if (idRol == RolGerente)
+                {
+                    // El gerente que registra el admin queda supervisado por el mismo admin.
+                    idUsuarioSupervisorFinal = idUsuarioCreador;
+                }
+                else if (idRol == RolVerificadorVoto)
+                {
+                    // El verificador nunca tiene supervisor.
+                    idUsuarioSupervisorFinal = null;
+                }
+                // Si idRol == RolMovilizador, el admin elige el gerente supervisor manualmente
+                // (idUsuarioSupervisorFinal ya viene del request tal cual).
+            }
+            // Super admin (rolCreador == ADMINISTRADOR && idTerritorioCreador == null): libre, sin forzar nada.
 
             string claveHash = BCrypt.Net.BCrypt.HashPassword(clave);
-            return _data.Insertar(idRol, idTerritorioFinal, idUsuarioSupervisor, usuario, claveHash, nombreCompleto, ci, celular, email, idUsuarioCreador);
+            return _data.Insertar(idRol, idTerritorioFinal, idUsuarioSupervisorFinal, usuario, claveHash, nombreCompleto, ci, celular, email, idUsuarioCreador);
         }
 
         public DataTable Actualizar(
@@ -53,60 +88,113 @@ namespace Application.Usuario
             string? email,
             bool activo,
             int idUsuarioCaller,
-            int? idTerritorioCaller)
+            int? idTerritorioCaller,
+            string rolCaller,
+            string? motivo)
         {
-            ValidarOwnership(idUsuario, idUsuarioCaller, idTerritorioCaller);
+            ValidarOwnership(idUsuario, idUsuarioCaller, idTerritorioCaller, rolCaller);
 
-            int? idTerritorioFinal = idTerritorioCaller ?? idTerritorio;
+            int? idTerritorioFinal = idTerritorio;
+            int? idUsuarioSupervisorFinal = idUsuarioSupervisor;
 
-            return _data.Actualizar(idUsuario, idRol, idTerritorioFinal, idUsuarioSupervisor, nombreCompleto, ci, celular, email, activo);
+            if (rolCaller == NombreRolGerente)
+            {
+                idTerritorioFinal = idTerritorioCaller;
+                idUsuarioSupervisorFinal = idRol == RolMovilizador ? idUsuarioCaller : (int?)null;
+            }
+            else if (idTerritorioCaller.HasValue)
+            {
+                idTerritorioFinal = idTerritorioCaller;
+
+                if (idRol == RolGerente)
+                {
+                    idUsuarioSupervisorFinal = idUsuarioCaller;
+                }
+                else if (idRol == RolVerificadorVoto)
+                {
+                    idUsuarioSupervisorFinal = null;
+                }
+            }
+
+            return _data.Actualizar(idUsuario, idRol, idTerritorioFinal, idUsuarioSupervisorFinal, nombreCompleto, ci, celular, email, activo, idUsuarioCaller, motivo);
         }
 
-        public DataTable CambiarClave(int idUsuario, string nuevaClave, int idUsuarioCaller, int? idTerritorioCaller)
+        public DataTable CambiarClave(int idUsuario, string nuevaClave, int idUsuarioCaller, int? idTerritorioCaller, string rolCaller, string? motivo)
         {
-            ValidarOwnership(idUsuario, idUsuarioCaller, idTerritorioCaller);
+            ValidarOwnership(idUsuario, idUsuarioCaller, idTerritorioCaller, rolCaller);
 
             string claveHash = BCrypt.Net.BCrypt.HashPassword(nuevaClave);
-            return _data.CambiarClave(idUsuario, claveHash);
+            return _data.CambiarClave(idUsuario, claveHash, idUsuarioCaller, motivo);
         }
 
-        public DataTable EliminarLogico(int idUsuario, int idUsuarioCaller, int? idTerritorioCaller)
+        public DataTable EliminarLogico(int idUsuario, int idUsuarioCaller, int? idTerritorioCaller, string rolCaller, string? motivo)
         {
-            ValidarOwnership(idUsuario, idUsuarioCaller, idTerritorioCaller);
+            ValidarOwnership(idUsuario, idUsuarioCaller, idTerritorioCaller, rolCaller);
 
-            return _data.EliminarLogico(idUsuario);
+            return _data.EliminarLogico(idUsuario, idUsuarioCaller, motivo);
         }
 
-        public DataTable Listar(int? idRol, int? idTerritorio, int? idUsuarioSupervisor, bool soloActivos, int idUsuarioCaller, int? idTerritorioCaller)
+        public DataTable Listar(int? idRol, int? idTerritorio, int? idUsuarioSupervisor, bool soloActivos, int idUsuarioCaller, int? idTerritorioCaller, string rolCaller)
         {
-            // Super admin (sin territorio) -> sin filtro, ve todo.
-            // Admin territorial -> solo lo que él mismo creó.
-            int? idUsuarioCreateFiltro = idTerritorioCaller.HasValue ? idUsuarioCaller : (int?)null;
+            var (idsCreador, idSupervisorPropio) = ResolverAlcance(idUsuarioCaller, idTerritorioCaller, rolCaller);
 
-            return _data.Listar(idRol, idTerritorio, idUsuarioSupervisor, soloActivos, idUsuarioCreateFiltro);
+            return _data.Listar(idRol, idTerritorio, idUsuarioSupervisor, soloActivos, null, idsCreador, idSupervisorPropio);
         }
 
-        public DataTable ObtenerPorId(int idUsuario, int idUsuarioCaller, int? idTerritorioCaller)
+        public DataTable ObtenerPorId(int idUsuario, int idUsuarioCaller, int? idTerritorioCaller, string rolCaller)
         {
             var ds = _data.ObtenerPorId(idUsuario);
-            ValidarOwnership(ds, idUsuarioCaller, idTerritorioCaller);
+            ValidarOwnership(ds, idUsuarioCaller, idTerritorioCaller, rolCaller);
             return ds;
         }
 
-        private void ValidarOwnership(int idUsuario, int idUsuarioCaller, int? idTerritorioCaller)
+        /// <summary>
+        /// Calcula el alcance de visibilidad segun quien llama:
+        ///   - Super admin: sin filtro.
+        ///   - Admin territorial: lo que el creo + lo que crearon sus gerentes (jerarquico).
+        ///   - Gerente: lo que el creo + los movilizadores que le asignaron como supervisor
+        ///     (los verificadores no tienen supervisor, asi que ahi solo cuenta lo que el creo).
+        /// </summary>
+        private (string? idsCreador, int? idSupervisorPropio) ResolverAlcance(int idUsuarioCaller, int? idTerritorioCaller, string rolCaller)
         {
+            if (rolCaller == NombreRolGerente)
+            {
+                return (idUsuarioCaller.ToString(), idUsuarioCaller);
+            }
+
             if (!idTerritorioCaller.HasValue)
+            {
+                return (null, null); // super admin
+            }
+
+            var gerentesDs = _data.Listar(RolGerente, null, null, false, idUsuarioCaller, null, null);
+            var ids = new List<int> { idUsuarioCaller };
+
+            if (gerentesDs != null)
+            {
+                foreach (DataRow row in gerentesDs.Rows)
+                {
+                    ids.Add(Convert.ToInt32(row["IdUsuario"]));
+                }
+            }
+
+            return (string.Join(",", ids), null);
+        }
+
+        private void ValidarOwnership(int idUsuario, int idUsuarioCaller, int? idTerritorioCaller, string rolCaller)
+        {
+            if (rolCaller != NombreRolGerente && !idTerritorioCaller.HasValue)
             {
                 return; // super admin: sin restricción
             }
 
             var ds = _data.ObtenerPorId(idUsuario);
-            ValidarOwnership(ds, idUsuarioCaller, idTerritorioCaller);
+            ValidarOwnership(ds, idUsuarioCaller, idTerritorioCaller, rolCaller);
         }
 
-        private void ValidarOwnership(DataTable ds, int idUsuarioCaller, int? idTerritorioCaller)
+        private void ValidarOwnership(DataTable ds, int idUsuarioCaller, int? idTerritorioCaller, string rolCaller)
         {
-            if (!idTerritorioCaller.HasValue)
+            if (rolCaller != NombreRolGerente && !idTerritorioCaller.HasValue)
             {
                 return; // super admin: sin restricción
             }
@@ -118,8 +206,35 @@ namespace Application.Usuario
 
             var row = ds.Rows[0];
             int? creador = row["IdUsuarioCreate"] == DBNull.Value ? (int?)null : Convert.ToInt32(row["IdUsuarioCreate"]);
+            int? supervisor = row["IdUsuarioSupervisor"] == DBNull.Value ? (int?)null : Convert.ToInt32(row["IdUsuarioSupervisor"]);
 
-            if (creador != idUsuarioCaller)
+            bool permitido;
+
+            if (rolCaller == NombreRolGerente)
+            {
+                // Gerente: lo que el creo, o lo que le asignaron como supervisor.
+                permitido = creador == idUsuarioCaller || supervisor == idUsuarioCaller;
+            }
+            else
+            {
+                // Admin territorial: lo suyo directo, o lo que creo un gerente que el mismo registro.
+                permitido = creador == idUsuarioCaller;
+
+                if (!permitido && creador.HasValue)
+                {
+                    var creadorDs = _data.ObtenerPorId(creador.Value);
+                    if (creadorDs != null && creadorDs.Rows.Count > 0)
+                    {
+                        var filaCreador = creadorDs.Rows[0];
+                        int idRolCreador = Convert.ToInt32(filaCreador["IdRol"]);
+                        int? creadorDelCreador = filaCreador["IdUsuarioCreate"] == DBNull.Value ? (int?)null : Convert.ToInt32(filaCreador["IdUsuarioCreate"]);
+
+                        permitido = idRolCreador == RolGerente && creadorDelCreador == idUsuarioCaller;
+                    }
+                }
+            }
+
+            if (!permitido)
             {
                 throw new AccesoDenegadoException("No tiene permiso sobre este usuario.");
             }

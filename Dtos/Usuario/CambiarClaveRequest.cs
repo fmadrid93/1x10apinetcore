@@ -10,5 +10,6 @@ namespace Dtos.Usuario
     {
         public int IdUsuario { get; set; }
         public string NuevaClave { get; set; } = string.Empty;
+        public string? Motivo { get; set; }
     }
 }

@@ -42,7 +42,9 @@ namespace Infrastructure
             string? ci,
             string? celular,
             string? email,
-            bool activo)
+            bool activo,
+            int? idUsuarioUpdate,
+            string? motivo)
         {
             return EjecutarPA(
                 "pa_usuario_actualizar",
@@ -54,28 +56,41 @@ namespace Infrastructure
                 new SqlParameter("@CI", SqlDbType.VarChar, 30) { Value = (object?)ci ?? DBNull.Value },
                 new SqlParameter("@Celular", SqlDbType.VarChar, 30) { Value = (object?)celular ?? DBNull.Value },
                 new SqlParameter("@Email", SqlDbType.VarChar, 150) { Value = (object?)email ?? DBNull.Value },
-                new SqlParameter("@Activo", SqlDbType.Bit) { Value = activo }
+                new SqlParameter("@Activo", SqlDbType.Bit) { Value = activo },
+                new SqlParameter("@IdUsuarioUpdate", SqlDbType.Int) { Value = (object?)idUsuarioUpdate ?? DBNull.Value },
+                new SqlParameter("@Motivo", SqlDbType.NVarChar, 300) { Value = (object?)motivo ?? DBNull.Value }
             );
         }
 
-        public DataTable CambiarClave(int idUsuario, string claveHash)
+        public DataTable CambiarClave(int idUsuario, string claveHash, int? idUsuarioUpdate, string? motivo)
         {
             return EjecutarPA(
                 "pa_usuario_cambiar_clave",
                 new SqlParameter("@IdUsuario", SqlDbType.Int) { Value = idUsuario },
-                new SqlParameter("@ClaveHash", SqlDbType.VarChar, 300) { Value = claveHash }
+                new SqlParameter("@ClaveHash", SqlDbType.VarChar, 300) { Value = claveHash },
+                new SqlParameter("@IdUsuarioUpdate", SqlDbType.Int) { Value = (object?)idUsuarioUpdate ?? DBNull.Value },
+                new SqlParameter("@Motivo", SqlDbType.NVarChar, 300) { Value = (object?)motivo ?? DBNull.Value }
             );
         }
 
-        public DataTable EliminarLogico(int idUsuario)
+        public DataTable EliminarLogico(int idUsuario, int? idUsuarioDelete, string? motivo)
         {
             return EjecutarPA(
                 "pa_usuario_eliminar_logico",
-                new SqlParameter("@IdUsuario", SqlDbType.Int) { Value = idUsuario }
+                new SqlParameter("@IdUsuario", SqlDbType.Int) { Value = idUsuario },
+                new SqlParameter("@IdUsuarioDelete", SqlDbType.Int) { Value = (object?)idUsuarioDelete ?? DBNull.Value },
+                new SqlParameter("@Motivo", SqlDbType.NVarChar, 300) { Value = (object?)motivo ?? DBNull.Value }
             );
         }
 
-        public DataTable Listar(int? idRol, int? idTerritorio, int? idUsuarioSupervisor, bool soloActivos, int? idUsuarioCreate)
+        public DataTable Listar(
+            int? idRol,
+            int? idTerritorio,
+            int? idUsuarioSupervisor,
+            bool soloActivos,
+            int? idUsuarioCreate,
+            string? idsCreador,
+            int? idSupervisorPropio)
         {
             return EjecutarPA(
                 "pa_usuario_listar",
@@ -83,7 +98,9 @@ namespace Infrastructure
                 new SqlParameter("@IdTerritorio", SqlDbType.Int) { Value = (object?)idTerritorio ?? DBNull.Value },
                 new SqlParameter("@IdUsuarioSupervisor", SqlDbType.Int) { Value = (object?)idUsuarioSupervisor ?? DBNull.Value },
                 new SqlParameter("@SoloActivos", SqlDbType.Bit) { Value = soloActivos },
-                new SqlParameter("@IdUsuarioCreate", SqlDbType.Int) { Value = (object?)idUsuarioCreate ?? DBNull.Value }
+                new SqlParameter("@IdUsuarioCreate", SqlDbType.Int) { Value = (object?)idUsuarioCreate ?? DBNull.Value },
+                new SqlParameter("@IdsCreador", SqlDbType.VarChar, -1) { Value = (object?)idsCreador ?? DBNull.Value },
+                new SqlParameter("@IdSupervisorPropio", SqlDbType.Int) { Value = (object?)idSupervisorPropio ?? DBNull.Value }
             );
         }
 
