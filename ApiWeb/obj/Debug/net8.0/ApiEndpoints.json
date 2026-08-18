@@ -1,0 +1,684 @@
+[
+  {
+    "ContainingType": "ApiWeb.Controllers.AtributoPreguntaController",
+    "Method": "BajaAtributoPregunta",
+    "RelativePath": "api/AtributoPregunta/BajaAtributoPregunta",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "param",
+        "Type": "AtributoPregunta.AtributoPreguntaDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.AtributoPreguntaController",
+    "Method": "BajaAtributoPreguntaXPregunta",
+    "RelativePath": "api/AtributoPregunta/BajaAtributoPreguntaXPregunta",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "param",
+        "Type": "AtributoPregunta.AtributoPreguntaDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.AtributoPreguntaController",
+    "Method": "InsertarAtributoPregunta",
+    "RelativePath": "api/AtributoPregunta/InsertarAtributoPregunta",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "param",
+        "Type": "AtributoPregunta.AtributoPreguntaDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.AtributoPreguntaController",
+    "Method": "ListarAtributosPregunta",
+    "RelativePath": "api/AtributoPregunta/ListarAtributosPregunta/{idPregunta}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idPregunta",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.AtributoPreguntaController",
+    "Method": "ModificarAtributoPregunta",
+    "RelativePath": "api/AtributoPregunta/ModificarAtributoPregunta",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "param",
+        "Type": "AtributoPregunta.AtributoPreguntaDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.AtributoPreguntaController",
+    "Method": "TotalAtributos",
+    "RelativePath": "api/AtributoPregunta/TotalAtributos",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.AtributoPreguntaController",
+    "Method": "TotalRespuestas",
+    "RelativePath": "api/AtributoPregunta/TotalRespuestas",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.AuthController",
+    "Method": "VerificarUsuarioMobile",
+    "RelativePath": "api/Auth/VerificarUsuarioMobile",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "param",
+        "Type": "Dtos.Usuario.LoginRequestDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.EncuestaController",
+    "Method": "CantidadEncuestasDiaCiudadano",
+    "RelativePath": "api/Encuesta/cantidad_encuesta_dia_ciudadano/{cuenta}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "cuenta",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.EncuestaController",
+    "Method": "InsertarCiudadanoEncuesta",
+    "RelativePath": "api/Encuesta/insertarEncuesta",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "param",
+        "Type": "Dtos.Encuesta.SetEncuestaDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.EncuestaController",
+    "Method": "ListarEncuestas",
+    "RelativePath": "api/Encuesta/listarencuestas",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idUsuario",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "fInicio",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      },
+      {
+        "Name": "fFin",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.EncuestaController",
+    "Method": "ListarFiltrosXEncuesta",
+    "RelativePath": "api/Encuesta/ListarFiltrosXEncuesta/{idEncuesta}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idEncuesta",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.EncuestaController",
+    "Method": "ListarMarkers",
+    "RelativePath": "api/Encuesta/ListarMarkers",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "param",
+        "Type": "Dtos.Encuesta.ParamPosicionDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.EncuestaController",
+    "Method": "ListarMarkersXUsuario",
+    "RelativePath": "api/Encuesta/ListarMarkersXUsuario",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "param",
+        "Type": "Dtos.Encuesta.ParamPosicionDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.EncuestaController",
+    "Method": "ListarTipoEncuesta",
+    "RelativePath": "api/Encuesta/ListarTipoEncuesta",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.EncuestaController",
+    "Method": "ListarUsuariosXTipoEncuesta",
+    "RelativePath": "api/Encuesta/ListarUsuariosXTipoEncuesta/{tipoEncuesta}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "tipoEncuesta",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.EncuestaController",
+    "Method": "ObtenerAudio",
+    "RelativePath": "api/Encuesta/ObtenerAudio/{idEncuesta}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idEncuesta",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.EncuestaController",
+    "Method": "ObtenerDetallePuntoEncuesta",
+    "RelativePath": "api/Encuesta/ObtenerDetallePuntoEncuesta",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idEncuesta",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.EncuestaController",
+    "Method": "ResumenEncuesta",
+    "RelativePath": "api/Encuesta/ResumenEncuesta",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "param",
+        "Type": "Dtos.Encuesta.ParamPosicionDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.EncuestaController",
+    "Method": "ResumenXUsuario",
+    "RelativePath": "api/Encuesta/ResumenXUsuario",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "param",
+        "Type": "Dtos.Encuesta.ParamPosicionDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.EncuestaAdminController",
+    "Method": "BajaEncuesta",
+    "RelativePath": "api/EncuestaAdmin/BajaEncuesta",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "param",
+        "Type": "Encuesta.EncuestaAdminDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.EncuestaAdminController",
+    "Method": "InsertarEncuesta",
+    "RelativePath": "api/EncuestaAdmin/InsertarEncuesta",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "param",
+        "Type": "Encuesta.EncuestaAdminDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.EncuestaAdminController",
+    "Method": "ListarEncuestas",
+    "RelativePath": "api/EncuestaAdmin/ListarEncuestas",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.EncuestaAdminController",
+    "Method": "ModificarEncuesta",
+    "RelativePath": "api/EncuestaAdmin/ModificarEncuesta",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "param",
+        "Type": "Encuesta.EncuestaAdminDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.EncuestaPreguntaController",
+    "Method": "BajaEncuestaPregunta",
+    "RelativePath": "api/EncuestaPregunta/BajaEncuestaPregunta",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "param",
+        "Type": "EncuestaPregunta.EncuestaPreguntaDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.EncuestaPreguntaController",
+    "Method": "InsertarEncuestaPregunta",
+    "RelativePath": "api/EncuestaPregunta/InsertarEncuestaPregunta",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "param",
+        "Type": "EncuestaPregunta.EncuestaPreguntaDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.EncuestaPreguntaController",
+    "Method": "ListarEncuestaPreguntas",
+    "RelativePath": "api/EncuestaPregunta/ListarEncuestaPreguntas/{idEncuesta}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idEncuesta",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.EncuestaPreguntaController",
+    "Method": "ModificarEncuestaPregunta",
+    "RelativePath": "api/EncuestaPregunta/ModificarEncuestaPregunta",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "param",
+        "Type": "EncuestaPregunta.EncuestaPreguntaDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.EncuestaPreguntaController",
+    "Method": "TotalPreguntas",
+    "RelativePath": "api/EncuestaPregunta/TotalPreguntas",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.GrupoController",
+    "Method": "BajaGrupo",
+    "RelativePath": "api/Grupo/BajaGrupo",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "param",
+        "Type": "Grupo.GrupoDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.GrupoController",
+    "Method": "CambiarTipoEncuestaGrupo",
+    "RelativePath": "api/Grupo/CambiarTipoEncuestaGrupo",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "param",
+        "Type": "System.Collections.Generic.List\u00601[[Grupo.GrupoDto, Dtos, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.GrupoController",
+    "Method": "InsertarGrupo",
+    "RelativePath": "api/Grupo/InsertarGrupo",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "param",
+        "Type": "Grupo.GrupoDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.GrupoController",
+    "Method": "ListarGrupos",
+    "RelativePath": "api/Grupo/ListarGrupos/{idEncuesta}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idEncuesta",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.GrupoController",
+    "Method": "ModificarGrupo",
+    "RelativePath": "api/Grupo/ModificarGrupo",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "param",
+        "Type": "Grupo.GrupoDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.LocationController",
+    "Method": "GetByUser",
+    "RelativePath": "api/Location/{userId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.LocationController",
+    "Method": "GetAll",
+    "RelativePath": "api/Location/all",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.LocationController",
+    "Method": "GetByGroup",
+    "RelativePath": "api/Location/group/{grupoId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "grupoId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.LocationController",
+    "Method": "UpdateLocation",
+    "RelativePath": "api/Location/update",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Grupo.LocationDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.UsuarioController",
+    "Method": "BajaUsuario",
+    "RelativePath": "api/Usuario/BajaUsuario",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "param",
+        "Type": "Dtos.Usuario.UsuarioGrupoDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.UsuarioController",
+    "Method": "CambiarGrupoUsuario",
+    "RelativePath": "api/Usuario/CambiarGrupoUsuario",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "param",
+        "Type": "System.Collections.Generic.List\u00601[[Dtos.Usuario.UsuarioGrupoDto, Dtos, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.UsuarioController",
+    "Method": "InsertarUsuario",
+    "RelativePath": "api/Usuario/InsertarUsuario",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "param",
+        "Type": "Dtos.Usuario.UsuarioGrupoDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.UsuarioController",
+    "Method": "ListarTipoUsuario",
+    "RelativePath": "api/Usuario/ListarTipoUsuario",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.UsuarioController",
+    "Method": "ListarUsuariosSinGrupo",
+    "RelativePath": "api/Usuario/ListarUsuariosSinGrupo",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.UsuarioController",
+    "Method": "ListarUsuariosXGrupo",
+    "RelativePath": "api/Usuario/ListarUsuariosXGrupo/{idGrupo}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idGrupo",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ApiWeb.Controllers.UsuarioController",
+    "Method": "ModificarUsuario",
+    "RelativePath": "api/Usuario/ModificarUsuario",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "param",
+        "Type": "Dtos.Usuario.UsuarioGrupoDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]

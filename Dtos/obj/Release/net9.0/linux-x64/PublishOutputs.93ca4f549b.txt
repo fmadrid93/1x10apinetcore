@@ -1,0 +1,3 @@
+D:\Poyectos\repos\mis desarrollos de prueba\encuestas\ApiEncuestaNetCore\publish-linux\Dtos.dll
+D:\Poyectos\repos\mis desarrollos de prueba\encuestas\ApiEncuestaNetCore\publish-linux\Dtos.deps.json
+D:\Poyectos\repos\mis desarrollos de prueba\encuestas\ApiEncuestaNetCore\publish-linux\Dtos.pdb

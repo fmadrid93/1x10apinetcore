@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  sqlserver-enterprise:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: sqlserver-enterprise
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Mo7oJob08o!684"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sql_datos:/var/opt/mssql
+
+  mi-apiweb:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mi-apiweb
+    depends_on:
+      - sqlserver-enterprise
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    ports:
+      - "8080:80"
+
+volumes:
+  sql_datos:
