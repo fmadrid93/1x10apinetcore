@@ -1,0 +1,40 @@
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+publish/
+publish-linux/
+publish-win/
+*.pyc
+
+# NuGet
+*.nupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+
+# ASP.NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Rider / VS Code
+.idea/
+.vscode/
+
+# .NET template engine cache
+TemplateEngineHost/
+
+# Logs
+*.log
+
+# OS junk
+.DS_Store
+Thumbs.db

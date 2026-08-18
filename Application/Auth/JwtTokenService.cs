@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -16,7 +17,7 @@ namespace Application.Auth
             _configuration = configuration;
         }
 
-        public string GenerateToken(int idUsuario, string usuario, string rol)
+        public string GenerateToken(int idUsuario, string usuario, string rol, int? idTerritorio = null)
         {
             var jwtSettings = _configuration.GetSection("Jwt");
             var key = new SymmetricSecurityKey(
@@ -28,12 +29,17 @@ namespace Application.Auth
                 SecurityAlgorithms.HmacSha256
             );
 
-            var claims = new[]
+            var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, idUsuario.ToString()),
                 new Claim(ClaimTypes.Name, usuario),
                 new Claim(ClaimTypes.Role, rol)
             };
+
+            if (idTerritorio.HasValue)
+            {
+                claims.Add(new Claim("idTerritorio", idTerritorio.Value.ToString()));
+            }
 
             var token = new JwtSecurityToken(
                 issuer: jwtSettings["Issuer"],

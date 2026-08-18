@@ -1,3 +1,0 @@
-C:\inetpub\wwwroot\ApiSeguimiento\Dtos.dll
-C:\inetpub\wwwroot\ApiSeguimiento\Dtos.deps.json
-C:\inetpub\wwwroot\ApiSeguimiento\Dtos.pdb

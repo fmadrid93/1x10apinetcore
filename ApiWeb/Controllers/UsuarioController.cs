@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Security.Claims;
 using Application.Reportes;
 using Application.Usuario;
 using ClosedXML.Excel;
@@ -8,13 +9,26 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ApiWeb.Controllers
 {
-  //  [Authorize(Roles = "ADMINISTRADOR")]
+    [Authorize(Roles = "ADMINISTRADOR")]
     [ApiController]
     [Route("api/[controller]")]
     public class UsuarioController : ControllerBase
     {
         private readonly UsuarioService _service = new UsuarioService();
         private readonly Application.Reportes.IExcelExportService _excelExportService = new ExcelExportService();
+
+        // El IdUsuario/IdTerritorio confiables salen siempre del JWT (claims),
+        // nunca del body o la query del request. Ver Manual_Estandares_CSharp_SQLServer_v8.md §40.
+        private int ObtenerIdUsuarioActual()
+        {
+            return int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        }
+
+        private int? ObtenerIdTerritorioActual()
+        {
+            var valor = User.FindFirstValue("idTerritorio");
+            return string.IsNullOrEmpty(valor) ? (int?)null : int.Parse(valor);
+        }
 
         [HttpPost("insertar")]
         public IActionResult Insertar([FromBody] UsuarioInsertRequest request)
@@ -30,7 +44,9 @@ namespace ApiWeb.Controllers
                     request.NombreCompleto,
                     request.CI,
                     request.Celular,
-                    request.Email
+                    request.Email,
+                    ObtenerIdUsuarioActual(),
+                    ObtenerIdTerritorioActual()
                 );
 
                 return Ok(new { exito = 1, dato = ds, status = "ok" });
@@ -55,10 +71,16 @@ namespace ApiWeb.Controllers
                     request.CI,
                     request.Celular,
                     request.Email,
-                    request.Activo
+                    request.Activo,
+                    ObtenerIdUsuarioActual(),
+                    ObtenerIdTerritorioActual()
                 );
 
                 return Ok(new { exito = 1, dato = ds, status = "ok" });
+            }
+            catch (AccesoDenegadoException ex)
+            {
+                return StatusCode(403, new { exito = 0, dato = (object?)null, status = ex.Message });
             }
             catch (Exception ex)
             {
@@ -71,8 +93,12 @@ namespace ApiWeb.Controllers
         {
             try
             {
-                var ds = _service.CambiarClave(request.IdUsuario, request.NuevaClave);
+                var ds = _service.CambiarClave(request.IdUsuario, request.NuevaClave, ObtenerIdUsuarioActual(), ObtenerIdTerritorioActual());
                 return Ok(new { exito = 1, dato = ds, status = "ok" });
+            }
+            catch (AccesoDenegadoException ex)
+            {
+                return StatusCode(403, new { exito = 0, dato = (object?)null, status = ex.Message });
             }
             catch (Exception ex)
             {
@@ -85,8 +111,12 @@ namespace ApiWeb.Controllers
         {
             try
             {
-                var ds = _service.EliminarLogico(idUsuario);
+                var ds = _service.EliminarLogico(idUsuario, ObtenerIdUsuarioActual(), ObtenerIdTerritorioActual());
                 return Ok(new { exito = 1, dato = ds, status = "ok" });
+            }
+            catch (AccesoDenegadoException ex)
+            {
+                return StatusCode(403, new { exito = 0, dato = (object?)null, status = ex.Message });
             }
             catch (Exception ex)
             {
@@ -99,7 +129,7 @@ namespace ApiWeb.Controllers
         {
             try
             {
-                var ds = _service.Listar(idRol, idTerritorio, idUsuarioSupervisor, soloActivos);
+                var ds = _service.Listar(idRol, idTerritorio, idUsuarioSupervisor, soloActivos, ObtenerIdUsuarioActual(), ObtenerIdTerritorioActual());
                 return Ok(new { exito = 1, dato = ds, status = "ok" });
             }
             catch (Exception ex)
@@ -113,8 +143,12 @@ namespace ApiWeb.Controllers
         {
             try
             {
-                var ds = _service.ObtenerPorId(idUsuario);
+                var ds = _service.ObtenerPorId(idUsuario, ObtenerIdUsuarioActual(), ObtenerIdTerritorioActual());
                 return Ok(new { exito = 1, dato = ds, status = "ok" });
+            }
+            catch (AccesoDenegadoException ex)
+            {
+                return StatusCode(403, new { exito = 0, dato = (object?)null, status = ex.Message });
             }
             catch (Exception ex)
             {
@@ -130,7 +164,7 @@ namespace ApiWeb.Controllers
         {
             try
             {
-                var ds = _service.Listar(idRol, idTerritorio, idUsuarioSupervisor, soloActivos);
+                var ds = _service.Listar(idRol, idTerritorio, idUsuarioSupervisor, soloActivos, ObtenerIdUsuarioActual(), ObtenerIdTerritorioActual());
 
                 if (ds == null || ds.Rows.Count == 0)
                 {
@@ -173,7 +207,7 @@ namespace ApiWeb.Controllers
         {
             try
             {
-                var ds = _service.Listar(idRol, idTerritorio, idUsuarioSupervisor, soloActivos);
+                var ds = _service.Listar(idRol, idTerritorio, idUsuarioSupervisor, soloActivos, ObtenerIdUsuarioActual(), ObtenerIdTerritorioActual());
 
                 if (ds == null || ds.Rows.Count == 0)
                 {

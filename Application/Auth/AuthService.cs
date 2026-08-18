@@ -59,8 +59,9 @@ namespace Application.Auth
             int idUsuario = Convert.ToInt32(row["IdUsuario"]);
             string usuarioDb = row["Usuario"]?.ToString() ?? "";
             string rol = row["Rol"]?.ToString() ?? "";
+            int? idTerritorio = row["IdTerritorio"] == DBNull.Value ? (int?)null : Convert.ToInt32(row["IdTerritorio"]);
 
-            string token = _jwtTokenService.GenerateToken(idUsuario, usuarioDb, rol);
+            string token = _jwtTokenService.GenerateToken(idUsuario, usuarioDb, rol, idTerritorio);
 
             var dato = new
             {
@@ -69,7 +70,7 @@ namespace Application.Auth
                 NombreCompleto = row["NombreCompleto"]?.ToString(),
                 IdRol = Convert.ToInt32(row["IdRol"]),
                 Rol = rol,
-                IdTerritorio = row["IdTerritorio"] == DBNull.Value ? (int?)null : Convert.ToInt32(row["IdTerritorio"]),
+                IdTerritorio = idTerritorio,
                 Territorio = row["Territorio"] == DBNull.Value ? null : row["Territorio"]?.ToString(),
                 IdUsuarioSupervisor = row["IdUsuarioSupervisor"] == DBNull.Value ? (int?)null : Convert.ToInt32(row["IdUsuarioSupervisor"]),
                 Token = token
