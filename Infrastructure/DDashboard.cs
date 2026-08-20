@@ -5,24 +5,28 @@ namespace Infrastructure
 {
     public class DDashboard : DbHelper
     {
-        public DataTable AdminKpis()
+        public DataTable AdminKpis(string idUsuario)
         {
-            return EjecutarPA("pa_dashboard_admin_kpis");
+            return EjecutarPA("pa_dashboard_admin_kpis",
+                new SqlParameter("@IdUsuario", SqlDbType.Int) { Value = idUsuario });
         }
 
-        public DataTable AdminRankingMovilizadores()
+        public DataTable AdminRankingMovilizadores(string idUsuario)
         {
-            return EjecutarPA("pa_dashboard_admin_ranking_movilizadores");
+            return EjecutarPA("pa_dashboard_admin_ranking_movilizadores",
+                new SqlParameter("@IdUsuario", SqlDbType.Int) { Value = idUsuario });
         }
 
-        public DataTable AdminRankingZonas()
+        public DataTable AdminRankingZonas(string idUsuario)
         {
-            return EjecutarPA("pa_dashboard_admin_ranking_zonas");
+            return EjecutarPA("pa_dashboard_admin_ranking_zonas",
+                new SqlParameter("@IdUsuario", SqlDbType.Int) { Value = idUsuario });
         }
 
-        public DataTable AdminDiaDPorZona()
+        public DataTable AdminDiaDPorZona(string idUsuario)
         {
-            return EjecutarPA("pa_dashboard_admin_diad_por_zona");
+            return EjecutarPA("pa_dashboard_admin_diad_por_zona",
+                new SqlParameter("@IdUsuario", SqlDbType.Int) { Value = idUsuario });
         }
 
         public DataTable GerenteKpis(int idGerente)
@@ -72,10 +76,11 @@ namespace Infrastructure
                 new SqlParameter("@HoraFin", SqlDbType.Int) { Value = horaFin }
             );
         }
-        public DataTable AdminComparativoZonas()
+        public DataTable AdminComparativoZonas(string idUsuario)
         {
             return EjecutarPA (
-                "PA_DASHBOARD_ADMIN_COMPARATIVO_ZONAS"
+                "PA_DASHBOARD_ADMIN_COMPARATIVO_ZONAS",
+                new SqlParameter("@IdUsuario", SqlDbType.VarChar, 50) { Value = idUsuario }
             );
         }
         public DataTable AdminComparativoGerentes(string idUsuario)

@@ -7,24 +7,24 @@ namespace Application.Dashboard
     {
         private readonly DDashboard _data = new DDashboard();
 
-        public DataTable AdminKpis()
+        public DataTable AdminKpis(string idUsuario)
         {
-            return _data.AdminKpis();
+            return _data.AdminKpis( idUsuario);
         }
 
-        public DataTable AdminRankingMovilizadores()
+        public DataTable AdminRankingMovilizadores(string idUsuario)
         {
-            return _data.AdminRankingMovilizadores();
+            return _data.AdminRankingMovilizadores(idUsuario);
         }
 
-        public DataTable AdminRankingZonas()
+        public DataTable AdminRankingZonas(string idUsuario)
         {
-            return _data.AdminRankingZonas();
+            return _data.AdminRankingZonas( idUsuario);
         }
 
-        public DataTable AdminDiaDPorZona()
+        public DataTable AdminDiaDPorZona(string idUsuario)
         {
-            return _data.AdminDiaDPorZona();
+            return _data.AdminDiaDPorZona( idUsuario);
         }
 
         public DataTable GerenteKpis(int idGerente)
@@ -53,9 +53,9 @@ namespace Application.Dashboard
         {
             return _data.GerenteDiaDResumen(idGerente, horaInicio ,  horaFin );
         }
-        public DataTable AdminComparativoZonas()
+        public DataTable AdminComparativoZonas(string idUsuario)
         {
-            return _data.AdminComparativoZonas();
+            return _data.AdminComparativoZonas( idUsuario);
         }
         public DataTable AdminComparativoGerentes(string idUsuario)
         {

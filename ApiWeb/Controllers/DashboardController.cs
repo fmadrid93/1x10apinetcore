@@ -16,11 +16,11 @@ namespace ApiWeb.Controllers
         private readonly Application.Reportes.IExcelExportService _excelExportService = new ExcelExportService();
 
         [HttpGet("admin-kpis")]
-        public IActionResult AdminKpis()
+        public IActionResult AdminKpis(string idUsuario)
         {
             try
             {
-                var ds = _service.AdminKpis();
+                var ds = _service.AdminKpis( idUsuario);
                 return Ok(new { exito = 1, dato = ds, status = "ok" });
             }
             catch (Exception ex)
@@ -30,11 +30,11 @@ namespace ApiWeb.Controllers
         }
 
         [HttpGet("admin-ranking-movilizadores")]
-        public IActionResult AdminRankingMovilizadores()
+        public IActionResult AdminRankingMovilizadores(string idUsuario)
         {
             try
             {
-                var ds = _service.AdminRankingMovilizadores();
+                var ds = _service.AdminRankingMovilizadores(idUsuario);
                 return Ok(new { exito = 1, dato = ds, status = "ok" });
             }
             catch (Exception ex)
@@ -44,11 +44,11 @@ namespace ApiWeb.Controllers
         }
 
         [HttpGet("admin-ranking-zonas")]
-        public IActionResult AdminRankingZonas()
+        public IActionResult AdminRankingZonas(string idUsuario)
         {
             try
             {
-                var ds = _service.AdminRankingZonas();
+                var ds = _service.AdminRankingZonas( idUsuario);
                 return Ok(new { exito = 1, dato = ds, status = "ok" });
             }
             catch (Exception ex)
@@ -58,11 +58,11 @@ namespace ApiWeb.Controllers
         }
 
         [HttpGet("admin-diad-por-zona")]
-        public IActionResult AdminDiaDPorZona()
+        public IActionResult AdminDiaDPorZona(string idUsuario)
         {
             try
             {
-                var ds = _service.AdminDiaDPorZona();
+                var ds = _service.AdminDiaDPorZona( idUsuario);
                 return Ok(new { exito = 1, dato = ds, status = "ok" });
             }
             catch (Exception ex)
@@ -174,11 +174,11 @@ namespace ApiWeb.Controllers
         }
         [HttpGet("admin-comparativo-zonas")]
         [Authorize(Roles = "ADMINISTRADOR")]
-        public IActionResult AdminComparativoZonas()
+        public IActionResult AdminComparativoZonas(string idUsuario)
         {
             try
             {
-                var ds = _service.AdminComparativoZonas();
+                var ds = _service.AdminComparativoZonas( idUsuario);
 
                 return Ok(new
                 {
@@ -220,11 +220,11 @@ namespace ApiWeb.Controllers
         }
         [HttpGet("admin-ranking-zonas-excel")]
         [Authorize(Roles = "ADMINISTRADOR")]
-        public IActionResult AdminRankingZonasExcel()
+        public IActionResult AdminRankingZonasExcel(string idUsuario)
         {
             try
             {
-                var ds = _service.AdminRankingZonas();
+                var ds = _service.AdminRankingZonas( idUsuario);
 
                 if (ds == null || ds.Rows.Count == 0)
                 {
@@ -260,11 +260,11 @@ namespace ApiWeb.Controllers
         }
         [HttpGet("admin-ranking-movilizadores-excel")]
         [Authorize(Roles = "ADMINISTRADOR")]
-        public IActionResult AdminRankingMovilizadoresExcel()
+        public IActionResult AdminRankingMovilizadoresExcel(string idUsuario)
         {
             try
             {
-                var ds = _service.AdminRankingMovilizadores();
+                var ds = _service.AdminRankingMovilizadores( idUsuario);
 
                 if (ds == null || ds.Rows.Count == 0)
                 {
@@ -302,11 +302,11 @@ namespace ApiWeb.Controllers
         }
         [HttpGet("admin-diad-por-zona-excel")]
         [Authorize(Roles = "ADMINISTRADOR")]
-        public IActionResult AdminDiaDPorZonaExcel()
+        public IActionResult AdminDiaDPorZonaExcel(string idUsuario)
         {
             try
             {
-                var ds = _service.AdminDiaDPorZona();
+                var ds = _service.AdminDiaDPorZona( idUsuario);
 
                 if (ds == null || ds.Rows.Count == 0)
                 {
