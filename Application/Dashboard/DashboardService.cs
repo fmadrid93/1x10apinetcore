@@ -57,9 +57,9 @@ namespace Application.Dashboard
         {
             return _data.AdminComparativoZonas();
         }
-        public DataTable AdminComparativoGerentes()
+        public DataTable AdminComparativoGerentes(string idUsuario)
         {
-            return _data.AdminComparativoGerentes();
+            return _data.AdminComparativoGerentes(idUsuario);
         }
     }
 }

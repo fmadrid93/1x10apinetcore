@@ -78,10 +78,11 @@ namespace Infrastructure
                 "PA_DASHBOARD_ADMIN_COMPARATIVO_ZONAS"
             );
         }
-        public DataTable AdminComparativoGerentes()
+        public DataTable AdminComparativoGerentes(string idUsuario)
         {
             return EjecutarPA(
-                "PA_DASHBOARD_ADMIN_COMPARATIVO_GERENTES"
+                "PA_DASHBOARD_ADMIN_COMPARATIVO_GERENTES",
+                new SqlParameter("@IdUsuario", SqlDbType.VarChar,50) { Value = idUsuario }
             );
         }
     }

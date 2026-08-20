@@ -197,11 +197,11 @@ namespace ApiWeb.Controllers
         }
         [HttpGet("admin-comparativo-gerentes")]
         [Authorize(Roles = "ADMINISTRADOR")]
-        public IActionResult AdminComparativoGerentes()
+        public IActionResult AdminComparativoGerentes(string idUsuario)
         {
             try
             {
-                var ds = _service.AdminComparativoGerentes();
+                var ds = _service.AdminComparativoGerentes(idUsuario);
 
                 return Ok(new
                 {
