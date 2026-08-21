@@ -25,7 +25,17 @@
       - Gerente: "idGerente"
     y @IdSupervisorPropio = idGerente solo cuando quien llama es gerente
     (para admin va NULL, porque su alcance ya es jerarquico via @IdsCreador).
+
+    Nota: este procedure es solo lectura (SELECT), asi que el requisito de
+    QUOTED_IDENTIFIER ON del indice filtrado de Usuario no le aplica en
+    estricto rigor -- se agrega igual por consistencia con el resto de
+    procedures de Usuario.
 */
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 
 CREATE OR ALTER PROCEDURE pa_usuario_listar
     @IdRol INT = NULL,

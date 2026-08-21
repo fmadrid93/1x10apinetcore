@@ -10,7 +10,18 @@
 
     @IdUsuarioDelete y @Motivo son opcionales para no romper llamadores
     existentes.
+
+    IMPORTANTE: Usuario tiene un indice unico FILTRADO
+    (UX_Usuario_Usuario, WHERE Usuario IS NOT NULL). Cualquier UPDATE
+    contra esta tabla exige QUOTED_IDENTIFIER ON en la sesion que crea el
+    procedure (si no, SQL Server da error "SET options have incorrect
+    settings" al ejecutarlo). Por eso los SET de abajo son obligatorios.
 */
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 
 CREATE OR ALTER PROCEDURE pa_usuario_eliminar_logico
     @IdUsuario INT,

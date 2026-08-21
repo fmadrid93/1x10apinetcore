@@ -8,7 +8,18 @@
     Se mantiene el contrato de retorno original (Exito/Mensaje) tal cual
     lo consume hoy el backend/frontend -- no se fuerza el @@ROWCOUNT del
     §23.5 aqui para no cambiar un contrato de API ya en uso.
+
+    IMPORTANTE: Usuario tiene un indice unico FILTRADO
+    (UX_Usuario_Usuario, WHERE Usuario IS NOT NULL). Cualquier UPDATE
+    contra esta tabla exige QUOTED_IDENTIFIER ON en la sesion que crea el
+    procedure (si no, SQL Server da error "SET options have incorrect
+    settings" al ejecutarlo). Por eso los SET de abajo son obligatorios.
 */
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 
 CREATE OR ALTER PROCEDURE pa_usuario_actualizar
     @IdUsuario INT,
