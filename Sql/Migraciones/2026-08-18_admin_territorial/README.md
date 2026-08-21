@@ -29,6 +29,16 @@ Ejecutar los scripts **en orden** contra la base `AppCampana1x10`.
     gerentes) y `@IdSupervisorPropio` (un gerente también ve los
     movilizadores que le asignaron como supervisor, aunque no los haya
     creado él).
+11. `11_backfill_gerentes_creador_inferido.sql` — para usuarios cargados
+    directo en la base (sin pasar por la API) que quedaron con
+    `IdUsuarioCreate` vacío: en gerentes, el `IdUsuarioSupervisor` ya
+    apunta al admin real que los "creó" (regla de negocio), así que se usa
+    ese valor como creador. **Correr antes que el script 12.**
+12. `12_backfill_admins_sin_rastro_a_superadmin.sql` — para usuarios sin
+    `IdUsuarioCreate` **ni** `IdUsuarioSupervisor` (típicamente admins
+    sembrados directo, ya que un admin nunca tiene supervisor) — no hay
+    forma de inferir su creador real, así que se les asigna `superadmin`
+    como creador, siguiendo la misma convención del script 02.
 
 Todos los scripts usan `CREATE OR ALTER` / verificación previa, así que se
 pueden volver a correr sin error si ya se ejecutaron antes.
