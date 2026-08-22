@@ -13,7 +13,10 @@ namespace Application.Recinto
     public class RecintoService
     {
         private readonly DRecinto _data = new DRecinto();
-
+        public DataTable ListarXTerritorio(int idTerritorio)
+        {
+            return _data.ListarXTerritorio(idTerritorio);
+        }
         public DataTable Listar()
         {
             return _data.Listar();

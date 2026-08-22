@@ -12,7 +12,10 @@ namespace Application.Votante
     public class VotanteService
     {
         private readonly DVotante _data = new DVotante();
-
+        public DataTable ObtenerVotante(string ci)
+        {
+            return _data.ObtenerVotante(ci);
+        }
         public DataTable BuscarPadronGlobal(string texto)
         {
             return _data.BuscarPadronGlobal(texto);

@@ -18,6 +18,19 @@ namespace ApiWeb.Controllers
 		//[HttpPost("insertar")]
        
 
+        [HttpGet("listar/{idTerritorio}")]
+        public IActionResult ListarXTerritorio(int idTerritorio)
+        {
+            try
+            {
+                var ds = _service.ListarXTerritorio(idTerritorio);
+                return Ok(new { exito = 1, dato = ds, status = "ok" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { exito = 0, dato = (object?)null, status = ex.Message });
+            }
+        }
         [HttpGet("listar")]
         public IActionResult Listar()
         {

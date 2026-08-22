@@ -5,11 +5,33 @@ using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
+//[Authorize]
 public class VotanteController : ControllerBase
 {
     private readonly VotanteService _service = new VotanteService();
-
+    [HttpGet("obtener-votante")]
+    public IActionResult ObtenerVotante([FromQuery] string ci)
+    {
+        try
+        {
+            var ds = _service.ObtenerVotante(ci);
+            return Ok(new
+            {
+                exito = 1,
+                dato = ds,
+                status = "ok"
+            });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new
+            {
+                exito = 0,
+                dato = (object?)null,
+                status = ex.Message
+            });
+        }
+    }
     [HttpGet("buscar-global")]
     public IActionResult BuscarGlobal([FromQuery] string texto)
     {

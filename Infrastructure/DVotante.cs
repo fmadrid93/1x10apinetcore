@@ -5,6 +5,13 @@ using System.Data;
 
 public class DVotante : DbHelper
 {
+    public DataTable ObtenerVotante(string ci)
+    {
+        return EjecutarPA(
+            "PA_ObtenerVotante",
+            new SqlParameter("@CI", SqlDbType.VarChar, 100) { Value = ci }
+        );
+    }
     public DataTable BuscarPadronGlobal(string texto)
     {
         return EjecutarPA(
