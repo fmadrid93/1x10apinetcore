@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using Microsoft.Data.SqlClient;
 
@@ -118,6 +118,30 @@ namespace Infrastructure
                 "pa_usuario_obtener_para_login",
                 new SqlParameter("@Usuario", SqlDbType.VarChar, 50) { Value = usuario }
             );
+        }
+
+        public bool ExisteUsuario(string usuario, int? excludeIdUsuario = null)
+        {
+            try
+            {
+                string sql = @"
+                    SELECT TOP 1 1
+                    FROM Usuario WITH (NOLOCK)
+                    WHERE LTRIM(RTRIM(Usuario)) = @Usuario
+                      AND (@ExcludeId IS NULL OR IdUsuario <> @ExcludeId)";
+
+                var dt = EjecutarSQL(
+                    sql,
+                    new SqlParameter("@Usuario", SqlDbType.VarChar, 50) { Value = (object?)usuario?.Trim() ?? "" },
+                    new SqlParameter("@ExcludeId", SqlDbType.Int) { Value = (object?)excludeIdUsuario ?? DBNull.Value }
+                );
+
+                return dt != null && dt.Rows.Count > 0;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

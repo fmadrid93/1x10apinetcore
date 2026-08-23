@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using Microsoft.Data.SqlClient;
 
@@ -138,6 +138,30 @@ namespace Infrastructure
                 "pa_persona_movilizada_resumen_movilizador",
                 new SqlParameter("@IdUsuarioMovilizador", SqlDbType.Int) { Value = idUsuarioMovilizador }
             );
+        }
+
+        public DataTable VerificarExisteCI(string ci, int? excludeIdPersona = null)
+        {
+            string sql = @"
+                SELECT TOP 1
+                    pm.IdPersonaMovilizada,
+                    (ISNULL(pm.Nombres, '') + ' ' + ISNULL(pm.Apellidos, '')) AS NombreCompleto,
+                    ISNULL(u.NombreCompleto, 'Desconocido') AS NombreMovilizador
+                FROM PersonaMovilizada pm WITH (NOLOCK)
+                LEFT JOIN Usuario u WITH (NOLOCK) ON pm.IdUsuarioMovilizador = u.IdUsuario
+                WHERE (pm.Activo IS NULL OR pm.Activo = 1)
+                  AND LTRIM(RTRIM(pm.CI)) = @CI";
+
+            if (excludeIdPersona.HasValue && excludeIdPersona.Value > 0)
+            {
+                sql += " AND pm.IdPersonaMovilizada <> @ExcludeId";
+                return EjecutarSQL(sql,
+                    new SqlParameter("@CI", SqlDbType.VarChar, 50) { Value = ci.Trim() },
+                    new SqlParameter("@ExcludeId", SqlDbType.Int) { Value = excludeIdPersona.Value }
+                );
+            }
+
+            return EjecutarSQL(sql, new SqlParameter("@CI", SqlDbType.VarChar, 50) { Value = ci.Trim() });
         }
     }
 }

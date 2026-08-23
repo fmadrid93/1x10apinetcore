@@ -1,4 +1,4 @@
-﻿using System.Data;
+using System.Data;
 using Infrastructure;
 
 namespace Application.PersonaMovilizada
@@ -6,6 +6,7 @@ namespace Application.PersonaMovilizada
     public class PersonaMovilizadaService
     {
         private readonly DPersonaMovilizada _data = new DPersonaMovilizada();
+        private readonly DConfiguracion _config = new DConfiguracion();
 
         public DataTable Insertar(
          int idUsuarioMovilizador,
@@ -26,6 +27,19 @@ namespace Application.PersonaMovilizada
          decimal? longitud
      )
         {
+            if (!string.IsNullOrWhiteSpace(ci))
+            {
+                bool permitirDuplicados = _config.ObtenerPermitirDuplicados();
+                if (!permitirDuplicados)
+                {
+                    var existente = _data.VerificarExisteCI(ci.Trim());
+                    if (existente != null && existente.Rows.Count > 0)
+                    {
+                        throw new Exception($"El CI '{ci.Trim()}' ya fue registrado por otra persona. No se permiten votantes duplicados.");
+                    }
+                }
+            }
+
             return _data.Insertar(
                 idUsuarioMovilizador,
                 idTerritorio,
@@ -66,6 +80,19 @@ namespace Application.PersonaMovilizada
             decimal? longitud
         )
         {
+            if (!string.IsNullOrWhiteSpace(ci))
+            {
+                bool permitirDuplicados = _config.ObtenerPermitirDuplicados();
+                if (!permitirDuplicados)
+                {
+                    var existente = _data.VerificarExisteCI(ci.Trim(), idPersonaMovilizada);
+                    if (existente != null && existente.Rows.Count > 0)
+                    {
+                        throw new Exception($"El CI '{ci.Trim()}' ya fue registrado por otra persona. No se permiten votantes duplicados.");
+                    }
+                }
+            }
+
             return _data.Actualizar(
                 idPersonaMovilizada,
                 idUsuarioMovilizador,

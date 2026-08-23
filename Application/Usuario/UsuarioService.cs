@@ -73,8 +73,18 @@ namespace Application.Usuario
             }
             // Super admin (rolCreador == ADMINISTRADOR && idTerritorioCreador == null): libre, sin forzar nada.
 
+            if (string.IsNullOrWhiteSpace(usuario))
+            {
+                throw new Exception("El nombre de usuario es obligatorio.");
+            }
+
+            if (_data.ExisteUsuario(usuario.Trim()))
+            {
+                throw new Exception($"El usuario '{usuario.Trim()}' ya se encuentra registrado. Por favor elija un nombre de usuario diferente.");
+            }
+
             string claveHash = BCrypt.Net.BCrypt.HashPassword(clave);
-            return _data.Insertar(idRol, idTerritorioFinal, idUsuarioSupervisorFinal, usuario, claveHash, nombreCompleto, ci, celular, email, idUsuarioCreador);
+            return _data.Insertar(idRol, idTerritorioFinal, idUsuarioSupervisorFinal, usuario.Trim(), claveHash, nombreCompleto, ci, celular, email, idUsuarioCreador);
         }
 
         public DataTable Actualizar(
