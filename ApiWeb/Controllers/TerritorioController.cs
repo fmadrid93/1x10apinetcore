@@ -1,4 +1,4 @@
-﻿using Application.Reportes;
+using Application.Reportes;
 using Application.Territorio;
 using Dtos.Territorio;
 using Microsoft.AspNetCore.Authorization;
@@ -19,7 +19,7 @@ namespace ApiWeb.Controllers
         {
             try
             {
-                var ds = _service.Insertar(request.IdTerritorioPadre, request.Nombre, request.TipoTerritorio, request.Codigo);
+                var ds = _service.Insertar(request.IdTerritorioPadre, request.Nombre, request.TipoTerritorio, request.Codigo, request.UrlServidorWhatsApp);
                 return Ok(new { exito = 1, dato = ds, status = "ok" });
             }
             catch (Exception ex)
@@ -32,7 +32,7 @@ namespace ApiWeb.Controllers
         {
             try
             {
-                var ds = _service.Actualizar(request.IdTerritorio,request.IdTerritorioPadre, request.Nombre, request.TipoTerritorio, request.Codigo, request.Activo);
+                var ds = _service.Actualizar(request.IdTerritorio, request.IdTerritorioPadre, request.Nombre, request.TipoTerritorio, request.Codigo, request.Activo, request.UrlServidorWhatsApp);
                 return Ok(new { exito = 1, dato = ds, status = "ok" });
             }
             catch (Exception ex)

@@ -1,4 +1,4 @@
-﻿using System.Data;
+using System.Data;
 using Infrastructure;
 
 namespace Application.Dashboard
@@ -60,6 +60,11 @@ namespace Application.Dashboard
         public DataTable AdminComparativoGerentes(string idUsuario)
         {
             return _data.AdminComparativoGerentes(idUsuario);
+        }
+
+        public DataTable SuperAdminResumenMunicipios()
+        {
+            return _data.SuperAdminResumenMunicipios();
         }
     }
 }

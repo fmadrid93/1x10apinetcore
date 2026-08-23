@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,5 +14,6 @@ namespace Dtos.Territorio
         public string? Codigo { get; set; }
         public int IdTerritorio { get; set; }
         public bool Activo { get; set; }
+        public string? UrlServidorWhatsApp { get; set; }
     }
 }

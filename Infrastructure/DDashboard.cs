@@ -1,4 +1,4 @@
-﻿using System.Data;
+using System.Data;
 using Microsoft.Data.SqlClient;
 
 namespace Infrastructure
@@ -89,6 +89,32 @@ namespace Infrastructure
                 "PA_DASHBOARD_ADMIN_COMPARATIVO_GERENTES",
                 new SqlParameter("@IdUsuario", SqlDbType.VarChar,50) { Value = idUsuario }
             );
+        }
+
+        public DataTable SuperAdminResumenMunicipios()
+        {
+            string sql = @"
+select 
+    u.NombreCompleto as Administrador, 
+    t.Nombre as Municipio,
+    (select count(*) 
+     from Usuario g with (nolock) 
+     where g.IdUsuarioSupervisor = u.IdUsuario and g.Activo = 1 and g.IdRol = 2) as Concejales,
+    (select count(*) 
+     from Usuario g1 with (nolock) 
+     join Usuario m with (nolock) on m.IdUsuarioSupervisor = g1.IdUsuario and m.Activo = 1 and m.IdRol = 3
+     where g1.IdUsuarioSupervisor = u.IdUsuario and g1.Activo = 1 and g1.IdRol = 2) as Punteros,
+    (select count(*) 
+     from Usuario g1 with (nolock) 
+     join Usuario m with (nolock) on m.IdUsuarioSupervisor = g1.IdUsuario and m.Activo = 1 and m.IdRol = 3
+     join PersonaMovilizada pm with (nolock) on pm.IdUsuarioMovilizador = m.IdUsuario and (pm.Activo is null or pm.Activo = 1)
+     where g1.IdUsuarioSupervisor = u.IdUsuario and g1.Activo = 1 and g1.IdRol = 2) as PersonasMovilizadas
+from Usuario u with (nolock)
+join Territorio t with (nolock) on u.IdTerritorio = t.IdTerritorio and t.Activo = 1
+where u.Activo = 1 and u.IdRol = 1 and u.IdTerritorio is not null and u.NombreCompleto not like '%madrid%'
+order by t.Nombre, u.NombreCompleto";
+
+            return EjecutarSQL(sql);
         }
     }
 }

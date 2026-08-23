@@ -1,4 +1,4 @@
-﻿using Application.Dashboard;
+using Application.Dashboard;
 using Application.Reportes;
 using Domain;
 using Infrastructure;
@@ -22,6 +22,34 @@ namespace ApiWeb.Controllers
             {
                 var ds = _service.AdminKpis( idUsuario);
                 return Ok(new { exito = 1, dato = ds, status = "ok" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { exito = 0, dato = (object?)null, status = ex.Message });
+            }
+        }
+
+        [HttpGet("superadmin-resumen-municipios")]
+        public IActionResult SuperAdminResumenMunicipios()
+        {
+            try
+            {
+                var dt = _service.SuperAdminResumenMunicipios();
+                var lista = new List<object>();
+
+                foreach (System.Data.DataRow row in dt.Rows)
+                {
+                    lista.Add(new
+                    {
+                        administrador = row["Administrador"] != DBNull.Value ? row["Administrador"].ToString() : "",
+                        municipio = row["Municipio"] != DBNull.Value ? row["Municipio"].ToString() : "",
+                        concejales = row["Concejales"] != DBNull.Value ? Convert.ToInt32(row["Concejales"]) : 0,
+                        punteros = row["Punteros"] != DBNull.Value ? Convert.ToInt32(row["Punteros"]) : 0,
+                        personasMovilizadas = row["PersonasMovilizadas"] != DBNull.Value ? Convert.ToInt32(row["PersonasMovilizadas"]) : 0
+                    });
+                }
+
+                return Ok(new { exito = 1, dato = lista, status = "ok" });
             }
             catch (Exception ex)
             {

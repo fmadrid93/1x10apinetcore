@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using Infrastructure;
 using Microsoft.Extensions.Configuration;
@@ -62,6 +62,7 @@ namespace Application.Auth
             int? idTerritorio = row["IdTerritorio"] == DBNull.Value ? (int?)null : Convert.ToInt32(row["IdTerritorio"]);
 
             string token = _jwtTokenService.GenerateToken(idUsuario, usuarioDb, rol, idTerritorio);
+            string? urlServidorWhatsApp = new DWhatsApp().ObtenerUrlServidorWhatsAppPorUsuario(idUsuario);
 
             var dato = new
             {
@@ -73,6 +74,7 @@ namespace Application.Auth
                 IdTerritorio = idTerritorio,
                 Territorio = row["Territorio"] == DBNull.Value ? null : row["Territorio"]?.ToString(),
                 IdUsuarioSupervisor = row["IdUsuarioSupervisor"] == DBNull.Value ? (int?)null : Convert.ToInt32(row["IdUsuarioSupervisor"]),
+                UrlServidorWhatsApp = urlServidorWhatsApp,
                 Token = token
             };
 

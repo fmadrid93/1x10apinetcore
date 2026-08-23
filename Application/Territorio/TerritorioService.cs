@@ -1,4 +1,4 @@
-﻿using System.Data;
+using System.Data;
 using Infrastructure;
 
 namespace Application.Territorio
@@ -7,9 +7,9 @@ namespace Application.Territorio
     {
         private readonly DTerritorio _data = new DTerritorio();
 
-        public DataTable Insertar(int? idTerritorioPadre, string nombre, string tipoTerritorio, string? codigo)
+        public DataTable Insertar(int? idTerritorioPadre, string nombre, string tipoTerritorio, string? codigo, string? urlServidorWhatsApp = null)
         {
-            return _data.Insertar(idTerritorioPadre, nombre, tipoTerritorio, codigo);
+            return _data.Insertar(idTerritorioPadre, nombre, tipoTerritorio, codigo, urlServidorWhatsApp);
         }
 
         public DataTable Listar(bool soloActivos)
@@ -21,9 +21,10 @@ namespace Application.Territorio
         {
             return _data.ObtenerPorId(idTerritorio);
         }
-        public DataTable Actualizar(int idTerritorio, int? idTerritorioPadre, string nombre, string tipoTerritorio, string? codigo, bool activo)
+
+        public DataTable Actualizar(int idTerritorio, int? idTerritorioPadre, string nombre, string tipoTerritorio, string? codigo, bool activo, string? urlServidorWhatsApp = null)
         {
-            return _data.Actualizar(idTerritorio, idTerritorioPadre, nombre, tipoTerritorio, codigo, activo);
+            return _data.Actualizar(idTerritorio, idTerritorioPadre, nombre, tipoTerritorio, codigo, activo, urlServidorWhatsApp);
         }
     }
 }
