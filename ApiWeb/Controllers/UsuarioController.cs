@@ -201,7 +201,7 @@ namespace ApiWeb.Controllers
                     ("CI", "CI"),
                     ("Celular", "Celular"),
                     ("Email", "Email"),
-                    ("Activo", "Activo")
+                    ("Activo", "Activo"), ("TotalPersonas", "TotalPersonas")
                 );
             }
             catch (Exception ex)

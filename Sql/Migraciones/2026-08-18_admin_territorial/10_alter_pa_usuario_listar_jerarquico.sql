@@ -1,35 +1,6 @@
 /*
     10. Extiende pa_usuario_listar para soportar visibilidad jerarquica
-    (item 3: "el gerente tambien puede registrar usuarios").
-
-    Reglas confirmadas con el cliente:
-      - Admin territorial: ve lo que EL creo + lo que crearon SUS gerentes
-        (jerarquico, no solo creacion directa).
-      - Gerente: ve los movilizadores/verificadores que EL creo, MAS los
-        movilizadores que le asignaron como supervisor (aunque los haya
-        creado otro, p.ej. el admin). Los verificadores NO tienen concepto
-        de supervisor: solo los ve/gestiona quien los creo.
-      - Super admin: sin filtro.
-
-    Se reemplaza el filtro simple "@IdUsuarioCreate = X" por dos parametros
-    combinables:
-
-      @IdsCreador       VARCHAR(MAX) -- CSV de IdUsuario: incluye filas
-                                          cuyo IdUsuarioCreate este en la lista.
-      @IdSupervisorPropio INT        -- ademas incluye filas cuyo
-                                          IdUsuarioSupervisor sea este id.
-
-    Si ambos son NULL, no se filtra (super admin). El backend arma
-    @IdsCreador segun el rol de quien llama:
-      - Admin: "idAdmin,idGerente1,idGerente2,..."
-      - Gerente: "idGerente"
-    y @IdSupervisorPropio = idGerente solo cuando quien llama es gerente
-    (para admin va NULL, porque su alcance ya es jerarquico via @IdsCreador).
-
-    Nota: este procedure es solo lectura (SELECT), asi que el requisito de
-    QUOTED_IDENTIFIER ON del indice filtrado de Usuario no le aplica en
-    estricto rigor -- se agrega igual por consistencia con el resto de
-    procedures de Usuario.
+    y contar personas registradas por cada movilizador.
 */
 
 SET ANSI_NULLS ON
@@ -64,7 +35,13 @@ BEGIN
         u.Email,
         u.Activo,
         u.FechaCreate,
-        u.FechaUpdate
+        u.FechaUpdate,
+        ISNULL((
+            SELECT COUNT(1)
+            FROM PersonaMovilizada pm WITH (NOLOCK)
+            WHERE pm.IdUsuarioMovilizador = u.IdUsuario
+              AND (pm.Activo IS NULL OR pm.Activo = 1)
+        ), 0) AS TotalPersonas
     FROM Usuario u
     INNER JOIN Rol r ON r.IdRol = u.IdRol
     LEFT JOIN Territorio t ON t.IdTerritorio = u.IdTerritorio
