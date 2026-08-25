@@ -23,6 +23,7 @@ namespace Infrastructure
                     SELECT 
                         pm.IdPersonaMovilizada,
                         pm.IdUsuarioMovilizador,
+                        u.IdUsuarioSupervisor,
                         pm.Nombres,
                         pm.Apellidos,
                         pm.CI,
@@ -47,6 +48,7 @@ namespace Infrastructure
                     SELECT 
                         pm.IdPersonaMovilizada,
                         pm.IdUsuarioMovilizador,
+                        u.IdUsuarioSupervisor,
                         pm.Nombres,
                         pm.Apellidos,
                         pm.CI,
@@ -61,17 +63,32 @@ namespace Infrastructure
                       AND (pm.Activo IS NULL OR pm.Activo = 1)
                       AND pm.Celular IS NOT NULL 
                       AND LTRIM(RTRIM(pm.Celular)) <> ''
-                    ORDER BY pm.Apellidos, pm.Nombres";
+                    ORDER BY 
+                        CASE WHEN pm.IdUsuarioMovilizador = @IdUsuario THEN 1 ELSE 2 END,
+                        pm.Apellidos, pm.Nombres";
 
                 return EjecutarSQLDirecto(sql, new SqlParameter("@IdUsuario", SqlDbType.Int) { Value = idUsuario });
             }
             else
             {
-                // ADMINISTRADOR u otros roles directivos (todo el ámbito)
+                // ADMINISTRADOR: Blindado a su árbol territorial y equipo (no toca otras estructuras)
                 string sql = @"
+                    WITH ArbolTerritoriosAdmin AS (
+                        SELECT t.IdTerritorio 
+                        FROM Usuario uAdmin WITH (NOLOCK)
+                        INNER JOIN Territorio t WITH (NOLOCK) ON uAdmin.IdTerritorio = t.IdTerritorio
+                        WHERE uAdmin.IdUsuario = @IdUsuario
+
+                        UNION ALL
+
+                        SELECT tHijo.IdTerritorio
+                        FROM Territorio tHijo WITH (NOLOCK)
+                        INNER JOIN ArbolTerritoriosAdmin a ON tHijo.IdTerritorioPadre = a.IdTerritorio
+                    )
                     SELECT 
                         pm.IdPersonaMovilizada,
                         pm.IdUsuarioMovilizador,
+                        u.IdUsuarioSupervisor,
                         pm.Nombres,
                         pm.Apellidos,
                         pm.CI,
@@ -82,14 +99,26 @@ namespace Infrastructure
                         u.NombreCompleto AS NombreMovilizador
                     FROM PersonaMovilizada pm WITH (NOLOCK)
                     LEFT JOIN Usuario u WITH (NOLOCK) ON pm.IdUsuarioMovilizador = u.IdUsuario
+                    LEFT JOIN Usuario uAdmin WITH (NOLOCK) ON uAdmin.IdUsuario = @IdUsuario
                     WHERE (pm.Activo IS NULL OR pm.Activo = 1)
                       AND pm.Celular IS NOT NULL 
                       AND LTRIM(RTRIM(pm.Celular)) <> ''
-                    ORDER BY pm.Apellidos, pm.Nombres";
+                      AND (
+                          uAdmin.IdTerritorio IS NULL -- SuperAdmin Nacional
+                          OR pm.IdTerritorio IN (SELECT IdTerritorio FROM ArbolTerritoriosAdmin)
+                          OR u.IdTerritorio IN (SELECT IdTerritorio FROM ArbolTerritoriosAdmin)
+                          OR u.IdUsuarioSupervisor = @IdUsuario
+                          OR u.IdUsuarioCreate = @IdUsuario
+                          OR pm.IdUsuarioMovilizador = @IdUsuario
+                      )
+                    ORDER BY 
+                        CASE WHEN pm.IdUsuarioMovilizador = @IdUsuario THEN 1 ELSE 2 END,
+                        pm.Apellidos, pm.Nombres";
 
-                return EjecutarSQLDirecto(sql);
+                return EjecutarSQLDirecto(sql, new SqlParameter("@IdUsuario", SqlDbType.Int) { Value = idUsuario });
             }
         }
+
 
         public string? ObtenerUrlServidorWhatsAppPorUsuario(int idUsuario)
         {

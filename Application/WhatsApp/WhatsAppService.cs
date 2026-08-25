@@ -293,6 +293,7 @@ namespace Application.WhatsApp
                     {
                         IdPersonaMovilizada = Convert.ToInt32(row["IdPersonaMovilizada"]),
                         IdUsuarioMovilizador = row["IdUsuarioMovilizador"] == DBNull.Value ? 0 : Convert.ToInt32(row["IdUsuarioMovilizador"]),
+                        IdUsuarioSupervisor = row.Table.Columns.Contains("IdUsuarioSupervisor") && row["IdUsuarioSupervisor"] != DBNull.Value ? (int?)Convert.ToInt32(row["IdUsuarioSupervisor"]) : null,
                         Nombres = row["Nombres"]?.ToString() ?? string.Empty,
                         Apellidos = row["Apellidos"]?.ToString() ?? string.Empty,
                         CI = row["CI"] == DBNull.Value ? null : row["CI"]?.ToString(),
@@ -309,7 +310,19 @@ namespace Application.WhatsApp
 
         public async Task<WhatsAppDifusionResultDto> EnviarDifusionNodoAsync(WhatsAppDifusionRequest request)
         {
-            var destinatarios = ObtenerDestinatariosNodo(request.IdUsuario, request.Rol);
+            var destinatariosBrutos = ObtenerDestinatariosNodo(request.IdUsuario, request.Rol);
+
+            // 1. Filtro estricto anti-duplicados por número de celular (0 duplicados)
+            var celularesVistos = new HashSet<string>();
+            var destinatarios = new List<WhatsAppDestinatarioDto>();
+            foreach (var d in destinatariosBrutos)
+            {
+                string normCel = NormalizarCelular(d.Celular);
+                if (!string.IsNullOrEmpty(normCel) && celularesVistos.Add(normCel))
+                {
+                    destinatarios.Add(d);
+                }
+            }
 
             if (destinatarios.Count == 0)
             {
@@ -342,7 +355,7 @@ namespace Application.WhatsApp
                     Fallidos = 0,
                     EsProgramado = true,
                     FechaProgramada = request.FechaProgramada.Value,
-                    MensajeEstado = $"Campaña de difusión programada exitosamente para el {request.FechaProgramada.Value:dd/MM/yyyy HH:mm} para {destinatarios.Count} destinatarios."
+                    MensajeEstado = $"Campaña de difusión programada exitosamente para el {request.FechaProgramada.Value:dd/MM/yyyy HH:mm} para {destinatarios.Count} destinatarios únicos."
                 };
             }
 
@@ -363,26 +376,76 @@ namespace Application.WhatsApp
                 throw new Exception($"No tienes ninguna sesión de WhatsApp conectada en el servidor ({serverUrl}). Ve a 'Mis Sesiones WhatsApp' y vincula tu número mediante el código QR antes de enviar.");
             }
 
-            int exitosos = 0;
-            int fallidos = 0;
-            int sesionIndex = 0;
-            var sesionesUsadas = new HashSet<string>();
+            // 2. Mapear dueño de cada sesión conectada (u{IdUsuario}_...)
+            int ExtraerIdUsuarioSesion(WhatsAppSessionDto sesion)
+            {
+                if (sesion.Name.StartsWith("u") || sesion.Id.StartsWith("u"))
+                {
+                    string refStr = sesion.Name.StartsWith("u") ? sesion.Name : sesion.Id;
+                    int idx = refStr.IndexOf('_');
+                    if (idx > 1 && int.TryParse(refStr.Substring(1, idx - 1), out int uid))
+                    {
+                        return uid;
+                    }
+                }
+                return request.IdUsuario;
+            }
+
+            var sesionesPorMovilizador = new Dictionary<int, List<WhatsAppSessionDto>>();
+            foreach (var s in sesionesConectadas)
+            {
+                int uid = ExtraerIdUsuarioSesion(s);
+                if (!sesionesPorMovilizador.ContainsKey(uid))
+                {
+                    sesionesPorMovilizador[uid] = new List<WhatsAppSessionDto>();
+                }
+                sesionesPorMovilizador[uid].Add(s);
+            }
+
+            // 3. Organizar los destinatarios en 3 capas de prioridad
+            // Capa 1: Contactos cuyo movilizador TIENE sesión conectada (Afinidad Directa)
+            // Capa 2: Contactos de movilizadores del equipo del Gerente que no tienen sesión
+            // Capa 3: Resto del padrón de la estructura del Administrador
+            var colaAfinidadDirecta = new Dictionary<int, List<WhatsAppDestinatarioDto>>();
+            var colaEquipoGerente = new List<WhatsAppDestinatarioDto>();
+            var colaGeneralAdmin = new List<WhatsAppDestinatarioDto>();
 
             foreach (var dest in destinatarios)
+            {
+                if (sesionesPorMovilizador.ContainsKey(dest.IdUsuarioMovilizador))
+                {
+                    if (!colaAfinidadDirecta.ContainsKey(dest.IdUsuarioMovilizador))
+                    {
+                        colaAfinidadDirecta[dest.IdUsuarioMovilizador] = new List<WhatsAppDestinatarioDto>();
+                    }
+                    colaAfinidadDirecta[dest.IdUsuarioMovilizador].Add(dest);
+                }
+                else if (dest.IdUsuarioSupervisor.HasValue && dest.IdUsuarioSupervisor.Value == request.IdUsuario)
+                {
+                    colaEquipoGerente.Add(dest);
+                }
+                else
+                {
+                    colaGeneralAdmin.Add(dest);
+                }
+            }
+
+            int exitosos = 0;
+            int fallidos = 0;
+            var sesionesUsadas = new HashSet<string>();
+
+            // Función auxiliar de despacho individual
+            async Task EnviarAContactoAsync(WhatsAppDestinatarioDto dest, WhatsAppSessionDto sesion)
             {
                 string celular = NormalizarCelular(dest.Celular);
                 if (string.IsNullOrEmpty(celular))
                 {
                     fallidos++;
-                    continue;
+                    return;
                 }
 
-                // Balanceo Round-Robin entre las sesiones conectadas del usuario
-                var sesionActual = sesionesConectadas[sesionIndex % sesionesConectadas.Count];
-                sesionIndex++;
-                sesionesUsadas.Add(sesionActual.Id);
+                sesionesUsadas.Add(sesion.Id);
 
-                // Personalizar mensaje con variables
                 string textoFinal = request.Mensaje
                     .Replace("{nombre}", dest.Nombres)
                     .Replace("{apellido}", dest.Apellidos)
@@ -391,13 +454,55 @@ namespace Application.WhatsApp
 
                 try
                 {
-                    bool enviado = await EnviarMensajeBridgeAsync(serverUrl, sesionActual.Id, celular, textoFinal);
+                    bool enviado = await EnviarMensajeBridgeAsync(serverUrl, sesion.Id, celular, textoFinal);
                     if (enviado) exitosos++;
                     else fallidos++;
+                    await Task.Delay(new Random().Next(1000, 2200));
                 }
                 catch
                 {
                     fallidos++;
+                }
+            }
+
+
+            // FASE 1: Cada movilizador envía PRIMERO a su propia gente 1x10 (haciendo Round-Robin entre sus propias líneas si tiene varias)
+            foreach (var kvp in colaAfinidadDirecta)
+            {
+                int idMov = kvp.Key;
+                var contactosPropios = kvp.Value;
+                var lineasDelMovilizador = sesionesPorMovilizador[idMov];
+
+                int idxLinea = 0;
+                foreach (var dest in contactosPropios)
+                {
+                    var sesion = lineasDelMovilizador[idxLinea % lineasDelMovilizador.Count];
+                    idxLinea++;
+                    await EnviarAContactoAsync(dest, sesion);
+                }
+            }
+
+            // FASE 2: Colaboración en Round-Robin para la gente del Gerente que no tenía sesión propia
+            if (colaEquipoGerente.Count > 0)
+            {
+                int idxGerente = 0;
+                foreach (var dest in colaEquipoGerente)
+                {
+                    var sesion = sesionesConectadas[idxGerente % sesionesConectadas.Count];
+                    idxGerente++;
+                    await EnviarAContactoAsync(dest, sesion);
+                }
+            }
+
+            // FASE 3: Colaboración en Round-Robin para el padrón general de la estructura del Administrador
+            if (colaGeneralAdmin.Count > 0)
+            {
+                int idxAdmin = 0;
+                foreach (var dest in colaGeneralAdmin)
+                {
+                    var sesion = sesionesConectadas[idxAdmin % sesionesConectadas.Count];
+                    idxAdmin++;
+                    await EnviarAContactoAsync(dest, sesion);
                 }
             }
 
@@ -413,9 +518,10 @@ namespace Application.WhatsApp
                 EncoladosCorrectamente = exitosos,
                 Fallidos = fallidos,
                 SesionesUtilizadas = new List<string>(sesionesUsadas),
-                MensajeEstado = $"Envío completado: {exitosos} mensaje(s) procesados a través de {sesionesUsadas.Count} cuenta(s) en servidor ({serverUrl})."
+                MensajeEstado = $"Envío completado: {exitosos} mensaje(s) procesados por prioridad jerárquica a través de {sesionesUsadas.Count} cuenta(s) en servidor ({serverUrl}). Cero duplicados."
             };
         }
+
 
         public WhatsAppBotConfigDto ObtenerBotConfiguracion(string? nombreCandidato = null)
         {
@@ -614,12 +720,13 @@ namespace Application.WhatsApp
             string digits = System.Text.RegularExpressions.Regex.Replace(celularRaw, @"\D", "");
             if (digits.Length < 7) return string.Empty;
 
-            if (digits.Length == 8)
-            {
-                digits = "591" + digits;
-            }
+            if (digits.StartsWith("595")) return digits;
+            if (digits.StartsWith("09") && digits.Length == 10) return "595" + digits.Substring(1);
+            if (digits.Length == 9 && digits.StartsWith("9")) return "595" + digits;
+            if (digits.Length == 8) return "595" + digits;
 
             return digits;
         }
     }
 }
+

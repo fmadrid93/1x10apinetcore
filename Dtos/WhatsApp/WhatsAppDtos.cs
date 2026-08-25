@@ -47,6 +47,7 @@ namespace Dtos.WhatsApp
     {
         public int IdPersonaMovilizada { get; set; }
         public int IdUsuarioMovilizador { get; set; }
+        public int? IdUsuarioSupervisor { get; set; }
         public string Nombres { get; set; } = string.Empty;
         public string Apellidos { get; set; } = string.Empty;
         public string? CI { get; set; }
@@ -56,6 +57,7 @@ namespace Dtos.WhatsApp
         public string EstadoApoyo { get; set; } = "PENDIENTE"; // PENDIENTE | CONSULTADO | APOYA | NO_APOYA
         public string? NombreMovilizador { get; set; }
     }
+
 
     public class WhatsAppDifusionResultDto
     {
