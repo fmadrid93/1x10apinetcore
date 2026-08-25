@@ -158,5 +158,47 @@ namespace ApiWeb.Controllers
                 return BadRequest(new { exito = 0, dato = (object?)null, status = ex.Message });
             }
         }
+
+        [HttpGet("bot/configuracion")]
+        public IActionResult ObtenerBotConfiguracion([FromQuery] string? candidato = null)
+        {
+            try
+            {
+                var bot = _service.ObtenerBotConfiguracion(candidato);
+                return Ok(new { exito = 1, dato = bot, status = "ok" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { exito = 0, dato = (object?)null, status = ex.Message });
+            }
+        }
+
+        [HttpPost("bot/configuracion")]
+        public IActionResult GuardarBotConfiguracion([FromBody] WhatsAppBotConfigDto request)
+        {
+            try
+            {
+                var bot = _service.GuardarBotConfiguracion(request);
+                return Ok(new { exito = 1, dato = bot, status = "Configuración del bot guardada exitosamente" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { exito = 0, dato = (object?)null, status = ex.Message });
+            }
+        }
+
+        [HttpPost("bot/procesar-respuesta")]
+        public IActionResult ProcesarRespuestaBot([FromBody] WhatsAppBotRespuestaRequest request)
+        {
+            try
+            {
+                var resultado = _service.ProcesarRespuestaBot(request);
+                return Ok(new { exito = 1, dato = resultado, status = "ok" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { exito = 0, dato = (object?)null, status = ex.Message });
+            }
+        }
     }
 }

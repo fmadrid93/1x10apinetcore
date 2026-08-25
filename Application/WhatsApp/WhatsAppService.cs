@@ -322,6 +322,30 @@ namespace Application.WhatsApp
                 };
             }
 
+            // Si se solicitó programar para una fecha/hora futura
+            if (request.FechaProgramada.HasValue && request.FechaProgramada.Value > DateTime.Now.AddMinutes(1))
+            {
+                string sessionsJson = request.SessionIdsSeleccionadas != null ? JsonConvert.SerializeObject(request.SessionIdsSeleccionadas) : null;
+                _dWhatsApp.GuardarCampanaProgramada(
+                    request.IdUsuario,
+                    request.Rol,
+                    request.Mensaje,
+                    request.FechaProgramada.Value,
+                    sessionsJson,
+                    destinatarios.Count
+                );
+
+                return new WhatsAppDifusionResultDto
+                {
+                    TotalDestinatarios = destinatarios.Count,
+                    EncoladosCorrectamente = destinatarios.Count,
+                    Fallidos = 0,
+                    EsProgramado = true,
+                    FechaProgramada = request.FechaProgramada.Value,
+                    MensajeEstado = $"Campaña de difusión programada exitosamente para el {request.FechaProgramada.Value:dd/MM/yyyy HH:mm} para {destinatarios.Count} destinatarios."
+                };
+            }
+
             string serverUrl = ObtenerUrlServidorParaUsuario(request.IdUsuario);
 
             // Obtener sesiones activas en el servidor correspondiente a su territorio
@@ -362,6 +386,7 @@ namespace Application.WhatsApp
                 string textoFinal = request.Mensaje
                     .Replace("{nombre}", dest.Nombres)
                     .Replace("{apellido}", dest.Apellidos)
+                    .Replace("{candidato}", request.NombreCandidato ?? "nuestro candidato")
                     .Replace("{recinto}", dest.RecintoVotacion ?? "");
 
                 try
@@ -376,6 +401,12 @@ namespace Application.WhatsApp
                 }
             }
 
+            if (request.EsBotEncuesta && exitosos > 0)
+            {
+                var celularesEnviados = destinatarios.ConvertAll(d => NormalizarCelular(d.Celular));
+                _dWhatsApp.MarcarComoConsultadosPorCelulares(string.Join(",", celularesEnviados));
+            }
+
             return new WhatsAppDifusionResultDto
             {
                 TotalDestinatarios = destinatarios.Count,
@@ -383,6 +414,144 @@ namespace Application.WhatsApp
                 Fallidos = fallidos,
                 SesionesUtilizadas = new List<string>(sesionesUsadas),
                 MensajeEstado = $"Envío completado: {exitosos} mensaje(s) procesados a través de {sesionesUsadas.Count} cuenta(s) en servidor ({serverUrl})."
+            };
+        }
+
+        public WhatsAppBotConfigDto ObtenerBotConfiguracion(string? nombreCandidato = null)
+        {
+            try
+            {
+                DataTable dt = _dWhatsApp.ObtenerBotConfiguracionBD();
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    var r = dt.Rows[0];
+                    return new WhatsAppBotConfigDto
+                    {
+                        IdBot = Convert.ToInt32(r["IdBot"]),
+                        Titulo = r["Titulo"]?.ToString() ?? "Consulta de Intención de Voto",
+                        NombreCandidato = !string.IsNullOrWhiteSpace(nombreCandidato) ? nombreCandidato : (r["NombreCandidato"]?.ToString() ?? "nuestro candidato"),
+                        PlantillaPregunta = r["PlantillaPregunta"]?.ToString() ?? "",
+                        Opcion1_Texto = r["Opcion1_Texto"]?.ToString() ?? "Sí, totalmente",
+                        Opcion1_EstadoApoyo = r["Opcion1_EstadoApoyo"]?.ToString() ?? "APOYA",
+                        Opcion1_Respuesta = r["Opcion1_Respuesta"]?.ToString() ?? "",
+                        Opcion2_Texto = r["Opcion2_Texto"]?.ToString() ?? "Tal vez / Indeciso",
+                        Opcion2_EstadoApoyo = r["Opcion2_EstadoApoyo"]?.ToString() ?? "CONSULTADO",
+                        Opcion2_Respuesta = r["Opcion2_Respuesta"]?.ToString() ?? "",
+                        Opcion3_Texto = r["Opcion3_Texto"]?.ToString() ?? "No",
+                        Opcion3_EstadoApoyo = r["Opcion3_EstadoApoyo"]?.ToString() ?? "NO_APOYA",
+                        Opcion3_Respuesta = r["Opcion3_Respuesta"]?.ToString() ?? "",
+                        Activo = r["Activo"] == DBNull.Value || Convert.ToBoolean(r["Activo"])
+                    };
+                }
+            }
+            catch { }
+
+            string candidato = string.IsNullOrWhiteSpace(nombreCandidato) ? "nuestro candidato" : nombreCandidato.Trim();
+            return new WhatsAppBotConfigDto
+            {
+                IdBot = 1,
+                Titulo = "Consulta de Intención de Voto",
+                NombreCandidato = candidato,
+                PlantillaPregunta = $"Hola {{nombre}}, ¿apoyarás a {candidato} en las próximas elecciones?\n\n1️⃣ Sí, totalmente\n2️⃣ Tal vez / Indeciso\n3️⃣ No\n\nPor favor responde con el número 1, 2 o 3.",
+                Opcion1_Texto = "Sí, totalmente",
+                Opcion1_EstadoApoyo = "APOYA",
+                Opcion1_Respuesta = $"¡Excelente {{nombre}}! Muchísimas gracias por tu respaldo a {candidato}. ¡Juntos vamos a ganar!",
+                Opcion2_Texto = "Tal vez / Indeciso",
+                Opcion2_EstadoApoyo = "CONSULTADO",
+                Opcion2_Respuesta = $"Gracias {{nombre}}. Te compartiremos nuestras principales propuestas para que conozcas a detalle el plan de trabajo de {candidato}.",
+                Opcion3_Texto = "No",
+                Opcion3_EstadoApoyo = "NO_APOYA",
+                Opcion3_Respuesta = "Comprendemos tu postura, {nombre}. Agradecemos mucho tu sinceridad y tiempo. ¡Que tengas un excelente día!",
+                Activo = true
+            };
+        }
+
+        public WhatsAppBotConfigDto GuardarBotConfiguracion(WhatsAppBotConfigDto bot)
+        {
+            DataTable dt = _dWhatsApp.GuardarBotConfiguracionBD(
+                bot.IdBot,
+                bot.Titulo,
+                bot.NombreCandidato,
+                bot.PlantillaPregunta,
+                bot.Opcion1_Texto,
+                bot.Opcion1_EstadoApoyo,
+                bot.Opcion1_Respuesta,
+                bot.Opcion2_Texto,
+                bot.Opcion2_EstadoApoyo,
+                bot.Opcion2_Respuesta,
+                bot.Opcion3_Texto,
+                bot.Opcion3_EstadoApoyo,
+                bot.Opcion3_Respuesta,
+                bot.Activo
+            );
+            return ObtenerBotConfiguracion(bot.NombreCandidato);
+        }
+
+        public WhatsAppBotRespuestaResultDto ProcesarRespuestaBot(WhatsAppBotRespuestaRequest request)
+        {
+            string texto = (request.TextoRespuesta ?? "").Trim().ToLower();
+            var botCfg = ObtenerBotConfiguracion();
+
+            string estadoApoyo = "CONSULTADO";
+            string mensajeRespuesta = botCfg.Opcion2_Respuesta;
+            bool reconocido = false;
+
+            if (texto.Contains("1") || texto.Contains("si") || texto.Contains("sí") || texto.Contains("totalmente") || texto.Contains("apoyo") || texto.Contains("claro") || texto.Contains("ganar"))
+            {
+                estadoApoyo = "APOYA";
+                mensajeRespuesta = botCfg.Opcion1_Respuesta;
+                reconocido = true;
+            }
+            else if (texto.Contains("2") || texto.Contains("tal vez") || texto.Contains("indeciso") || texto.Contains("duda") || texto.Contains("quizas") || texto.Contains("quizás") || texto.Contains("veremos"))
+            {
+                estadoApoyo = "CONSULTADO";
+                mensajeRespuesta = botCfg.Opcion2_Respuesta;
+                reconocido = true;
+            }
+            else if (texto.Contains("3") || texto.Contains("no") || texto.Contains("nunca") || texto.Contains("ninguno") || texto.Contains("jamas") || texto.Contains("jamás"))
+            {
+                estadoApoyo = "NO_APOYA";
+                mensajeRespuesta = botCfg.Opcion3_Respuesta;
+                reconocido = true;
+            }
+
+            int? idPersona = null;
+            string? nombreVotante = null;
+
+            try
+            {
+                DataTable dt = _dWhatsApp.ActualizarCompromisoPorCelular(request.Celular, estadoApoyo, request.TextoRespuesta);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    idPersona = Convert.ToInt32(dt.Rows[0]["IdPersonaMovilizada"]);
+                    string nom = dt.Rows[0]["Nombres"]?.ToString() ?? "";
+                    string ape = dt.Rows[0]["Apellidos"]?.ToString() ?? "";
+                    nombreVotante = $"{nom} {ape}".Trim();
+
+                    // Reemplazar variable {nombre} en la respuesta diferenciada
+                    mensajeRespuesta = mensajeRespuesta
+                        .Replace("{nombre}", nom)
+                        .Replace("{apellido}", ape)
+                        .Replace("{candidato}", botCfg.NombreCandidato);
+                }
+                else
+                {
+                    mensajeRespuesta = mensajeRespuesta
+                        .Replace("{nombre}", "")
+                        .Replace("{apellido}", "")
+                        .Replace("{candidato}", botCfg.NombreCandidato)
+                        .Trim();
+                }
+            }
+            catch { }
+
+            return new WhatsAppBotRespuestaResultDto
+            {
+                Reconocido = reconocido,
+                IdPersonaMovilizada = idPersona,
+                NombreVotante = nombreVotante,
+                EstadoApoyoAsignado = estadoApoyo,
+                MensajeRespuesta = mensajeRespuesta
             };
         }
 
