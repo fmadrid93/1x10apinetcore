@@ -64,6 +64,39 @@ namespace Application.Auth
             string token = _jwtTokenService.GenerateToken(idUsuario, usuarioDb, rol, idTerritorio);
             string? urlServidorWhatsApp = new DWhatsApp().ObtenerUrlServidorWhatsAppPorUsuario(idUsuario);
 
+            string? municipio = null;
+            string? zona = null;
+
+            if (idTerritorio.HasValue)
+            {
+                try
+                {
+                    DataTable dtTerr = new DTerritorio().ObtenerPorId(idTerritorio.Value);
+                    if (dtTerr != null && dtTerr.Rows.Count > 0)
+                    {
+                        DataRow rTerr = dtTerr.Rows[0];
+                        string tipo = rTerr["TipoTerritorio"]?.ToString()?.ToUpper()?.Trim() ?? "";
+                        string nombreTerr = rTerr["Nombre"]?.ToString()?.Trim() ?? "";
+                        string nombrePadre = rTerr["NombrePadre"]?.ToString()?.Trim() ?? "";
+
+                        if (tipo == "ZONA")
+                        {
+                            zona = nombreTerr;
+                            municipio = !string.IsNullOrEmpty(nombrePadre) ? nombrePadre : null;
+                        }
+                        else if (tipo == "MUNICIPIO" || tipo == "CIUDAD" || tipo == "DISTRITO")
+                        {
+                            municipio = nombreTerr;
+                        }
+                        else
+                        {
+                            municipio = nombreTerr;
+                        }
+                    }
+                }
+                catch { }
+            }
+
             var dato = new
             {
                 IdUsuario = idUsuario,
@@ -73,10 +106,13 @@ namespace Application.Auth
                 Rol = rol,
                 IdTerritorio = idTerritorio,
                 Territorio = row["Territorio"] == DBNull.Value ? null : row["Territorio"]?.ToString(),
+                Municipio = municipio,
+                Zona = zona,
                 IdUsuarioSupervisor = row["IdUsuarioSupervisor"] == DBNull.Value ? (int?)null : Convert.ToInt32(row["IdUsuarioSupervisor"]),
                 UrlServidorWhatsApp = urlServidorWhatsApp,
                 Token = token
             };
+
 
             return new
             {
