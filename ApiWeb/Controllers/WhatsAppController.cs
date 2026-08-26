@@ -200,5 +200,25 @@ namespace ApiWeb.Controllers
                 return BadRequest(new { exito = 0, dato = (object?)null, status = ex.Message });
             }
         }
+
+        [Authorize]
+        [HttpPost("marcar-consultados")]
+        public IActionResult MarcarComoConsultados([FromBody] WhatsAppMarcarConsultadosRequest request)
+        {
+            try
+            {
+                if (request?.Celulares != null && request.Celulares.Count > 0)
+                {
+                    _service.MarcarConsultados(request.Celulares);
+                }
+                return Ok(new { exito = 1, status = "ok" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { exito = 0, status = ex.Message });
+            }
+        }
+
     }
 }
+

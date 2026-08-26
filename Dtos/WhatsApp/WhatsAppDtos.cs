@@ -124,4 +124,10 @@ namespace Dtos.WhatsApp
         public string? PhoneE164 { get; set; }
         public string? OutboundIp { get; set; }
     }
+
+    public class WhatsAppMarcarConsultadosRequest
+    {
+        public List<string> Celulares { get; set; } = new List<string>();
+    }
 }
+

@@ -715,6 +715,13 @@ namespace Application.WhatsApp
             return lista;
         }
 
+        public void MarcarConsultados(List<string> celulares)
+        {
+            if (celulares == null || celulares.Count == 0) return;
+            string unidos = string.Join(",", celulares.Where(c => !string.IsNullOrWhiteSpace(c)).Select(c => c.Trim()));
+            _dWhatsApp.MarcarComoConsultadosPorCelulares(unidos);
+        }
+
         private string NormalizarCelular(string? celularRaw)
         {
             if (string.IsNullOrWhiteSpace(celularRaw)) return string.Empty;
@@ -730,4 +737,5 @@ namespace Application.WhatsApp
         }
     }
 }
+
 
