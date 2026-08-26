@@ -21,7 +21,7 @@ namespace Application.Votante
             return _data.BuscarPadronGlobal(texto, idRecinto, nroMesa);
         }
 
-        public DataTable MarcarYaVoto(int idVotante, int idUsuarioMarca, string? observacion)
+        public DataTable MarcarYaVoto(string idVotante, int idUsuarioMarca, string? observacion)
         {
             return _data.MarcarYaVoto(idVotante, idUsuarioMarca, observacion);
         }

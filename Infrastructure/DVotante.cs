@@ -37,11 +37,11 @@ public class DVotante : DbHelper
         }
     }
 
-    public DataTable MarcarYaVoto(int idVotante, int idUsuarioMarca, string? observacion)
+    public DataTable MarcarYaVoto(string idVotante, int idUsuarioMarca, string? observacion)
     {
         return EjecutarPA(
             "PA_VOTANTE_MARCAR_YA_VOTO",
-            new SqlParameter("@IdVotante", SqlDbType.Int) { Value = idVotante },
+            new SqlParameter("@IdVotante", SqlDbType.VarChar, 150) { Value = (object?)idVotante?.Trim() ?? DBNull.Value },
             new SqlParameter("@IdUsuarioMarca", SqlDbType.Int) { Value = idUsuarioMarca },
             new SqlParameter("@Observacion", SqlDbType.VarChar, 300) { Value = (object?)observacion ?? DBNull.Value }
         );
