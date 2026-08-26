@@ -38,15 +38,16 @@ namespace Application.WhatsApp
             try
             {
                 string? urlTerritorio = _dWhatsApp.ObtenerUrlServidorWhatsAppPorUsuario(idUsuario);
-                if (!string.IsNullOrEmpty(urlTerritorio))
+                if (!string.IsNullOrEmpty(urlTerritorio) && !urlTerritorio.Contains("127.0.0.1") && !urlTerritorio.Contains("localhost"))
                 {
                     return urlTerritorio.TrimEnd('/');
                 }
             }
             catch { }
 
-            return BridgeBaseUrl.TrimEnd('/');
+            return (BridgeBaseUrl ?? "https://principal.liberales26.com").TrimEnd('/');
         }
+
 
         public async Task<WhatsAppConfigDto> ObtenerConfiguracionAsync(int? idUsuario = null)
         {

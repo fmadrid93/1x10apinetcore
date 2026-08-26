@@ -109,14 +109,14 @@ namespace Application.Usuario
 
             if (rolCaller == NombreRolGerente)
             {
-                idTerritorioFinal = idTerritorioCaller;
+                idTerritorioFinal = idTerritorio ?? idTerritorioCaller;
                 idUsuarioSupervisorFinal = idRol == RolMovilizador ? idUsuarioCaller : (int?)null;
             }
-            else if (idTerritorioCaller.HasValue)
+            else
             {
-                idTerritorioFinal = idTerritorioCaller;
+                idTerritorioFinal = idTerritorio;
 
-                if (idRol == RolGerente)
+                if (idRol == RolGerente && idUsuarioSupervisor == null)
                 {
                     idUsuarioSupervisorFinal = idUsuarioCaller;
                 }
@@ -127,6 +127,7 @@ namespace Application.Usuario
             }
 
             return _data.Actualizar(idUsuario, idRol, idTerritorioFinal, idUsuarioSupervisorFinal, nombreCompleto, ci, celular, email, activo, idUsuarioCaller, motivo);
+
         }
 
         public DataTable CambiarClave(int idUsuario, string nuevaClave, int idUsuarioCaller, int? idTerritorioCaller, string rolCaller, string? motivo)
