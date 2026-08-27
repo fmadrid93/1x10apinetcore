@@ -163,5 +163,28 @@ namespace Infrastructure
 
             return EjecutarSQL(sql, new SqlParameter("@CI", SqlDbType.VarChar, 50) { Value = ci.Trim() });
         }
+
+        public System.Collections.Generic.HashSet<string> ListarTodosLosCIExistentes()
+        {
+            var hashSet = new System.Collections.Generic.HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            try
+            {
+                string sql = "SELECT LTRIM(RTRIM(CI)) AS CI FROM PersonaMovilizada WITH (NOLOCK) WHERE (Activo IS NULL OR Activo = 1) AND CI IS NOT NULL AND LTRIM(RTRIM(CI)) <> ''";
+                var dt = EjecutarSQL(sql);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        string ci = row["CI"]?.ToString()?.Trim() ?? "";
+                        if (!string.IsNullOrEmpty(ci))
+                        {
+                            hashSet.Add(ci);
+                        }
+                    }
+                }
+            }
+            catch { }
+            return hashSet;
+        }
     }
 }

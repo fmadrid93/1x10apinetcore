@@ -43,11 +43,14 @@ namespace Dtos.Importacion
     {
         public int TotalFilas { get; set; }
         public int GerentesCreados { get; set; }
+        public int GerentesReutilizados { get; set; }
         public int MovilizadoresCreados { get; set; }
+        public int MovilizadoresReutilizados { get; set; }
         public int VotantesInsertados { get; set; }
         public int VotantesDuplicadosOmitidos { get; set; }
         public int RecintosVinculados { get; set; }
         public List<string> Errores { get; set; } = new List<string>();
         public bool Exito => Errores.Count == 0 || VotantesInsertados > 0;
     }
+
 }

@@ -1,4 +1,5 @@
-﻿using System.Data;
+using System;
+using System.Data;
 using Microsoft.Data.SqlClient;
 
 namespace Infrastructure
@@ -8,6 +9,90 @@ namespace Infrastructure
         public DataTable Listar()
         {
             return EjecutarPA("pa_movilizador_meta_listar");
+        }
+
+        public DataTable ListarPorEstructura(int idUsuarioCaller, int? idTerritorioCaller, string rolCaller)
+        {
+            string rolUpper = (rolCaller ?? string.Empty).Trim().ToUpper();
+
+            if (rolUpper == "GERENTE")
+            {
+                string sql = @"
+                    SELECT 
+                        ISNULL(mm.IdMovilizadorMeta, 0) AS IdMovilizadorMeta,
+                        u.IdUsuario AS IdUsuarioMovilizador,
+                        u.NombreCompleto AS Movilizador,
+                        ISNULL(mm.MetaObjetivo, 10) AS MetaObjetivo,
+                        mm.FechaCreate,
+                        mm.FechaUpdate,
+                        ISNULL((SELECT COUNT(1) FROM PersonaMovilizada pm WITH (NOLOCK) WHERE pm.IdUsuarioMovilizador = u.IdUsuario AND (pm.Activo IS NULL OR pm.Activo = 1)), 0) AS TotalPersonas
+                    FROM Usuario u WITH (NOLOCK)
+                    LEFT JOIN MovilizadorMeta mm WITH (NOLOCK) ON u.IdUsuario = mm.IdUsuarioMovilizador
+                    WHERE u.IdRol = 3 -- MOVILIZADOR
+                      AND (u.Activo IS NULL OR u.Activo = 1)
+                      AND (u.IdUsuarioSupervisor = @IdUsuarioCaller OR u.IdUsuarioCreate = @IdUsuarioCaller)
+                    ORDER BY u.NombreCompleto";
+
+                return EjecutarSQL(sql, new SqlParameter("@IdUsuarioCaller", SqlDbType.Int) { Value = idUsuarioCaller });
+            }
+            else if (idTerritorioCaller.HasValue)
+            {
+                // Admin territorial: Movilizadores bajo su árbol de territorios o supervisados/creados por sus gerentes o por él
+                string sql = @"
+                    WITH ArbolTerritorios AS (
+                        SELECT IdTerritorio FROM Territorio WITH (NOLOCK) WHERE IdTerritorio = @IdTerritorioCaller
+                        UNION ALL
+                        SELECT t.IdTerritorio FROM Territorio t WITH (NOLOCK)
+                        INNER JOIN ArbolTerritorios a ON t.IdTerritorioPadre = a.IdTerritorio
+                    ),
+                    GerentesDelAdmin AS (
+                        SELECT IdUsuario FROM Usuario WITH (NOLOCK)
+                        WHERE IdRol = 2 AND (IdTerritorio IN (SELECT IdTerritorio FROM ArbolTerritorios) OR IdUsuarioSupervisor = @IdUsuarioCaller OR IdUsuarioCreate = @IdUsuarioCaller)
+                    )
+                    SELECT 
+                        ISNULL(mm.IdMovilizadorMeta, 0) AS IdMovilizadorMeta,
+                        u.IdUsuario AS IdUsuarioMovilizador,
+                        u.NombreCompleto AS Movilizador,
+                        ISNULL(mm.MetaObjetivo, 10) AS MetaObjetivo,
+                     --   mm.FechaCreate,
+                      --  mm.FechaUpdate,
+                        ISNULL((SELECT COUNT(1) FROM PersonaMovilizada pm WITH (NOLOCK) WHERE pm.IdUsuarioMovilizador = u.IdUsuario AND (pm.Activo IS NULL OR pm.Activo = 1)), 0) AS TotalPersonas
+                    FROM Usuario u WITH (NOLOCK)
+                    LEFT JOIN MovilizadorMeta mm WITH (NOLOCK) ON u.IdUsuario = mm.IdUsuarioMovilizador
+                    WHERE u.IdRol = 3 -- MOVILIZADOR
+                      AND (u.Activo IS NULL OR u.Activo = 1)
+                      AND (
+                          u.IdTerritorio IN (SELECT IdTerritorio FROM ArbolTerritorios)
+                          OR u.IdUsuarioSupervisor IN (SELECT IdUsuario FROM GerentesDelAdmin)
+                          OR u.IdUsuarioSupervisor = @IdUsuarioCaller
+                          OR u.IdUsuarioCreate = @IdUsuarioCaller
+                      )
+                    ORDER BY u.NombreCompleto";
+
+                return EjecutarSQL(sql, 
+                    new SqlParameter("@IdUsuarioCaller", SqlDbType.Int) { Value = idUsuarioCaller },
+                    new SqlParameter("@IdTerritorioCaller", SqlDbType.Int) { Value = idTerritorioCaller.Value });
+            }
+            else
+            {
+                // Super Admin: Listar todos los movilizadores activos
+                string sql = @"
+                    SELECT 
+                        ISNULL(mm.IdMovilizadorMeta, 0) AS IdMovilizadorMeta,
+                        u.IdUsuario AS IdUsuarioMovilizador,
+                        u.NombreCompleto AS Movilizador,
+                        ISNULL(mm.MetaObjetivo, 10) AS MetaObjetivo,
+                        mm.FechaCreate,
+                        mm.FechaUpdate,
+                        ISNULL((SELECT COUNT(1) FROM PersonaMovilizada pm WITH (NOLOCK) WHERE pm.IdUsuarioMovilizador = u.IdUsuario AND (pm.Activo IS NULL OR pm.Activo = 1)), 0) AS TotalPersonas
+                    FROM Usuario u WITH (NOLOCK)
+                    LEFT JOIN MovilizadorMeta mm WITH (NOLOCK) ON u.IdUsuario = mm.IdUsuarioMovilizador
+                    WHERE u.IdRol = 3 -- MOVILIZADOR
+                      AND (u.Activo IS NULL OR u.Activo = 1)
+                    ORDER BY u.NombreCompleto";
+
+                return EjecutarSQL(sql);
+            }
         }
 
         public DataTable Obtener(int idUsuarioMovilizador)
@@ -26,12 +111,26 @@ namespace Infrastructure
                 new SqlParameter("@MetaObjetivo", SqlDbType.Int) { Value = metaObjetivo }
             );
         }
+
         public DataTable ListarPorGerente(int idGerente)
         {
-            return EjecutarPA(
-                "pa_movilizador_meta_listar_por_gerente",
-                new SqlParameter("@IdGerente", SqlDbType.Int) { Value = idGerente }
-            );
+            string sql = @"
+                SELECT 
+                    ISNULL(mm.IdMovilizadorMeta, 0) AS IdMovilizadorMeta,
+                    u.IdUsuario AS IdUsuarioMovilizador,
+                    u.NombreCompleto AS Movilizador,
+                    ISNULL(mm.MetaObjetivo, 10) AS MetaObjetivo,
+                    mm.FechaCreate,
+                    mm.FechaUpdate,
+                    ISNULL((SELECT COUNT(1) FROM PersonaMovilizada pm WITH (NOLOCK) WHERE pm.IdUsuarioMovilizador = u.IdUsuario AND (pm.Activo IS NULL OR pm.Activo = 1)), 0) AS TotalPersonas
+                FROM Usuario u WITH (NOLOCK)
+                LEFT JOIN MovilizadorMeta mm WITH (NOLOCK) ON u.IdUsuario = mm.IdUsuarioMovilizador
+                WHERE u.IdRol = 3 -- MOVILIZADOR
+                  AND (u.Activo IS NULL OR u.Activo = 1)
+                  AND (u.IdUsuarioSupervisor = @IdGerente OR u.IdUsuarioCreate = @IdGerente)
+                ORDER BY u.NombreCompleto";
+
+            return EjecutarSQL(sql, new SqlParameter("@IdGerente", SqlDbType.Int) { Value = idGerente });
         }
     }
 }
