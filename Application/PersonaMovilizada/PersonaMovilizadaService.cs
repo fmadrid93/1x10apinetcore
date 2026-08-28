@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using System.Data;
+using Application.Configuracion;
 using Infrastructure;
 
 namespace Application.PersonaMovilizada
@@ -7,6 +10,61 @@ namespace Application.PersonaMovilizada
     {
         private readonly DPersonaMovilizada _data = new DPersonaMovilizada();
         private readonly DConfiguracion _config = new DConfiguracion();
+        private readonly ConfiguracionService _configuracionService = new ConfiguracionService();
+
+        private void ValidarCamposObligatorios(
+            string? celular,
+            string? direccionReferencia,
+            string? sexo,
+            string? rangoEdad,
+            string? recintoVotacion,
+            string? idRecinto,
+            string? nivelCompromiso,
+            string? observaciones,
+            decimal? latitud,
+            decimal? longitud)
+        {
+            var obligatorios = _configuracionService.ObtenerCamposObligatorios();
+            if (obligatorios.Count == 0) return;
+
+            var valores = new Dictionary<string, bool>
+            {
+                ["CELULAR"] = !string.IsNullOrWhiteSpace(celular),
+                ["DIRECCION"] = !string.IsNullOrWhiteSpace(direccionReferencia),
+                ["SEXO"] = !string.IsNullOrWhiteSpace(sexo),
+                ["RANGO_EDAD"] = !string.IsNullOrWhiteSpace(rangoEdad),
+                ["RECINTO"] = !string.IsNullOrWhiteSpace(recintoVotacion) || !string.IsNullOrWhiteSpace(idRecinto),
+                ["NIVEL_COMPROMISO"] = !string.IsNullOrWhiteSpace(nivelCompromiso),
+                ["OBSERVACIONES"] = !string.IsNullOrWhiteSpace(observaciones),
+                ["UBICACION"] = latitud.HasValue && longitud.HasValue,
+            };
+
+            var faltantes = new List<string>();
+            foreach (var codigo in obligatorios)
+            {
+                if (valores.TryGetValue(codigo, out bool tieneValor) && !tieneValor)
+                {
+                    faltantes.Add(codigo);
+                }
+            }
+
+            if (faltantes.Count > 0)
+            {
+                var etiquetas = new List<string>();
+                foreach (var codigo in faltantes)
+                {
+                    foreach (var campo in CamposVotanteCatalogo.CamposConfigurables)
+                    {
+                        if (campo.Codigo == codigo)
+                        {
+                            etiquetas.Add(campo.Etiqueta);
+                            break;
+                        }
+                    }
+                }
+                throw new Exception($"Los siguientes campos son obligatorios: {string.Join(", ", etiquetas)}.");
+            }
+        }
 
         public DataTable Insertar(
          int idUsuarioMovilizador,
@@ -39,6 +97,11 @@ namespace Application.PersonaMovilizada
                     }
                 }
             }
+
+            ValidarCamposObligatorios(
+                celular, direccionReferencia, sexo, rangoEdad,
+                recintoVotacion, idRecinto, nivelCompromiso, observaciones,
+                latitud, longitud);
 
             return _data.Insertar(
                 idUsuarioMovilizador,
@@ -92,6 +155,11 @@ namespace Application.PersonaMovilizada
                     }
                 }
             }
+
+            ValidarCamposObligatorios(
+                celular, direccionReferencia, sexo, rangoEdad,
+                recintoVotacion, idRecinto, nivelCompromiso, observaciones,
+                latitud, longitud);
 
             return _data.Actualizar(
                 idPersonaMovilizada,
