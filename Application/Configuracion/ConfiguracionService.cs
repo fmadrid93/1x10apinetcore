@@ -19,17 +19,36 @@ namespace Application.Configuracion
             return _data.GuardarPermitirDuplicados(permitir);
         }
 
-        public List<string> ObtenerCamposObligatorios()
+        private const string ClaveCamposObligatoriosBase = "CAMPOS_OBLIGATORIOS_VOTANTE";
+
+        private static string ClaveCamposObligatorios(int? idTerritorio)
         {
-            // Mientras el Admin no lo haya tocado nunca (la clave no existe todavía en
-            // ConfiguracionGeneral), el default es "todos obligatorios". Una vez que el
-            // Admin guarda una selección propia (aunque sea vacía), esa pasa a mandar.
-            string valorPorDefecto = string.Join(
+            // Sin territorio (SuperAdmin) = clave base = default global.
+            // Con territorio = una clave propia por Admin Territorial, para que cada uno
+            // configure "su estructura" sin afectar a los demás municipios/zonas.
+            return idTerritorio.HasValue
+                ? $"{ClaveCamposObligatoriosBase}_{idTerritorio.Value}"
+                : ClaveCamposObligatoriosBase;
+        }
+
+        /// <param name="idTerritorio">
+        /// Territorio del Admin que consulta (viene del JWT). Null = SuperAdmin.
+        /// </param>
+        public List<string> ObtenerCamposObligatorios(int? idTerritorio)
+        {
+            string todosLosCampos = string.Join(
                 ",",
                 CamposVotanteCatalogo.CamposConfigurables.Select(c => c.Codigo)
             );
 
-            string valor = _data.ObtenerValor("CAMPOS_OBLIGATORIOS_VOTANTE", valorPorDefecto);
+            // El default de "todos obligatorios" aplica siempre que no exista una config
+            // explícita. Un territorio que nunca configuró nada propio hereda el default
+            // global del SuperAdmin (que a su vez, si tampoco fue tocado, es "todos").
+            string valorPorDefecto = idTerritorio.HasValue
+                ? _data.ObtenerValor(ClaveCamposObligatoriosBase, todosLosCampos)
+                : todosLosCampos;
+
+            string valor = _data.ObtenerValor(ClaveCamposObligatorios(idTerritorio), valorPorDefecto);
             if (string.IsNullOrWhiteSpace(valor)) return new List<string>();
 
             return valor
@@ -40,7 +59,8 @@ namespace Application.Configuracion
                 .ToList();
         }
 
-        public bool GuardarCamposObligatorios(List<string> campos)
+        /// <param name="idTerritorio">Territorio del Admin que guarda (viene del JWT). Null = SuperAdmin.</param>
+        public bool GuardarCamposObligatorios(int? idTerritorio, List<string> campos)
         {
             var validos = (campos ?? new List<string>())
                 .Select(c => (c ?? "").Trim().ToUpperInvariant())
@@ -48,11 +68,11 @@ namespace Application.Configuracion
                 .Distinct()
                 .ToList();
 
-            return _data.GuardarValor(
-                "CAMPOS_OBLIGATORIOS_VOTANTE",
-                string.Join(",", validos),
-                "Campos del registro de votante que son obligatorios además de Nombre y CI (lista separada por comas)"
-            );
+            string descripcion = idTerritorio.HasValue
+                ? $"Campos obligatorios del registro de votante propios del territorio {idTerritorio.Value} (lista separada por comas)"
+                : "Campos obligatorios del registro de votante: default global que heredan los territorios sin config propia (lista separada por comas)";
+
+            return _data.GuardarValor(ClaveCamposObligatorios(idTerritorio), string.Join(",", validos), descripcion);
         }
     }
 }

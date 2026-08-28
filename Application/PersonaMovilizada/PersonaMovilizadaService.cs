@@ -13,6 +13,7 @@ namespace Application.PersonaMovilizada
         private readonly ConfiguracionService _configuracionService = new ConfiguracionService();
 
         private void ValidarCamposObligatorios(
+            int? idTerritorio,
             string? celular,
             string? direccionReferencia,
             string? sexo,
@@ -24,7 +25,11 @@ namespace Application.PersonaMovilizada
             decimal? latitud,
             decimal? longitud)
         {
-            var obligatorios = _configuracionService.ObtenerCamposObligatorios();
+            // Cada Admin Territorial tiene su propia configuración de campos obligatorios;
+            // se usa el territorio de la persona que se está registrando (no el del caller,
+            // que acá no está disponible: movilizador/gerente heredan el territorio del
+            // Admin dueño de su estructura al crearse, ver UsuarioService.Insertar).
+            var obligatorios = _configuracionService.ObtenerCamposObligatorios(idTerritorio);
             if (obligatorios.Count == 0) return;
 
             var valores = new Dictionary<string, bool>
@@ -99,6 +104,7 @@ namespace Application.PersonaMovilizada
             }
 
             ValidarCamposObligatorios(
+                idTerritorio,
                 celular, direccionReferencia, sexo, rangoEdad,
                 recintoVotacion, idRecinto, nivelCompromiso, observaciones,
                 latitud, longitud);
@@ -157,6 +163,7 @@ namespace Application.PersonaMovilizada
             }
 
             ValidarCamposObligatorios(
+                idTerritorio,
                 celular, direccionReferencia, sexo, rangoEdad,
                 recintoVotacion, idRecinto, nivelCompromiso, observaciones,
                 latitud, longitud);
