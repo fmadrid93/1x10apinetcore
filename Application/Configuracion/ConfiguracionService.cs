@@ -21,7 +21,15 @@ namespace Application.Configuracion
 
         public List<string> ObtenerCamposObligatorios()
         {
-            string valor = _data.ObtenerValor("CAMPOS_OBLIGATORIOS_VOTANTE", "");
+            // Mientras el Admin no lo haya tocado nunca (la clave no existe todavía en
+            // ConfiguracionGeneral), el default es "todos obligatorios". Una vez que el
+            // Admin guarda una selección propia (aunque sea vacía), esa pasa a mandar.
+            string valorPorDefecto = string.Join(
+                ",",
+                CamposVotanteCatalogo.CamposConfigurables.Select(c => c.Codigo)
+            );
+
+            string valor = _data.ObtenerValor("CAMPOS_OBLIGATORIOS_VOTANTE", valorPorDefecto);
             if (string.IsNullOrWhiteSpace(valor)) return new List<string>();
 
             return valor
