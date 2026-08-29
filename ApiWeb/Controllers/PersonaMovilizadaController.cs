@@ -135,6 +135,20 @@ namespace ApiWeb.Controllers
             }
         }
 
+        [HttpGet("celulares-repetidos")]
+        public IActionResult CelularesRepetidos([FromQuery] int? idTerritorio, [FromQuery] int? idUsuarioMovilizador)
+        {
+            try
+            {
+                var ds = _service.CelularesRepetidos(idTerritorio, idUsuarioMovilizador);
+                return Ok(new { exito = 1, dato = ds, status = "ok" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { exito = 0, dato = (object?)null, status = ex.Message });
+            }
+        }
+
         [HttpGet("resumen-movilizador/{idUsuarioMovilizador}")]
         public IActionResult ResumenMovilizador(int idUsuarioMovilizador)
         {

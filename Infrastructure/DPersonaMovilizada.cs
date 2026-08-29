@@ -141,6 +141,15 @@ namespace Infrastructure
             );
         }
 
+        public DataTable CelularesRepetidos(int? idTerritorio, int? idUsuarioMovilizador)
+        {
+            return EjecutarPA(
+                "pa_persona_movilizada_celulares_repetidos",
+                new SqlParameter("@IdTerritorio", SqlDbType.Int) { Value = (object?)idTerritorio ?? DBNull.Value },
+                new SqlParameter("@IdUsuarioMovilizador", SqlDbType.Int) { Value = (object?)idUsuarioMovilizador ?? DBNull.Value }
+            );
+        }
+
         public DataTable VerificarExisteCI(string ci, int? excludeIdPersona = null)
         {
             string sql = @"

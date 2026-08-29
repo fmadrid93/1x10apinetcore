@@ -225,5 +225,10 @@ namespace Application.PersonaMovilizada
         {
             return _data.ResumenMovilizador(idUsuarioMovilizador);
         }
+
+        public DataTable CelularesRepetidos(int? idTerritorio, int? idUsuarioMovilizador)
+        {
+            return _data.CelularesRepetidos(idTerritorio, idUsuarioMovilizador);
+        }
     }
 }
