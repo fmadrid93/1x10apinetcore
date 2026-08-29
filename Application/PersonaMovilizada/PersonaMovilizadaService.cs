@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Threading.Tasks;
 using Application.Configuracion;
+using Application.WhatsApp;
 using Infrastructure;
+using Microsoft.Extensions.Configuration;
 
 namespace Application.PersonaMovilizada
 {
@@ -10,6 +13,15 @@ namespace Application.PersonaMovilizada
     {
         private readonly DPersonaMovilizada _data = new DPersonaMovilizada();
         private readonly ConfiguracionService _configuracionService = new ConfiguracionService();
+        private readonly DUsuario _usuarios = new DUsuario();
+        private readonly IConfiguration? _configuration;
+
+        public PersonaMovilizadaService() { }
+
+        public PersonaMovilizadaService(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
 
         private void ValidarCamposObligatorios(
             int? idTerritorio,
@@ -132,7 +144,7 @@ namespace Application.PersonaMovilizada
                 recintoVotacion, idRecinto, nivelCompromiso, observaciones,
                 latitud, longitud);
 
-            return _data.Insertar(
+            var resultado = _data.Insertar(
                 idUsuarioMovilizador,
                 idTerritorio,
                 nombres,
@@ -150,6 +162,47 @@ namespace Application.PersonaMovilizada
                 latitud,
                 longitud
             );
+
+            // Best-effort, sin bloquear la respuesta del registro: si el envío
+            // falla (sesión desconectada, celular inválido, etc.) no debe
+            // afectar el alta de la persona, que ya se guardó bien.
+            if (resultado != null && resultado.Rows.Count > 0 && !string.IsNullOrWhiteSpace(celular))
+            {
+                _ = EnviarBienvenidaMovilizadorAsync(idUsuarioMovilizador, idTerritorio, nombres, celular);
+            }
+
+            return resultado;
+        }
+
+        private async Task EnviarBienvenidaMovilizadorAsync(int idUsuarioMovilizador, int? idTerritorio, string nombrePersona, string celular)
+        {
+            if (_configuration == null) return;
+
+            try
+            {
+                var whatsApp = new WhatsAppService(_configuration);
+                var botConfig = whatsApp.ObtenerBotConfiguracion(idTerritorio);
+                if (string.IsNullOrWhiteSpace(botConfig.MensajeBienvenidaMovilizador)) return;
+
+                string nombreMovilizador = "tu movilizador";
+                var datosUsuario = _usuarios.ObtenerPorId(idUsuarioMovilizador);
+                if (datosUsuario != null && datosUsuario.Rows.Count > 0 && datosUsuario.Columns.Contains("NombreCompleto"))
+                {
+                    var valor = datosUsuario.Rows[0]["NombreCompleto"]?.ToString();
+                    if (!string.IsNullOrWhiteSpace(valor)) nombreMovilizador = valor;
+                }
+
+                string mensaje = botConfig.MensajeBienvenidaMovilizador
+                    .Replace("{nombre}", nombrePersona)
+                    .Replace("{movilizador}", nombreMovilizador)
+                    .Replace("{candidato}", botConfig.NombreCandidato);
+
+                await whatsApp.EnviarMensajeAUsuarioAsync(idUsuarioMovilizador, celular, mensaje);
+            }
+            catch
+            {
+                // Best-effort: un fallo acá nunca debe afectar el registro de la persona.
+            }
         }
 
         public DataTable Actualizar(

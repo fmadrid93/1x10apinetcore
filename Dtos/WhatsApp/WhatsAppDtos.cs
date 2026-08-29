@@ -73,23 +73,41 @@ namespace Dtos.WhatsApp
     public class WhatsAppBotConfigDto
     {
         public int IdBot { get; set; } = 1;
+        /// <summary>Null = configuración global (default para municipios sin la suya propia).</summary>
+        public int? IdTerritorio { get; set; }
+        public string? NombreTerritorio { get; set; }
         public string Titulo { get; set; } = "Consulta de Intención de Voto";
         public string NombreCandidato { get; set; } = "nuestro candidato";
         public string PlantillaPregunta { get; set; } = "Hola {nombre}, ¿apoyarás a {candidato} en las próximas elecciones?\n\n1️⃣ Sí, totalmente\n2️⃣ Tal vez / Indeciso\n3️⃣ No\n\nPor favor responde con el número 1, 2 o 3.";
-        
+
         public string Opcion1_Texto { get; set; } = "Sí, totalmente";
         public string Opcion1_EstadoApoyo { get; set; } = "APOYA";
         public string Opcion1_Respuesta { get; set; } = "¡Excelente {nombre}! Muchísimas gracias por tu respaldo a {candidato}. ¡Juntos vamos a ganar!";
-        
+
         public string Opcion2_Texto { get; set; } = "Tal vez / Indeciso";
         public string Opcion2_EstadoApoyo { get; set; } = "CONSULTADO";
         public string Opcion2_Respuesta { get; set; } = "Gracias {nombre}. Te compartiremos nuestras principales propuestas para que conozcas a detalle el plan de trabajo de {candidato}.";
-        
+
         public string Opcion3_Texto { get; set; } = "No";
         public string Opcion3_EstadoApoyo { get; set; } = "NO_APOYA";
         public string Opcion3_Respuesta { get; set; } = "Comprendemos tu postura, {nombre}. Agradecemos mucho tu sinceridad y tiempo. ¡Que tengas un excelente día!";
-        
+
+        /// <summary>
+        /// Mensaje de bienvenida enviado automáticamente al votante cuando un
+        /// movilizador lo registra. Variables: {nombre}, {movilizador}, {candidato}.
+        /// </summary>
+        public string? MensajeBienvenidaMovilizador { get; set; }
+
         public bool Activo { get; set; } = true;
+    }
+
+    public class WhatsAppMunicipioConAdminDto
+    {
+        public int IdTerritorio { get; set; }
+        public string NombreTerritorio { get; set; } = string.Empty;
+        public string? TipoTerritorio { get; set; }
+        public int TotalUsuarios { get; set; }
+        public string? NombreAdministrador { get; set; }
     }
 
     public class WhatsAppBotRespuestaRequest

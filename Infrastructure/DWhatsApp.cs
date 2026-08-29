@@ -291,13 +291,19 @@ namespace Infrastructure
             catch { }
         }
 
-        public DataTable ObtenerBotConfiguracionBD()
+        /// <summary>
+        /// Se asegura de que la tabla exista y tenga las columnas nuevas
+        /// (IdTerritorio, MensajeBienvenidaMovilizador) — mismo patrón de
+        /// automigración lazy usado en el resto del proyecto.
+        /// </summary>
+        private void AsegurarTablaBotConfig()
         {
             string sql = @"
                 IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name = 'WhatsAppBotConfig')
                 BEGIN
                     CREATE TABLE dbo.WhatsAppBotConfig (
                         IdBot INT IDENTITY(1,1) PRIMARY KEY,
+                        IdTerritorio INT NULL,
                         Titulo VARCHAR(150) NOT NULL DEFAULT 'Consulta de Intención de Voto',
                         NombreCandidato VARCHAR(150) NOT NULL DEFAULT 'nuestro candidato',
                         PlantillaPregunta VARCHAR(MAX) NOT NULL,
@@ -310,32 +316,61 @@ namespace Infrastructure
                         Opcion3_Texto VARCHAR(200) NOT NULL DEFAULT 'No',
                         Opcion3_EstadoApoyo VARCHAR(30) NOT NULL DEFAULT 'NO_APOYA',
                         Opcion3_Respuesta VARCHAR(MAX) NOT NULL,
+                        MensajeBienvenidaMovilizador VARCHAR(MAX) NULL,
                         Activo BIT NOT NULL DEFAULT 1,
                         FechaUpdate DATETIME DEFAULT GETDATE()
                     );
 
                     INSERT INTO dbo.WhatsAppBotConfig (
-                        Titulo, NombreCandidato, PlantillaPregunta,
+                        IdTerritorio, Titulo, NombreCandidato, PlantillaPregunta,
                         Opcion1_Texto, Opcion1_EstadoApoyo, Opcion1_Respuesta,
                         Opcion2_Texto, Opcion2_EstadoApoyo, Opcion2_Respuesta,
-                        Opcion3_Texto, Opcion3_EstadoApoyo, Opcion3_Respuesta, Activo
+                        Opcion3_Texto, Opcion3_EstadoApoyo, Opcion3_Respuesta,
+                        MensajeBienvenidaMovilizador, Activo
                     ) VALUES (
-                        'Consulta de Intención de Voto', 'nuestro candidato',
+                        NULL, 'Consulta de Intención de Voto', 'nuestro candidato',
                         'Hola {nombre}, ¿apoyarás a {candidato} en las próximas elecciones?\n\n1️⃣ Sí, totalmente\n2️⃣ Tal vez / Indeciso\n3️⃣ No\n\nPor favor responde con el número 1, 2 o 3.',
                         'Sí, totalmente', 'APOYA', '¡Excelente {nombre}! Muchísimas gracias por tu respaldo a {candidato}. ¡Juntos vamos a ganar!',
                         'Tal vez / Indeciso', 'CONSULTADO', 'Gracias {nombre}. Te compartiremos nuestras principales propuestas para que conozcas a detalle el plan de trabajo de {candidato}.',
                         'No', 'NO_APOYA', 'Comprendemos tu postura, {nombre}. Agradecemos mucho tu sinceridad y tiempo. ¡Que tengas un excelente día!',
+                        'Hola {nombre}, soy {movilizador}. Te acabo de registrar como parte del equipo de {candidato}. ¡Gracias por tu apoyo!',
                         1
                     );
                 END
+                ELSE IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = OBJECT_ID('dbo.WhatsAppBotConfig') AND name = 'IdTerritorio')
+                BEGIN
+                    ALTER TABLE dbo.WhatsAppBotConfig ADD IdTerritorio INT NULL;
+                    ALTER TABLE dbo.WhatsAppBotConfig ADD MensajeBienvenidaMovilizador VARCHAR(MAX) NULL;
+                END";
 
-                SELECT TOP 1 * FROM dbo.WhatsAppBotConfig WHERE Activo = 1 ORDER BY IdBot DESC";
+            EjecutarSQLDirecto(sql);
+        }
 
-            return EjecutarSQLDirecto(sql);
+        /// <summary>
+        /// Config del bot para un territorio específico; si no tiene una propia
+        /// configurada, cae al default global (IdTerritorio IS NULL).
+        /// </summary>
+        public DataTable ObtenerBotConfiguracionBD(int? idTerritorio)
+        {
+            AsegurarTablaBotConfig();
+
+            string sql = @"
+                SELECT TOP 1 * FROM dbo.WhatsAppBotConfig
+                WHERE Activo = 1 AND IdTerritorio = @IdTerritorio
+                ORDER BY IdBot DESC;
+
+                IF @@ROWCOUNT = 0
+                BEGIN
+                    SELECT TOP 1 * FROM dbo.WhatsAppBotConfig
+                    WHERE Activo = 1 AND IdTerritorio IS NULL
+                    ORDER BY IdBot DESC;
+                END";
+
+            return EjecutarSQLDirecto(sql, new SqlParameter("@IdTerritorio", SqlDbType.Int) { Value = (object?)idTerritorio ?? DBNull.Value });
         }
 
         public DataTable GuardarBotConfiguracionBD(
-            int idBot,
+            int? idTerritorio,
             string titulo,
             string nombreCandidato,
             string plantillaPregunta,
@@ -348,27 +383,35 @@ namespace Infrastructure
             string op3Texto,
             string op3Estado,
             string op3Resp,
+            string? mensajeBienvenidaMovilizador,
             bool activo)
         {
+            AsegurarTablaBotConfig();
+
             string sql = @"
-                IF NOT EXISTS (SELECT 1 FROM dbo.WhatsAppBotConfig WHERE IdBot = @IdBot)
+                IF NOT EXISTS (
+                    SELECT 1 FROM dbo.WhatsAppBotConfig
+                    WHERE (@IdTerritorio IS NULL AND IdTerritorio IS NULL) OR IdTerritorio = @IdTerritorio
+                )
                 BEGIN
                     INSERT INTO dbo.WhatsAppBotConfig (
-                        Titulo, NombreCandidato, PlantillaPregunta,
+                        IdTerritorio, Titulo, NombreCandidato, PlantillaPregunta,
                         Opcion1_Texto, Opcion1_EstadoApoyo, Opcion1_Respuesta,
                         Opcion2_Texto, Opcion2_EstadoApoyo, Opcion2_Respuesta,
-                        Opcion3_Texto, Opcion3_EstadoApoyo, Opcion3_Respuesta, Activo, FechaUpdate
+                        Opcion3_Texto, Opcion3_EstadoApoyo, Opcion3_Respuesta,
+                        MensajeBienvenidaMovilizador, Activo, FechaUpdate
                     ) VALUES (
-                        @Titulo, @NombreCandidato, @PlantillaPregunta,
+                        @IdTerritorio, @Titulo, @NombreCandidato, @PlantillaPregunta,
                         @Opcion1_Texto, @Opcion1_EstadoApoyo, @Opcion1_Respuesta,
                         @Opcion2_Texto, @Opcion2_EstadoApoyo, @Opcion2_Respuesta,
-                        @Opcion3_Texto, @Opcion3_EstadoApoyo, @Opcion3_Respuesta, @Activo, GETDATE()
+                        @Opcion3_Texto, @Opcion3_EstadoApoyo, @Opcion3_Respuesta,
+                        @MensajeBienvenidaMovilizador, @Activo, GETDATE()
                     );
                 END
                 ELSE
                 BEGIN
                     UPDATE dbo.WhatsAppBotConfig
-                    SET 
+                    SET
                         Titulo = @Titulo,
                         NombreCandidato = @NombreCandidato,
                         PlantillaPregunta = @PlantillaPregunta,
@@ -381,16 +424,19 @@ namespace Infrastructure
                         Opcion3_Texto = @Opcion3_Texto,
                         Opcion3_EstadoApoyo = @Opcion3_EstadoApoyo,
                         Opcion3_Respuesta = @Opcion3_Respuesta,
+                        MensajeBienvenidaMovilizador = @MensajeBienvenidaMovilizador,
                         Activo = @Activo,
                         FechaUpdate = GETDATE()
-                    WHERE IdBot = @IdBot;
+                    WHERE (@IdTerritorio IS NULL AND IdTerritorio IS NULL) OR IdTerritorio = @IdTerritorio;
                 END
 
-                SELECT TOP 1 * FROM dbo.WhatsAppBotConfig WHERE Activo = 1 ORDER BY IdBot DESC";
+                SELECT TOP 1 * FROM dbo.WhatsAppBotConfig
+                WHERE Activo = 1 AND ((@IdTerritorio IS NULL AND IdTerritorio IS NULL) OR IdTerritorio = @IdTerritorio)
+                ORDER BY IdBot DESC";
 
             return EjecutarSQLDirecto(
                 sql,
-                new SqlParameter("@IdBot", SqlDbType.Int) { Value = idBot },
+                new SqlParameter("@IdTerritorio", SqlDbType.Int) { Value = (object?)idTerritorio ?? DBNull.Value },
                 new SqlParameter("@Titulo", SqlDbType.VarChar, 150) { Value = titulo },
                 new SqlParameter("@NombreCandidato", SqlDbType.VarChar, 150) { Value = nombreCandidato },
                 new SqlParameter("@PlantillaPregunta", SqlDbType.VarChar, -1) { Value = plantillaPregunta },
@@ -403,8 +449,33 @@ namespace Infrastructure
                 new SqlParameter("@Opcion3_Texto", SqlDbType.VarChar, 200) { Value = op3Texto },
                 new SqlParameter("@Opcion3_EstadoApoyo", SqlDbType.VarChar, 30) { Value = op3Estado },
                 new SqlParameter("@Opcion3_Respuesta", SqlDbType.VarChar, -1) { Value = op3Resp },
+                new SqlParameter("@MensajeBienvenidaMovilizador", SqlDbType.VarChar, -1) { Value = (object?)mensajeBienvenidaMovilizador ?? DBNull.Value },
                 new SqlParameter("@Activo", SqlDbType.Bit) { Value = activo }
             );
+        }
+
+        /// <summary>
+        /// Municipios (territorios) que tienen al menos un Administrador
+        /// activo enlazado — para que el SuperAdmin, desde el móvil, elija a
+        /// cuál configurarle su bot/candidato sin ver municipios vacíos.
+        /// </summary>
+        public DataTable ObtenerMunicipiosConAdministrador()
+        {
+            string sql = @"
+                SELECT
+                    t.IdTerritorio,
+                    t.Nombre AS NombreTerritorio,
+                    t.TipoTerritorio,
+                    COUNT(DISTINCT u.IdUsuario) AS TotalUsuarios,
+                    MAX(u.NombreCompleto) AS NombreAdministrador
+                FROM Territorio t WITH (NOLOCK)
+                INNER JOIN Usuario u WITH (NOLOCK) ON u.IdTerritorio = t.IdTerritorio
+                INNER JOIN Rol r WITH (NOLOCK) ON r.IdRol = u.IdRol
+                WHERE u.Activo = 1 AND r.Nombre = 'ADMINISTRADOR'
+                GROUP BY t.IdTerritorio, t.Nombre, t.TipoTerritorio
+                ORDER BY t.Nombre";
+
+            return EjecutarSQLDirecto(sql);
         }
 
         public DataTable GuardarCampanaProgramada(int idUsuario, string rol, string mensaje, DateTime fechaProgramada, string? sessionIdsJson, int totalDestinatarios)

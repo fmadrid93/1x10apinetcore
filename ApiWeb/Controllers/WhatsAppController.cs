@@ -1,4 +1,5 @@
 using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Application.WhatsApp;
 using Dtos.WhatsApp;
@@ -18,6 +19,19 @@ namespace ApiWeb.Controllers
         {
             _service = new WhatsAppService(configuration);
         }
+
+        // Mismo criterio que ConfiguracionController: el IdTerritorio del JWT
+        // (null = SuperAdmin) define qué config puede tocar cada quien por
+        // defecto. Para el bot/candidato, el SuperAdmin puede además apuntar
+        // explícitamente a OTRO municipio (para eso existe la pantalla de
+        // "elegir municipio"); un Admin territorial solo puede tocar el suyo.
+        private int? ObtenerIdTerritorioActual()
+        {
+            var valor = User.FindFirstValue("idTerritorio");
+            return string.IsNullOrEmpty(valor) ? (int?)null : int.Parse(valor);
+        }
+
+        private bool EsSuperAdmin() => ObtenerIdTerritorioActual() == null;
 
         [HttpGet("config")]
         public async Task<IActionResult> ObtenerConfig()
@@ -159,12 +173,21 @@ namespace ApiWeb.Controllers
             }
         }
 
+        /// <summary>
+        /// Trae la config del bot. Un Admin territorial ve siempre la SUYA
+        /// (ignora idTerritorio del query aunque lo mande). El SuperAdmin puede
+        /// pedir la de un municipio puntual con ?idTerritorio=, o la global si
+        /// lo omite.
+        /// </summary>
+        [Authorize]
         [HttpGet("bot/configuracion")]
-        public IActionResult ObtenerBotConfiguracion([FromQuery] string? candidato = null)
+        public IActionResult ObtenerBotConfiguracion([FromQuery] int? idTerritorio = null, [FromQuery] string? candidato = null)
         {
             try
             {
-                var bot = _service.ObtenerBotConfiguracion(candidato);
+                int? propio = ObtenerIdTerritorioActual();
+                int? objetivo = EsSuperAdmin() ? idTerritorio : propio;
+                var bot = _service.ObtenerBotConfiguracion(objetivo, candidato);
                 return Ok(new { exito = 1, dato = bot, status = "ok" });
             }
             catch (Exception ex)
@@ -173,13 +196,49 @@ namespace ApiWeb.Controllers
             }
         }
 
+        /// <summary>
+        /// Guarda la config del bot. Un Admin territorial solo puede guardar
+        /// la SUYA (se le fuerza su propio IdTerritorio del JWT, ignorando lo
+        /// que mande en el body). Solo el SuperAdmin puede apuntar a otro
+        /// municipio explícito o a la config global.
+        /// </summary>
+        [Authorize(Roles = "ADMINISTRADOR")]
         [HttpPost("bot/configuracion")]
         public IActionResult GuardarBotConfiguracion([FromBody] WhatsAppBotConfigDto request)
         {
             try
             {
+                int? propio = ObtenerIdTerritorioActual();
+                if (!EsSuperAdmin())
+                {
+                    request.IdTerritorio = propio;
+                }
                 var bot = _service.GuardarBotConfiguracion(request);
                 return Ok(new { exito = 1, dato = bot, status = "Configuración del bot guardada exitosamente" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { exito = 0, dato = (object?)null, status = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Municipios con al menos un Administrador enlazado — para que el
+        /// SuperAdmin, desde el móvil, elija a cuál configurarle su
+        /// candidato/mensajes sin ver municipios vacíos.
+        /// </summary>
+        [Authorize(Roles = "ADMINISTRADOR")]
+        [HttpGet("bot/municipios")]
+        public IActionResult ObtenerMunicipiosConAdministrador()
+        {
+            if (!EsSuperAdmin())
+            {
+                return Forbid();
+            }
+            try
+            {
+                var lista = _service.ObtenerMunicipiosConAdministrador();
+                return Ok(new { exito = 1, dato = lista, total = lista.Count, status = "ok" });
             }
             catch (Exception ex)
             {

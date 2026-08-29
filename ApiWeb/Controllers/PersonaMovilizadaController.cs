@@ -3,6 +3,7 @@ using Application.Reportes;
 using Dtos.PersonaMovilizada;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace ApiWeb.Controllers
 {
@@ -11,8 +12,13 @@ namespace ApiWeb.Controllers
     [Route("api/[controller]")]
     public class PersonaMovilizadaController : ControllerBase
     {
-        private readonly PersonaMovilizadaService _service = new PersonaMovilizadaService();
+        private readonly PersonaMovilizadaService _service;
         private readonly Application.Reportes.IExcelExportService _excelExportService = new ExcelExportService();
+
+        public PersonaMovilizadaController(IConfiguration configuration)
+        {
+            _service = new PersonaMovilizadaService(configuration);
+        }
 
         [HttpPost("insertar")]
         public IActionResult Insertar([FromBody] PersonaMovilizadaInsertRequest request)

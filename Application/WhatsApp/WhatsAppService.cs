@@ -524,17 +524,18 @@ namespace Application.WhatsApp
         }
 
 
-        public WhatsAppBotConfigDto ObtenerBotConfiguracion(string? nombreCandidato = null)
+        public WhatsAppBotConfigDto ObtenerBotConfiguracion(int? idTerritorio = null, string? nombreCandidato = null)
         {
             try
             {
-                DataTable dt = _dWhatsApp.ObtenerBotConfiguracionBD();
+                DataTable dt = _dWhatsApp.ObtenerBotConfiguracionBD(idTerritorio);
                 if (dt != null && dt.Rows.Count > 0)
                 {
                     var r = dt.Rows[0];
                     return new WhatsAppBotConfigDto
                     {
                         IdBot = Convert.ToInt32(r["IdBot"]),
+                        IdTerritorio = r["IdTerritorio"] == DBNull.Value ? (int?)null : Convert.ToInt32(r["IdTerritorio"]),
                         Titulo = r["Titulo"]?.ToString() ?? "Consulta de Intención de Voto",
                         NombreCandidato = !string.IsNullOrWhiteSpace(nombreCandidato) ? nombreCandidato : (r["NombreCandidato"]?.ToString() ?? "nuestro candidato"),
                         PlantillaPregunta = r["PlantillaPregunta"]?.ToString() ?? "",
@@ -547,6 +548,9 @@ namespace Application.WhatsApp
                         Opcion3_Texto = r["Opcion3_Texto"]?.ToString() ?? "No",
                         Opcion3_EstadoApoyo = r["Opcion3_EstadoApoyo"]?.ToString() ?? "NO_APOYA",
                         Opcion3_Respuesta = r["Opcion3_Respuesta"]?.ToString() ?? "",
+                        MensajeBienvenidaMovilizador = r.Table.Columns.Contains("MensajeBienvenidaMovilizador") && r["MensajeBienvenidaMovilizador"] != DBNull.Value
+                            ? r["MensajeBienvenidaMovilizador"]?.ToString()
+                            : null,
                         Activo = r["Activo"] == DBNull.Value || Convert.ToBoolean(r["Activo"])
                     };
                 }
@@ -557,6 +561,7 @@ namespace Application.WhatsApp
             return new WhatsAppBotConfigDto
             {
                 IdBot = 1,
+                IdTerritorio = idTerritorio,
                 Titulo = "Consulta de Intención de Voto",
                 NombreCandidato = candidato,
                 PlantillaPregunta = $"Hola {{nombre}}, ¿apoyarás a {candidato} en las próximas elecciones?\n\n1️⃣ Sí, totalmente\n2️⃣ Tal vez / Indeciso\n3️⃣ No\n\nPor favor responde con el número 1, 2 o 3.",
@@ -569,14 +574,35 @@ namespace Application.WhatsApp
                 Opcion3_Texto = "No",
                 Opcion3_EstadoApoyo = "NO_APOYA",
                 Opcion3_Respuesta = "Comprendemos tu postura, {nombre}. Agradecemos mucho tu sinceridad y tiempo. ¡Que tengas un excelente día!",
+                MensajeBienvenidaMovilizador = "Hola {nombre}, soy {movilizador}. Te acabo de registrar como parte del equipo de {candidato}. ¡Gracias por tu apoyo!",
                 Activo = true
             };
+        }
+
+        public List<WhatsAppMunicipioConAdminDto> ObtenerMunicipiosConAdministrador()
+        {
+            var lista = new List<WhatsAppMunicipioConAdminDto>();
+            DataTable dt = _dWhatsApp.ObtenerMunicipiosConAdministrador();
+            if (dt == null) return lista;
+
+            foreach (DataRow r in dt.Rows)
+            {
+                lista.Add(new WhatsAppMunicipioConAdminDto
+                {
+                    IdTerritorio = Convert.ToInt32(r["IdTerritorio"]),
+                    NombreTerritorio = r["NombreTerritorio"]?.ToString() ?? "",
+                    TipoTerritorio = r["TipoTerritorio"] == DBNull.Value ? null : r["TipoTerritorio"]?.ToString(),
+                    TotalUsuarios = Convert.ToInt32(r["TotalUsuarios"]),
+                    NombreAdministrador = r["NombreAdministrador"] == DBNull.Value ? null : r["NombreAdministrador"]?.ToString(),
+                });
+            }
+            return lista;
         }
 
         public WhatsAppBotConfigDto GuardarBotConfiguracion(WhatsAppBotConfigDto bot)
         {
             DataTable dt = _dWhatsApp.GuardarBotConfiguracionBD(
-                bot.IdBot,
+                bot.IdTerritorio,
                 bot.Titulo,
                 bot.NombreCandidato,
                 bot.PlantillaPregunta,
@@ -589,9 +615,10 @@ namespace Application.WhatsApp
                 bot.Opcion3_Texto,
                 bot.Opcion3_EstadoApoyo,
                 bot.Opcion3_Respuesta,
+                bot.MensajeBienvenidaMovilizador,
                 bot.Activo
             );
-            return ObtenerBotConfiguracion(bot.NombreCandidato);
+            return ObtenerBotConfiguracion(bot.IdTerritorio, bot.NombreCandidato);
         }
 
         public WhatsAppBotRespuestaResultDto ProcesarRespuestaBot(WhatsAppBotRespuestaRequest request)
@@ -660,6 +687,27 @@ namespace Application.WhatsApp
                 EstadoApoyoAsignado = estadoApoyo,
                 MensajeRespuesta = mensajeRespuesta
             };
+        }
+
+        /// <summary>
+        /// Manda un mensaje directo usando la sesión de WhatsApp "principal" de
+        /// un usuario (movilizador/gerente/admin) — convención de sessionId
+        /// "u{idUsuario}_principal" ya usada en todo el monitoreo. Best-effort:
+        /// no lanza, devuelve false si algo falla (no debe tumbar el flujo que
+        /// lo llama, como el registro de una persona).
+        /// </summary>
+        public async Task<bool> EnviarMensajeAUsuarioAsync(int idUsuarioEmisor, string celularDestino, string mensaje)
+        {
+            try
+            {
+                string serverUrl = ObtenerUrlServidorParaUsuario(idUsuarioEmisor);
+                string sessionId = $"u{idUsuarioEmisor}_principal";
+                return await EnviarMensajeBridgeAsync(serverUrl, sessionId, celularDestino, mensaje);
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         private async Task<bool> EnviarMensajeBridgeAsync(string serverUrl, string sessionId, string celular, string mensaje)
