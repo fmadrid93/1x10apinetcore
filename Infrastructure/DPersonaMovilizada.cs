@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
 using Microsoft.Data.SqlClient;
 
@@ -164,6 +165,43 @@ namespace Infrastructure
             return EjecutarSQL(sql, new SqlParameter("@CI", SqlDbType.VarChar, 50) { Value = ci.Trim() });
         }
 
+        /// <summary>
+        /// Cuenta cuántas PersonaMovilizada activas ya tienen este CI, y de esas
+        /// cuántas caen bajo el mismo movilizador (eso último NUNCA se permite,
+        /// tenga o no habilitados los duplicados a nivel territorio).
+        /// </summary>
+        public (int Total, int EnMismoMovilizador) ContarPorCI(string ci, int idUsuarioMovilizador, int? excludeIdPersona = null)
+        {
+            string sql = @"
+                SELECT
+                    COUNT(*) AS Total,
+                    SUM(CASE WHEN IdUsuarioMovilizador = @IdUsuarioMovilizador THEN 1 ELSE 0 END) AS EnMismoMovilizador
+                FROM PersonaMovilizada WITH (NOLOCK)
+                WHERE (Activo IS NULL OR Activo = 1)
+                  AND LTRIM(RTRIM(CI)) = @CI";
+
+            var parametros = new List<SqlParameter>
+            {
+                new SqlParameter("@CI", SqlDbType.VarChar, 50) { Value = ci.Trim() },
+                new SqlParameter("@IdUsuarioMovilizador", SqlDbType.Int) { Value = idUsuarioMovilizador },
+            };
+
+            if (excludeIdPersona.HasValue && excludeIdPersona.Value > 0)
+            {
+                sql += " AND IdPersonaMovilizada <> @ExcludeId";
+                parametros.Add(new SqlParameter("@ExcludeId", SqlDbType.Int) { Value = excludeIdPersona.Value });
+            }
+
+            var dt = EjecutarSQL(sql, parametros.ToArray());
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                int total = dt.Rows[0]["Total"] == DBNull.Value ? 0 : Convert.ToInt32(dt.Rows[0]["Total"]);
+                int enMismo = dt.Rows[0]["EnMismoMovilizador"] == DBNull.Value ? 0 : Convert.ToInt32(dt.Rows[0]["EnMismoMovilizador"]);
+                return (total, enMismo);
+            }
+            return (0, 0);
+        }
+
         public System.Collections.Generic.HashSet<string> ListarTodosLosCIExistentes()
         {
             var hashSet = new System.Collections.Generic.HashSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -185,6 +223,30 @@ namespace Infrastructure
             }
             catch { }
             return hashSet;
+        }
+
+        /// <summary>
+        /// Sincroniza el "Día D" de PersonaMovilizada cuando un Verificador marca a
+        /// alguien como YA_VOTO desde el padrón oficial (TB_Votante): son dos tablas
+        /// separadas y sin esto el dashboard (que lee de PersonaMovilizada) nunca se
+        /// entera. Actualiza TODAS las filas activas con ese CI (por si hay
+        /// duplicados del mismo movilizador).
+        /// </summary>
+        public int MarcarYaVotoPorCI(string ci)
+        {
+            string sql = @"
+                UPDATE PersonaMovilizada
+                SET EstadoDiaD = 'YA_VOTO'
+                WHERE LTRIM(RTRIM(CI)) = @CI
+                  AND (Activo IS NULL OR Activo = 1);
+                SELECT @@ROWCOUNT AS Filas;";
+
+            var dt = EjecutarSQL(sql, new SqlParameter("@CI", SqlDbType.VarChar, 50) { Value = ci.Trim() });
+            if (dt != null && dt.Rows.Count > 0 && dt.Rows[0]["Filas"] != DBNull.Value)
+            {
+                return Convert.ToInt32(dt.Rows[0]["Filas"]);
+            }
+            return 0;
         }
     }
 }

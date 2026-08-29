@@ -53,6 +53,52 @@ namespace Application.Importacion
                 }
             }
 
+            // 1b. Cargar catálogo de Territorios (Zonas/Municipios) para resolver la
+            // columna "NombreTerritorio" del archivo por nombre, igual que se hace con
+            // el Recinto. Si quien importa es un Admin Territorial (no SuperAdmin), solo
+            // puede resolver nombres dentro de SU PROPIA estructura (su municipio y las
+            // zonas debajo): así un nombre repetido en otro municipio nunca lo saca de
+            // su territorio.
+            var dtTerritorios = _dTerritorio.Listar(true);
+            var dictTerritorios = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+            if (dtTerritorios != null && dtTerritorios.Rows.Count > 0)
+            {
+                var padrePorId = new Dictionary<int, int?>();
+                foreach (DataRow row in dtTerritorios.Rows)
+                {
+                    int idFila = Convert.ToInt32(row["IdTerritorio"]);
+                    int? padreFila = row["IdTerritorioPadre"] == DBNull.Value ? (int?)null : Convert.ToInt32(row["IdTerritorioPadre"]);
+                    padrePorId[idFila] = padreFila;
+                }
+
+                bool PerteneceAlPropio(int idTerr)
+                {
+                    if (!idTerritorioAdmin.HasValue) return true; // SuperAdmin: ve todo el país
+                    var visitados = new HashSet<int>();
+                    int? actual = idTerr;
+                    while (actual.HasValue)
+                    {
+                        if (actual.Value == idTerritorioAdmin.Value) return true;
+                        if (!visitados.Add(actual.Value)) return false;
+                        actual = padrePorId.TryGetValue(actual.Value, out var p) ? p : null;
+                    }
+                    return false;
+                }
+
+                foreach (DataRow row in dtTerritorios.Rows)
+                {
+                    int idFila = Convert.ToInt32(row["IdTerritorio"]);
+                    string nombreFila = row["Nombre"]?.ToString() ?? "";
+                    if (string.IsNullOrEmpty(nombreFila) || !PerteneceAlPropio(idFila)) continue;
+
+                    string normalTerr = NormalizarTexto(nombreFila);
+                    if (!dictTerritorios.ContainsKey(normalTerr))
+                    {
+                        dictTerritorios[normalTerr] = idFila;
+                    }
+                }
+            }
+
             // 2. Cargar Usuarios existentes (Gerentes y Movilizadores por CI, Usuario y Nombre)
             var dtUsuarios = _dUsuario.Listar(null, null, null, false, null, null, null);
             var cacheGerentesPorCI = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
@@ -102,7 +148,20 @@ namespace Application.Importacion
                 indexFila++;
                 try
                 {
-                    int? idTerritorioFinal = fila.IdTerritorio ?? idTerritorioAdmin ?? request.IdTerritorioPorDefecto;
+                    int? idTerritorioFinal = fila.IdTerritorio;
+                    if (!idTerritorioFinal.HasValue && !string.IsNullOrWhiteSpace(fila.NombreTerritorio))
+                    {
+                        string normalTerrFila = NormalizarTexto(fila.NombreTerritorio);
+                        if (dictTerritorios.TryGetValue(normalTerrFila, out var idTerrResuelto))
+                        {
+                            idTerritorioFinal = idTerrResuelto;
+                        }
+                        else
+                        {
+                            resultado.Errores.Add($"Fila {indexFila}: no se encontró la zona/municipio '{fila.NombreTerritorio}', se usará el territorio por defecto.");
+                        }
+                    }
+                    idTerritorioFinal = idTerritorioFinal ?? idTerritorioAdmin ?? request.IdTerritorioPorDefecto;
 
                     // A) Resolver Recinto por Nombre / Id
                     string? idRecintoFinal = fila.IdRecinto;

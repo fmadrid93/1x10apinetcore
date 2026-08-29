@@ -17,7 +17,7 @@ namespace Application.Auth
             _configuration = configuration;
         }
 
-        public string GenerateToken(int idUsuario, string usuario, string rol, int? idTerritorio = null)
+        public string GenerateToken(int idUsuario, string usuario, string rol, int? idTerritorio = null, string? idRecinto = null)
         {
             var jwtSettings = _configuration.GetSection("Jwt");
             var key = new SymmetricSecurityKey(
@@ -39,6 +39,11 @@ namespace Application.Auth
             if (idTerritorio.HasValue)
             {
                 claims.Add(new Claim("idTerritorio", idTerritorio.Value.ToString()));
+            }
+
+            if (!string.IsNullOrWhiteSpace(idRecinto))
+            {
+                claims.Add(new Claim("idRecinto", idRecinto));
             }
 
             var token = new JwtSecurityToken(

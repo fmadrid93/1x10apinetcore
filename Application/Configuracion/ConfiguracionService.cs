@@ -9,14 +9,38 @@ namespace Application.Configuracion
     {
         private readonly DConfiguracion _data = new DConfiguracion();
 
-        public bool ObtenerPermitirDuplicados()
+        private const string ClavePermitirDuplicadosBase = "PERMITIR_VOTANTES_DUPLICADOS";
+
+        private static string ClavePermitirDuplicados(int? idTerritorio)
         {
-            return _data.ObtenerPermitirDuplicados();
+            // Mismo esquema que los campos obligatorios: sin territorio (SuperAdmin) es
+            // el default global; con territorio, cada Admin tiene su propia clave.
+            return idTerritorio.HasValue
+                ? $"{ClavePermitirDuplicadosBase}_{idTerritorio.Value}"
+                : ClavePermitirDuplicadosBase;
         }
 
-        public bool GuardarPermitirDuplicados(bool permitir)
+        /// <param name="idTerritorio">Territorio del Admin que consulta (viene del JWT). Null = SuperAdmin.</param>
+        public bool ObtenerPermitirDuplicados(int? idTerritorio)
         {
-            return _data.GuardarPermitirDuplicados(permitir);
+            // Un territorio que nunca configuró nada propio hereda el default global del
+            // SuperAdmin (que si tampoco fue tocado, es "no permitir", igual que antes).
+            string valorPorDefecto = idTerritorio.HasValue
+                ? _data.ObtenerValor(ClavePermitirDuplicadosBase, "0")
+                : "0";
+
+            string valor = _data.ObtenerValor(ClavePermitirDuplicados(idTerritorio), valorPorDefecto);
+            return valor == "1" || valor.Equals("true", StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <param name="idTerritorio">Territorio del Admin que guarda (viene del JWT). Null = SuperAdmin.</param>
+        public bool GuardarPermitirDuplicados(int? idTerritorio, bool permitir)
+        {
+            string descripcion = idTerritorio.HasValue
+                ? $"Permite o bloquea CI duplicado propio del territorio {idTerritorio.Value} (0=Bloquear, 1=Permitir)"
+                : "Permite o bloquea CI duplicado: default global que heredan los territorios sin config propia (0=Bloquear, 1=Permitir)";
+
+            return _data.GuardarValor(ClavePermitirDuplicados(idTerritorio), permitir ? "1" : "0", descripcion);
         }
 
         private const string ClaveCamposObligatoriosBase = "CAMPOS_OBLIGATORIOS_VOTANTE";

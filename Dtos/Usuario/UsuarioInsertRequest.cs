@@ -17,5 +17,6 @@ namespace Dtos.Usuario
         public string? CI { get; set; }
         public string? Celular { get; set; }
         public string? Email { get; set; }
+        public string? IdRecinto { get; set; }
     }
 }

@@ -32,11 +32,12 @@ namespace ApiWeb.Controllers
         {
             try
             {
-                bool permitir = _service.ObtenerPermitirDuplicados();
+                int? idTerritorio = ObtenerIdTerritorioActual();
+                bool permitir = _service.ObtenerPermitirDuplicados(idTerritorio);
                 return Ok(new
                 {
                     exito = 1,
-                    dato = new { permitirDuplicados = permitir },
+                    dato = new { permitirDuplicados = permitir, idTerritorio, esConfigGlobal = idTerritorio == null },
                     status = "ok"
                 });
             }
@@ -62,11 +63,12 @@ namespace ApiWeb.Controllers
         {
             try
             {
-                bool guardado = _service.GuardarPermitirDuplicados(request.PermitirDuplicados);
+                int? idTerritorio = ObtenerIdTerritorioActual();
+                bool guardado = _service.GuardarPermitirDuplicados(idTerritorio, request.PermitirDuplicados);
                 return Ok(new
                 {
                     exito = guardado ? 1 : 0,
-                    dato = new { permitirDuplicados = request.PermitirDuplicados },
+                    dato = new { permitirDuplicados = request.PermitirDuplicados, idTerritorio },
                     status = guardado ? "ok" : "Error al guardar configuración"
                 });
             }

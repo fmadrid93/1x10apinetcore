@@ -9,7 +9,6 @@ namespace Application.PersonaMovilizada
     public class PersonaMovilizadaService
     {
         private readonly DPersonaMovilizada _data = new DPersonaMovilizada();
-        private readonly DConfiguracion _config = new DConfiguracion();
         private readonly ConfiguracionService _configuracionService = new ConfiguracionService();
 
         private void ValidarCamposObligatorios(
@@ -71,6 +70,41 @@ namespace Application.PersonaMovilizada
             }
         }
 
+        private const int MaxDuplicadosPermitidos = 2;
+
+        /// <summary>
+        /// Reglas de CI duplicado:
+        ///  - Dentro del MISMO movilizador nunca se permite, esté o no habilitado
+        ///    "permitir duplicados" a nivel de territorio.
+        ///  - Entre movilizadores distintos: si el territorio no permite duplicados,
+        ///    se bloquea igual que antes; si sí los permite, se tolera hasta
+        ///    MaxDuplicadosPermitidos copias del mismo CI y se bloquea de ahí en más.
+        /// </summary>
+        private void ValidarDuplicadoCI(string? ci, int idUsuarioMovilizador, int? idTerritorio, int? excludeIdPersona)
+        {
+            if (string.IsNullOrWhiteSpace(ci)) return;
+
+            var (total, enMismoMovilizador) = _data.ContarPorCI(ci.Trim(), idUsuarioMovilizador, excludeIdPersona);
+
+            if (enMismoMovilizador > 0)
+            {
+                throw new Exception($"El CI '{ci.Trim()}' ya está registrado en tu propia lista. No se puede duplicar dentro del mismo movilizador.");
+            }
+
+            bool permitirDuplicados = _configuracionService.ObtenerPermitirDuplicados(idTerritorio);
+            if (!permitirDuplicados)
+            {
+                if (total > 0)
+                {
+                    throw new Exception($"El CI '{ci.Trim()}' ya fue registrado por otra persona. No se permiten votantes duplicados.");
+                }
+            }
+            else if (total >= MaxDuplicadosPermitidos)
+            {
+                throw new Exception($"El CI '{ci.Trim()}' ya alcanzó el máximo de {MaxDuplicadosPermitidos} registros permitidos entre distintos movilizadores.");
+            }
+        }
+
         public DataTable Insertar(
          int idUsuarioMovilizador,
          int? idTerritorio,
@@ -90,18 +124,7 @@ namespace Application.PersonaMovilizada
          decimal? longitud
      )
         {
-            if (!string.IsNullOrWhiteSpace(ci))
-            {
-                bool permitirDuplicados = _config.ObtenerPermitirDuplicados();
-                if (!permitirDuplicados)
-                {
-                    var existente = _data.VerificarExisteCI(ci.Trim());
-                    if (existente != null && existente.Rows.Count > 0)
-                    {
-                        throw new Exception($"El CI '{ci.Trim()}' ya fue registrado por otra persona. No se permiten votantes duplicados.");
-                    }
-                }
-            }
+            ValidarDuplicadoCI(ci, idUsuarioMovilizador, idTerritorio, excludeIdPersona: null);
 
             ValidarCamposObligatorios(
                 idTerritorio,
@@ -149,18 +172,7 @@ namespace Application.PersonaMovilizada
             decimal? longitud
         )
         {
-            if (!string.IsNullOrWhiteSpace(ci))
-            {
-                bool permitirDuplicados = _config.ObtenerPermitirDuplicados();
-                if (!permitirDuplicados)
-                {
-                    var existente = _data.VerificarExisteCI(ci.Trim(), idPersonaMovilizada);
-                    if (existente != null && existente.Rows.Count > 0)
-                    {
-                        throw new Exception($"El CI '{ci.Trim()}' ya fue registrado por otra persona. No se permiten votantes duplicados.");
-                    }
-                }
-            }
+            ValidarDuplicadoCI(ci, idUsuarioMovilizador, idTerritorio, excludeIdPersona: idPersonaMovilizada);
 
             ValidarCamposObligatorios(
                 idTerritorio,

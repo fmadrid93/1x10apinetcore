@@ -74,10 +74,11 @@ namespace ApiWeb.Controllers
                 dt.Columns.Add("VotanteCelular", typeof(string));
                 dt.Columns.Add("VotanteFechaNacimiento", typeof(string));
                 dt.Columns.Add("NombreRecinto", typeof(string));
+                dt.Columns.Add("Zona", typeof(string));
 
-                dt.Rows.Add("Carlos Mendoza", "3456789", "0981111111", "Juan Perez", "4567890", "0982222222", "Maria", "Gonzalez", "5678901", "0981123456", "15/05/1998", "Colegio Nacional Capital");
-                dt.Rows.Add("Carlos Mendoza", "3456789", "0981111111", "Juan Perez", "4567890", "0982222222", "Pedro", "Benitez", "6789012", "0982234567", "20/11/1985", "Colegio San Jose");
-                dt.Rows.Add("Carlos Mendoza", "3456789", "0981111111", "Rosa Martinez", "4890123", "0983333333", "Lucas", "Duarte", "7890123", "0983345678", "10/02/2003", "Escuela Republica de Colombia");
+                dt.Rows.Add("Carlos Mendoza", "3456789", "0981111111", "Juan Perez", "4567890", "0982222222", "Maria", "Gonzalez", "5678901", "0981123456", "15/05/1998", "Colegio Nacional Capital", "Centro");
+                dt.Rows.Add("Carlos Mendoza", "3456789", "0981111111", "Juan Perez", "4567890", "0982222222", "Pedro", "Benitez", "6789012", "0982234567", "20/11/1985", "Colegio San Jose", "Centro");
+                dt.Rows.Add("Carlos Mendoza", "3456789", "0981111111", "Rosa Martinez", "4890123", "0983333333", "Lucas", "Duarte", "7890123", "0983345678", "10/02/2003", "Escuela Republica de Colombia", "San Roque");
 
                 return _excelExportService.ExportarXlsx(
                     dt,
@@ -94,7 +95,8 @@ namespace ApiWeb.Controllers
                     ("VotanteCI", "VotanteCI"),
                     ("VotanteCelular", "VotanteCelular"),
                     ("VotanteFechaNacimiento", "VotanteFechaNacimiento"),
-                    ("NombreRecinto", "NombreRecinto")
+                    ("NombreRecinto", "NombreRecinto"),
+                    ("Zona", "Zona")
                 );
             }
             catch (Exception ex)

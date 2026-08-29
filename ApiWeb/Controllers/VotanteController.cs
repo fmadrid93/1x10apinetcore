@@ -140,4 +140,32 @@ public class VotanteController : ControllerBase
             });
         }
     }
+
+    [HttpPost("marcar-paso-pc")]
+    public IActionResult MarcarPasoPorElPC([FromBody] VotanteMarcarPasoPCRequest request)
+    {
+        try
+        {
+            var ds = _service.MarcarPasoPorElPC(
+                request.IdVotante,
+                request.IdUsuarioMarca
+            );
+
+            return Ok(new
+            {
+                exito = 1,
+                dato = ds,
+                status = "ok"
+            });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new
+            {
+                exito = 0,
+                dato = (object?)null,
+                status = ex.Message
+            });
+        }
+    }
 }

@@ -16,7 +16,8 @@ namespace Infrastructure
             string? ci,
             string? celular,
             string? email,
-            int? idUsuarioCreate)
+            int? idUsuarioCreate,
+            string? idRecinto = null)
         {
             return EjecutarPA(
                 "pa_usuario_insertar",
@@ -29,7 +30,8 @@ namespace Infrastructure
                 new SqlParameter("@CI", SqlDbType.VarChar, 30) { Value = (object?)ci ?? DBNull.Value },
                 new SqlParameter("@Celular", SqlDbType.VarChar, 30) { Value = (object?)celular ?? DBNull.Value },
                 new SqlParameter("@Email", SqlDbType.VarChar, 150) { Value = (object?)email ?? DBNull.Value },
-                new SqlParameter("@IdUsuarioCreate", SqlDbType.Int) { Value = (object?)idUsuarioCreate ?? DBNull.Value }
+                new SqlParameter("@IdUsuarioCreate", SqlDbType.Int) { Value = (object?)idUsuarioCreate ?? DBNull.Value },
+                new SqlParameter("@IdRecinto", SqlDbType.VarChar, 150) { Value = (object?)idRecinto ?? DBNull.Value }
             );
         }
 
@@ -44,7 +46,8 @@ namespace Infrastructure
             string? email,
             bool activo,
             int? idUsuarioUpdate,
-            string? motivo)
+            string? motivo,
+            string? idRecinto = null)
         {
             return EjecutarPA(
                 "pa_usuario_actualizar",
@@ -58,7 +61,8 @@ namespace Infrastructure
                 new SqlParameter("@Email", SqlDbType.VarChar, 150) { Value = (object?)email ?? DBNull.Value },
                 new SqlParameter("@Activo", SqlDbType.Bit) { Value = activo },
                 new SqlParameter("@IdUsuarioUpdate", SqlDbType.Int) { Value = (object?)idUsuarioUpdate ?? DBNull.Value },
-                new SqlParameter("@Motivo", SqlDbType.NVarChar, 300) { Value = (object?)motivo ?? DBNull.Value }
+                new SqlParameter("@Motivo", SqlDbType.NVarChar, 300) { Value = (object?)motivo ?? DBNull.Value },
+                new SqlParameter("@IdRecinto", SqlDbType.VarChar, 150) { Value = (object?)idRecinto ?? DBNull.Value }
             );
         }
 
@@ -142,6 +146,27 @@ namespace Infrastructure
             {
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Busca un usuario activo de un rol dado (ej. Movilizador) por CI, sin
+        /// importar quién lo supervisa. Se usa para impedir que la misma persona
+        /// quede registrada como movilizador bajo más de un gerente.
+        /// </summary>
+        public DataTable ObtenerActivoPorCIyRol(string ci, int idRol, int? excludeIdUsuario = null)
+        {
+            string sql = @"
+                SELECT TOP 1 IdUsuario, IdUsuarioSupervisor, NombreCompleto, Usuario
+                FROM Usuario WITH (NOLOCK)
+                WHERE IdRol = @IdRol
+                  AND Activo = 1
+                  AND LTRIM(RTRIM(CI)) = @CI
+                  AND (@ExcludeId IS NULL OR IdUsuario <> @ExcludeId)";
+
+            return EjecutarSQL(sql,
+                new SqlParameter("@IdRol", SqlDbType.Int) { Value = idRol },
+                new SqlParameter("@CI", SqlDbType.VarChar, 30) { Value = ci.Trim() },
+                new SqlParameter("@ExcludeId", SqlDbType.Int) { Value = (object?)excludeIdUsuario ?? DBNull.Value });
         }
     }
 }

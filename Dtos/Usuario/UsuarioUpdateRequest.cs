@@ -18,5 +18,6 @@ namespace Dtos.Usuario
         public string? Email { get; set; }
         public bool Activo { get; set; } = true;
         public string? Motivo { get; set; }
+        public string? IdRecinto { get; set; }
     }
 }

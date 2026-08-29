@@ -60,8 +60,14 @@ namespace Application.Auth
             string usuarioDb = row["Usuario"]?.ToString() ?? "";
             string rol = row["Rol"]?.ToString() ?? "";
             int? idTerritorio = row["IdTerritorio"] == DBNull.Value ? (int?)null : Convert.ToInt32(row["IdTerritorio"]);
+            string? idRecinto = row.Table.Columns.Contains("IdRecinto") && row["IdRecinto"] != DBNull.Value
+                ? row["IdRecinto"].ToString()
+                : null;
+            string? recintoAsignado = row.Table.Columns.Contains("RecintoAsignado") && row["RecintoAsignado"] != DBNull.Value
+                ? row["RecintoAsignado"].ToString()
+                : null;
 
-            string token = _jwtTokenService.GenerateToken(idUsuario, usuarioDb, rol, idTerritorio);
+            string token = _jwtTokenService.GenerateToken(idUsuario, usuarioDb, rol, idTerritorio, idRecinto);
             string? urlServidorWhatsApp = new DWhatsApp().ObtenerUrlServidorWhatsAppPorUsuario(idUsuario);
 
             string? municipio = null;
@@ -109,6 +115,8 @@ namespace Application.Auth
                 Municipio = municipio,
                 Zona = zona,
                 IdUsuarioSupervisor = row["IdUsuarioSupervisor"] == DBNull.Value ? (int?)null : Convert.ToInt32(row["IdUsuarioSupervisor"]),
+                IdRecinto = idRecinto,
+                RecintoAsignado = recintoAsignado,
                 UrlServidorWhatsApp = urlServidorWhatsApp,
                 Token = token
             };

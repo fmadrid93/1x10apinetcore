@@ -37,7 +37,8 @@ namespace Application.Usuario
             string? email,
             int idUsuarioCreador,
             int? idTerritorioCreador,
-            string rolCreador)
+            string rolCreador,
+            string? idRecinto = null)
         {
             int? idTerritorioFinal = idTerritorio;
             int? idUsuarioSupervisorFinal = idUsuarioSupervisor;
@@ -83,8 +84,23 @@ namespace Application.Usuario
                 throw new Exception($"El usuario '{usuario.Trim()}' ya se encuentra registrado. Por favor elija un nombre de usuario diferente.");
             }
 
+            if (idRol == RolMovilizador && !string.IsNullOrWhiteSpace(ci))
+            {
+                var existente = _data.ObtenerActivoPorCIyRol(ci.Trim(), RolMovilizador);
+                if (existente != null && existente.Rows.Count > 0)
+                {
+                    var fila = existente.Rows[0];
+                    int? supervisorExistente = fila["IdUsuarioSupervisor"] == DBNull.Value ? (int?)null : Convert.ToInt32(fila["IdUsuarioSupervisor"]);
+                    if (supervisorExistente != idUsuarioSupervisorFinal)
+                    {
+                        string nombreExistente = fila["NombreCompleto"]?.ToString() ?? fila["Usuario"]?.ToString() ?? ci.Trim();
+                        throw new Exception($"El CI '{ci.Trim()}' ya está registrado como movilizador ({nombreExistente}) bajo otro gerente. Un movilizador no puede pertenecer a más de un gerente.");
+                    }
+                }
+            }
+
             string claveHash = BCrypt.Net.BCrypt.HashPassword(clave);
-            return _data.Insertar(idRol, idTerritorioFinal, idUsuarioSupervisorFinal, usuario.Trim(), claveHash, nombreCompleto, ci, celular, email, idUsuarioCreador);
+            return _data.Insertar(idRol, idTerritorioFinal, idUsuarioSupervisorFinal, usuario.Trim(), claveHash, nombreCompleto, ci, celular, email, idUsuarioCreador, idRecinto);
         }
 
         public DataTable Actualizar(
@@ -100,7 +116,8 @@ namespace Application.Usuario
             int idUsuarioCaller,
             int? idTerritorioCaller,
             string rolCaller,
-            string? motivo)
+            string? motivo,
+            string? idRecinto = null)
         {
             ValidarOwnership(idUsuario, idUsuarioCaller, idTerritorioCaller, rolCaller);
 
@@ -126,7 +143,7 @@ namespace Application.Usuario
                 }
             }
 
-            return _data.Actualizar(idUsuario, idRol, idTerritorioFinal, idUsuarioSupervisorFinal, nombreCompleto, ci, celular, email, activo, idUsuarioCaller, motivo);
+            return _data.Actualizar(idUsuario, idRol, idTerritorioFinal, idUsuarioSupervisorFinal, nombreCompleto, ci, celular, email, activo, idUsuarioCaller, motivo, idRecinto);
 
         }
 
