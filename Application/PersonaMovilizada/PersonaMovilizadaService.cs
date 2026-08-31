@@ -269,9 +269,9 @@ namespace Application.PersonaMovilizada
             return _data.ListarPorMovilizador(idUsuarioMovilizador, texto, estadoDiaD);
         }
 
-        public DataTable BuscarGeneral(int? idTerritorio, int? idUsuarioMovilizador, string? texto, string? estadoDiaD)
+        public DataTable BuscarGeneral(int? idTerritorio, int? idUsuarioMovilizador, string? texto, string? estadoDiaD, string? estadoApoyo = null)
         {
-            return _data.BuscarGeneral(idTerritorio, idUsuarioMovilizador, texto, estadoDiaD);
+            return _data.BuscarGeneral(idTerritorio, idUsuarioMovilizador, texto, estadoDiaD, estadoApoyo);
         }
 
         public DataTable ResumenMovilizador(int idUsuarioMovilizador)

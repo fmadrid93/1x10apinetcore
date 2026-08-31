@@ -128,11 +128,11 @@ namespace ApiWeb.Controllers
         }
 
         [HttpGet("buscar-general")]
-        public IActionResult BuscarGeneral([FromQuery] int? idTerritorio, [FromQuery] int? idUsuarioMovilizador, [FromQuery] string? texto, [FromQuery] string? estadoDiaD)
+        public IActionResult BuscarGeneral([FromQuery] int? idTerritorio, [FromQuery] int? idUsuarioMovilizador, [FromQuery] string? texto, [FromQuery] string? estadoDiaD, [FromQuery] string? estadoApoyo)
         {
             try
             {
-                var ds = _service.BuscarGeneral(idTerritorio, idUsuarioMovilizador, texto, estadoDiaD);
+                var ds = _service.BuscarGeneral(idTerritorio, idUsuarioMovilizador, texto, estadoDiaD, estadoApoyo);
                 return Ok(new { exito = 1, dato = ds, status = "ok" });
             }
             catch (Exception ex)

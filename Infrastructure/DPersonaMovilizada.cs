@@ -122,14 +122,15 @@ namespace Infrastructure
             );
         }
 
-        public DataTable BuscarGeneral(int? idTerritorio, int? idUsuarioMovilizador, string? texto, string? estadoDiaD)
+        public DataTable BuscarGeneral(int? idTerritorio, int? idUsuarioMovilizador, string? texto, string? estadoDiaD, string? estadoApoyo = null)
         {
             return EjecutarPA(
                 "pa_persona_movilizada_buscar_general",
                 new SqlParameter("@IdTerritorio", SqlDbType.Int) { Value = (object?)idTerritorio ?? DBNull.Value },
                 new SqlParameter("@IdUsuarioMovilizador", SqlDbType.Int) { Value = (object?)idUsuarioMovilizador ?? DBNull.Value },
                 new SqlParameter("@Texto", SqlDbType.VarChar, 150) { Value = (object?)texto ?? DBNull.Value },
-                new SqlParameter("@EstadoDiaD", SqlDbType.VarChar, 30) { Value = (object?)estadoDiaD ?? DBNull.Value }
+                new SqlParameter("@EstadoDiaD", SqlDbType.VarChar, 30) { Value = (object?)estadoDiaD ?? DBNull.Value },
+                new SqlParameter("@EstadoApoyo", SqlDbType.VarChar, 30) { Value = (object?)estadoApoyo ?? DBNull.Value }
             );
         }
 
