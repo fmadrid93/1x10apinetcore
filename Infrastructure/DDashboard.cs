@@ -96,6 +96,7 @@ namespace Infrastructure
             string sql = @"
 select 
     u.NombreCompleto as Administrador, 
+    u.Celular as Celular,
     t.Nombre as Municipio,
     (select count(*) 
      from Usuario g with (nolock) 

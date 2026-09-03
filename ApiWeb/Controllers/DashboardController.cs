@@ -39,9 +39,11 @@ namespace ApiWeb.Controllers
 
                 foreach (System.Data.DataRow row in dt.Rows)
                 {
+                    var celRaw = row["Celular"] != DBNull.Value ? row["Celular"].ToString() : "";
                     lista.Add(new
                     {
                         administrador = row["Administrador"] != DBNull.Value ? row["Administrador"].ToString() : "",
+                        celular = FormatearCelularParaguay(celRaw),
                         municipio = row["Municipio"] != DBNull.Value ? row["Municipio"].ToString() : "",
                         concejales = row["Concejales"] != DBNull.Value ? Convert.ToInt32(row["Concejales"]) : 0,
                         punteros = row["Punteros"] != DBNull.Value ? Convert.ToInt32(row["Punteros"]) : 0,
@@ -431,6 +433,72 @@ namespace ApiWeb.Controllers
             {
                 return BadRequest(new { exito = 0, dato = (object?)null, status = ex.Message });
             }
+        }
+
+        [HttpGet("superadmin-resumen-municipios-excel")]
+        public IActionResult SuperAdminResumenMunicipiosExcel()
+        {
+            try
+            {
+                var dt = _service.SuperAdminResumenMunicipios();
+
+                if (dt == null || dt.Rows.Count == 0)
+                {
+                    return BadRequest(new
+                    {
+                        exito = 0,
+                        dato = (object?)null,
+                        status = "No hay datos para exportar"
+                    });
+                }
+
+                // Formatear celulares para Paraguay en el DataTable antes de exportar
+                if (dt.Columns.Contains("Celular"))
+                {
+                    foreach (System.Data.DataRow row in dt.Rows)
+                    {
+                        if (row["Celular"] != DBNull.Value)
+                        {
+                            row["Celular"] = FormatearCelularParaguay(row["Celular"].ToString());
+                        }
+                    }
+                }
+
+                return _excelExportService.ExportarXlsx(
+                    dt,
+                    "Resumen Municipios",
+                    "resumen_municipios.xlsx",
+                    ("Municipio", "Municipio"),
+                    ("Administrador", "Administrador"),
+                    ("Celular Administrador", "Celular"),
+                    ("Concejales (Rol 2)", "Concejales"),
+                    ("Punteros (Rol 3)", "Punteros"),
+                    ("Personas Movilizadas", "PersonasMovilizadas")
+                );
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    exito = 0,
+                    dato = (object?)null,
+                    status = ex.Message
+                });
+            }
+        }
+
+        private static string FormatearCelularParaguay(string? raw)
+        {
+            if (string.IsNullOrWhiteSpace(raw)) return "";
+            var digits = new string(raw.Where(char.IsDigit).ToArray());
+            if (digits.StartsWith("595") && digits.Length == 12) digits = digits.Substring(3);
+            else if (digits.StartsWith("0") && digits.Length == 10) digits = digits.Substring(1);
+
+            if (digits.Length == 9 && digits.StartsWith("9"))
+            {
+                return $"+595 {digits.Substring(0, 3)} {digits.Substring(3, 3)} {digits.Substring(6)}";
+            }
+            return raw.Trim();
         }
     }
 
