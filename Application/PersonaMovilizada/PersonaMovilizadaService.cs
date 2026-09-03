@@ -12,6 +12,7 @@ namespace Application.PersonaMovilizada
     public class PersonaMovilizadaService
     {
         private readonly DPersonaMovilizada _data = new DPersonaMovilizada();
+        private readonly DMovilizadorMeta _metaData = new DMovilizadorMeta();
         private readonly ConfiguracionService _configuracionService = new ConfiguracionService();
         private readonly DUsuario _usuarios = new DUsuario();
         private readonly IConfiguration? _configuration;
@@ -22,6 +23,16 @@ namespace Application.PersonaMovilizada
         {
             _configuration = configuration;
         }
+
+        private void ValidarMetaMaxima(int idUsuarioMovilizador)
+        {
+            var (metaObjetivo, totalRegistrados) = _metaData.ObtenerMetaYTotalPersonas(idUsuarioMovilizador);
+            if (totalRegistrados >= metaObjetivo)
+            {
+                throw new Exception($"El movilizador ya alcanzó su meta máxima permitida de {metaObjetivo} votantes registrados.");
+            }
+        }
+
 
         private void ValidarCamposObligatorios(
             int? idTerritorio,
@@ -136,6 +147,8 @@ namespace Application.PersonaMovilizada
          decimal? longitud
      )
         {
+            ValidarMetaMaxima(idUsuarioMovilizador);
+
             ValidarDuplicadoCI(ci, idUsuarioMovilizador, idTerritorio, excludeIdPersona: null);
 
             ValidarCamposObligatorios(
@@ -143,6 +156,7 @@ namespace Application.PersonaMovilizada
                 celular, direccionReferencia, sexo, rangoEdad,
                 recintoVotacion, idRecinto, nivelCompromiso, observaciones,
                 latitud, longitud);
+
 
             var resultado = _data.Insertar(
                 idUsuarioMovilizador,

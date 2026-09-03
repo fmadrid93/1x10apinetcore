@@ -43,8 +43,9 @@ public class VotanteController : ControllerBase
     {
         try
         {
-            string? recintoFinal = !string.IsNullOrWhiteSpace(recinto) ? recinto : idRecinto;
+            string? recintoFinal = !string.IsNullOrWhiteSpace(idRecinto) ? idRecinto.Trim() : (!string.IsNullOrWhiteSpace(recinto) ? recinto.Trim() : null);
             var dt = _service.BuscarPadronGlobal(texto ?? "", recintoFinal, nroMesa);
+
 
             return Ok(new
             {

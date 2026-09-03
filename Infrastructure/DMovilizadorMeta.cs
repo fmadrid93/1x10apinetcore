@@ -132,5 +132,26 @@ namespace Infrastructure
 
             return EjecutarSQL(sql, new SqlParameter("@IdGerente", SqlDbType.Int) { Value = idGerente });
         }
+
+        public (int metaObjetivo, int totalRegistrados) ObtenerMetaYTotalPersonas(int idUsuarioMovilizador)
+        {
+
+            try
+            {
+                string sql = @"
+                    SELECT 
+                        ISNULL((SELECT TOP 1 MetaObjetivo FROM MovilizadorMeta WITH (NOLOCK) WHERE IdUsuarioMovilizador = @IdUsuarioMovilizador), 10) AS MetaObjetivo,
+                        ISNULL((SELECT COUNT(1) FROM PersonaMovilizada WITH (NOLOCK) WHERE IdUsuarioMovilizador = @IdUsuarioMovilizador AND (Activo IS NULL OR Activo = 1)), 0) AS TotalPersonas";
+                var dt = EjecutarSQL(sql, new SqlParameter("@IdUsuarioMovilizador", SqlDbType.Int) { Value = idUsuarioMovilizador });
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    int meta = Convert.ToInt32(dt.Rows[0]["MetaObjetivo"]);
+                    int total = Convert.ToInt32(dt.Rows[0]["TotalPersonas"]);
+                    return (meta, total);
+                }
+            }
+            catch { }
+            return (10, 0);
+        }
     }
 }
