@@ -76,12 +76,16 @@ namespace Application.Usuario
 
             if (string.IsNullOrWhiteSpace(usuario))
             {
-                throw new Exception("El nombre de usuario es obligatorio.");
+                usuario = GenerarUsuarioDisponible(nombreCompleto, ci);
             }
-
-            if (_data.ExisteUsuario(usuario.Trim()))
+            else if (_data.ExisteUsuario(usuario.Trim()))
             {
                 throw new Exception($"El usuario '{usuario.Trim()}' ya se encuentra registrado. Por favor elija un nombre de usuario diferente.");
+            }
+
+            if (string.IsNullOrWhiteSpace(clave))
+            {
+                clave = !string.IsNullOrWhiteSpace(ci) ? ci.Trim() : "123456";
             }
 
             if (idRol == RolMovilizador && !string.IsNullOrWhiteSpace(ci))
@@ -266,6 +270,69 @@ namespace Application.Usuario
             {
                 throw new AccesoDenegadoException("No tiene permiso sobre este usuario.");
             }
+        }
+
+        public string GenerarUsuarioDisponible(string nombreCompleto, string? ci = null)
+        {
+            if (string.IsNullOrWhiteSpace(nombreCompleto))
+            {
+                return !string.IsNullOrWhiteSpace(ci) ? $"u_{ci.Trim()}" : $"u_{DateTime.Now.Ticks % 100000}";
+            }
+
+            var partes = nombreCompleto.Trim().Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+            if (partes.Length == 0)
+            {
+                return !string.IsNullOrWhiteSpace(ci) ? $"u_{ci.Trim()}" : $"u_{DateTime.Now.Ticks % 100000}";
+            }
+
+            string pNombre = NormalizarTexto(partes[0]);
+            string pApellido = partes.Length >= 2 ? NormalizarTexto(partes[1]) : pNombre;
+
+            if (string.IsNullOrEmpty(pNombre) || string.IsNullOrEmpty(pApellido))
+            {
+                return !string.IsNullOrWhiteSpace(ci) ? $"u_{ci.Trim()}" : $"u_{DateTime.Now.Ticks % 100000}";
+            }
+
+            // 1. Primer caracter del primer nombre + primer apellido (ej: Carlos Mendoza -> cmendoza)
+            string c1 = pNombre.Substring(0, 1) + (partes.Length >= 2 ? pApellido : "");
+            if (!_data.ExisteUsuario(c1)) return c1;
+
+            // 2. Dos o más caracteres del primer nombre + primer apellido (ej: camendoza, carmendoza...)
+            for (int len = 2; len <= pNombre.Length; len++)
+            {
+                string cLen = pNombre.Substring(0, len) + (partes.Length >= 2 ? pApellido : "");
+                if (!_data.ExisteUsuario(cLen)) return cLen;
+            }
+
+            // 3. Con sufijo de CI
+            if (!string.IsNullOrWhiteSpace(ci))
+            {
+                string cCi = $"{c1}_{System.Text.RegularExpressions.Regex.Replace(ci.Trim().ToLowerInvariant(), @"[^a-z0-9]", "")}";
+                if (!_data.ExisteUsuario(cCi)) return cCi;
+            }
+
+            // 4. Con número secuencial (cmendoza1, cmendoza2...)
+            for (int i = 1; i <= 999; i++)
+            {
+                string cNum = $"{c1}{i}";
+                if (!_data.ExisteUsuario(cNum)) return cNum;
+            }
+
+            return $"{c1}_{DateTime.Now.Ticks % 10000}";
+        }
+
+        private string NormalizarTexto(string texto)
+        {
+            if (string.IsNullOrWhiteSpace(texto)) return string.Empty;
+            string t = texto.Trim().ToLowerInvariant();
+            t = System.Text.RegularExpressions.Regex.Replace(t, @"[áàäâ]", "a");
+            t = System.Text.RegularExpressions.Regex.Replace(t, @"[éèëê]", "e");
+            t = System.Text.RegularExpressions.Regex.Replace(t, @"[íìïî]", "i");
+            t = System.Text.RegularExpressions.Regex.Replace(t, @"[óòöô]", "o");
+            t = System.Text.RegularExpressions.Regex.Replace(t, @"[úùüû]", "u");
+            t = System.Text.RegularExpressions.Regex.Replace(t, @"[ñ]", "n");
+            t = System.Text.RegularExpressions.Regex.Replace(t, @"[^a-z0-9]", "");
+            return t;
         }
     }
 }

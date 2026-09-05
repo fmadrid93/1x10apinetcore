@@ -623,28 +623,44 @@ namespace Application.WhatsApp
 
         public WhatsAppBotRespuestaResultDto ProcesarRespuestaBot(WhatsAppBotRespuestaRequest request)
         {
-            string texto = (request.TextoRespuesta ?? "").Trim().ToLower();
+            string rawTexto = request.TextoRespuesta ?? "";
+            string texto = rawTexto.Trim().ToLower()
+                .Replace("á", "a").Replace("é", "e").Replace("í", "i").Replace("ó", "o").Replace("ú", "u");
+
             var botCfg = ObtenerBotConfiguracion();
 
             string estadoApoyo = "CONSULTADO";
             string mensajeRespuesta = botCfg.Opcion2_Respuesta;
             bool reconocido = false;
 
-            if (texto.Contains("1") || texto.Contains("si") || texto.Contains("sí") || texto.Contains("totalmente") || texto.Contains("apoyo") || texto.Contains("claro") || texto.Contains("ganar"))
+            // Detectar si la opción 2 está configurada como NO_APOYA o si es una plantilla de 2 opciones
+            bool esPlantillaDosOpciones = (botCfg.Opcion2_EstadoApoyo == "NO_APOYA")
+                || string.IsNullOrWhiteSpace(botCfg.Opcion3_Texto)
+                || string.IsNullOrWhiteSpace(botCfg.Opcion3_Respuesta)
+                || (botCfg.Opcion2_Texto ?? "").ToLower().Contains("no")
+                || (botCfg.Opcion2_Texto ?? "").ToLower().Contains("error");
+
+            if (texto == "1" || texto.StartsWith("1") || texto.Contains("1️⃣") || texto.Contains("si") || texto.Contains("apoyo") || texto.Contains("apoyar") || texto.Contains("claro") || texto.Contains("totalmente"))
             {
-                estadoApoyo = "APOYA";
+                estadoApoyo = string.IsNullOrWhiteSpace(botCfg.Opcion1_EstadoApoyo) ? "APOYA" : botCfg.Opcion1_EstadoApoyo;
                 mensajeRespuesta = botCfg.Opcion1_Respuesta;
                 reconocido = true;
             }
-            else if (texto.Contains("2") || texto.Contains("tal vez") || texto.Contains("indeciso") || texto.Contains("duda") || texto.Contains("quizas") || texto.Contains("quizás") || texto.Contains("veremos"))
+            else if (esPlantillaDosOpciones && (texto == "2" || texto.StartsWith("2") || texto.Contains("2️⃣") || texto.Contains("no") || texto.Contains("error") || texto.Contains("interesa") || texto.Contains("ninguno") || texto.Contains("jamas")))
             {
-                estadoApoyo = "CONSULTADO";
+                estadoApoyo = string.IsNullOrWhiteSpace(botCfg.Opcion2_EstadoApoyo) ? "NO_APOYA" : botCfg.Opcion2_EstadoApoyo;
                 mensajeRespuesta = botCfg.Opcion2_Respuesta;
                 reconocido = true;
             }
-            else if (texto.Contains("3") || texto.Contains("no") || texto.Contains("nunca") || texto.Contains("ninguno") || texto.Contains("jamas") || texto.Contains("jamás"))
+            else if (!esPlantillaDosOpciones && (texto == "2" || texto.StartsWith("2") || texto.Contains("2️⃣") || texto.Contains("tal vez") || texto.Contains("indeciso") || texto.Contains("duda") || texto.Contains("quizas") || texto.Contains("veremos")))
             {
-                estadoApoyo = "NO_APOYA";
+                estadoApoyo = string.IsNullOrWhiteSpace(botCfg.Opcion2_EstadoApoyo) ? "CONSULTADO" : botCfg.Opcion2_EstadoApoyo;
+                mensajeRespuesta = botCfg.Opcion2_Respuesta;
+                reconocido = true;
+            }
+            else if (texto == "3" || texto.StartsWith("3") || texto.Contains("3️⃣") || texto.Contains("no") || texto.Contains("nunca") || texto.Contains("ninguno") || texto.Contains("jamas"))
+            {
+                estadoApoyo = string.IsNullOrWhiteSpace(botCfg.Opcion3_EstadoApoyo) ? "NO_APOYA" : botCfg.Opcion3_EstadoApoyo;
                 mensajeRespuesta = botCfg.Opcion3_Respuesta;
                 reconocido = true;
             }
@@ -662,18 +678,18 @@ namespace Application.WhatsApp
                     string ape = dt.Rows[0]["Apellidos"]?.ToString() ?? "";
                     nombreVotante = $"{nom} {ape}".Trim();
 
-                    // Reemplazar variable {nombre} en la respuesta diferenciada
-                    mensajeRespuesta = mensajeRespuesta
+                    // Reemplazar variables dinámicas en la respuesta
+                    mensajeRespuesta = (mensajeRespuesta ?? "")
                         .Replace("{nombre}", nom)
                         .Replace("{apellido}", ape)
-                        .Replace("{candidato}", botCfg.NombreCandidato);
+                        .Replace("{candidato}", botCfg.NombreCandidato ?? "");
                 }
                 else
                 {
-                    mensajeRespuesta = mensajeRespuesta
+                    mensajeRespuesta = (mensajeRespuesta ?? "")
                         .Replace("{nombre}", "")
                         .Replace("{apellido}", "")
-                        .Replace("{candidato}", botCfg.NombreCandidato)
+                        .Replace("{candidato}", botCfg.NombreCandidato ?? "")
                         .Trim();
                 }
             }

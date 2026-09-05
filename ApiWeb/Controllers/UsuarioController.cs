@@ -246,5 +246,19 @@ namespace ApiWeb.Controllers
                 });
             }
         }
+
+        [HttpGet("generar-usuario-disponible")]
+        public IActionResult GenerarUsuarioDisponible([FromQuery] string nombreCompleto, [FromQuery] string? ci = null)
+        {
+            try
+            {
+                string usuario = _service.GenerarUsuarioDisponible(nombreCompleto, ci);
+                return Ok(new { exito = 1, dato = new { usuario }, status = "ok" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { exito = 0, dato = (object?)null, status = ex.Message });
+            }
+        }
     }
 }
