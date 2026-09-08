@@ -66,6 +66,9 @@ namespace Application.Auth
             string? recintoAsignado = row.Table.Columns.Contains("RecintoAsignado") && row["RecintoAsignado"] != DBNull.Value
                 ? row["RecintoAsignado"].ToString()
                 : null;
+            string? mesa = row.Table.Columns.Contains("Mesa") && row["Mesa"] != DBNull.Value
+                ? row["Mesa"].ToString()
+                : null;
 
             string token = _jwtTokenService.GenerateToken(idUsuario, usuarioDb, rol, idTerritorio, idRecinto);
             string? urlServidorWhatsApp = new DWhatsApp().ObtenerUrlServidorWhatsAppPorUsuario(idUsuario);
@@ -117,6 +120,7 @@ namespace Application.Auth
                 IdUsuarioSupervisor = row["IdUsuarioSupervisor"] == DBNull.Value ? (int?)null : Convert.ToInt32(row["IdUsuarioSupervisor"]),
                 IdRecinto = idRecinto,
                 RecintoAsignado = recintoAsignado,
+                Mesa = mesa,
                 UrlServidorWhatsApp = urlServidorWhatsApp,
                 Token = token
             };

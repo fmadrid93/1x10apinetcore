@@ -17,7 +17,8 @@ namespace Infrastructure
             string? celular,
             string? email,
             int? idUsuarioCreate,
-            string? idRecinto = null)
+            string? idRecinto = null,
+            string? mesa = null)
         {
             return EjecutarPA(
                 "pa_usuario_insertar",
@@ -31,7 +32,8 @@ namespace Infrastructure
                 new SqlParameter("@Celular", SqlDbType.VarChar, 30) { Value = (object?)celular ?? DBNull.Value },
                 new SqlParameter("@Email", SqlDbType.VarChar, 150) { Value = (object?)email ?? DBNull.Value },
                 new SqlParameter("@IdUsuarioCreate", SqlDbType.Int) { Value = (object?)idUsuarioCreate ?? DBNull.Value },
-                new SqlParameter("@IdRecinto", SqlDbType.VarChar, 150) { Value = (object?)idRecinto ?? DBNull.Value }
+                new SqlParameter("@IdRecinto", SqlDbType.VarChar, 150) { Value = (object?)idRecinto ?? DBNull.Value },
+                new SqlParameter("@Mesa", SqlDbType.VarChar, 50) { Value = (object?)mesa ?? DBNull.Value }
             );
         }
 
@@ -47,7 +49,8 @@ namespace Infrastructure
             bool activo,
             int? idUsuarioUpdate,
             string? motivo,
-            string? idRecinto = null)
+            string? idRecinto = null,
+            string? mesa = null)
         {
             return EjecutarPA(
                 "pa_usuario_actualizar",
@@ -62,7 +65,8 @@ namespace Infrastructure
                 new SqlParameter("@Activo", SqlDbType.Bit) { Value = activo },
                 new SqlParameter("@IdUsuarioUpdate", SqlDbType.Int) { Value = (object?)idUsuarioUpdate ?? DBNull.Value },
                 new SqlParameter("@Motivo", SqlDbType.NVarChar, 300) { Value = (object?)motivo ?? DBNull.Value },
-                new SqlParameter("@IdRecinto", SqlDbType.VarChar, 150) { Value = (object?)idRecinto ?? DBNull.Value }
+                new SqlParameter("@IdRecinto", SqlDbType.VarChar, 150) { Value = (object?)idRecinto ?? DBNull.Value },
+                new SqlParameter("@Mesa", SqlDbType.VarChar, 50) { Value = (object?)mesa ?? DBNull.Value }
             );
         }
 

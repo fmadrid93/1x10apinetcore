@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,5 +19,6 @@ namespace Dtos.Usuario
         public bool Activo { get; set; } = true;
         public string? Motivo { get; set; }
         public string? IdRecinto { get; set; }
+        public string? Mesa { get; set; }
     }
 }

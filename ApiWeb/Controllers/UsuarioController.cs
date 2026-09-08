@@ -53,7 +53,8 @@ namespace ApiWeb.Controllers
                     ObtenerIdUsuarioActual(),
                     ObtenerIdTerritorioActual(),
                     ObtenerRolActual(),
-                    request.IdRecinto
+                    request.IdRecinto,
+                    request.Mesa
                 );
 
                 return Ok(new { exito = 1, dato = ds, status = "ok" });
@@ -87,7 +88,8 @@ namespace ApiWeb.Controllers
                     ObtenerIdTerritorioActual(),
                     ObtenerRolActual(),
                     request.Motivo,
-                    request.IdRecinto
+                    request.IdRecinto,
+                    request.Mesa
                 );
 
                 return Ok(new { exito = 1, dato = ds, status = "ok" });
