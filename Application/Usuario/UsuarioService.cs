@@ -39,7 +39,8 @@ namespace Application.Usuario
             int? idTerritorioCreador,
             string rolCreador,
             string? idRecinto = null,
-            string? mesa = null)
+            string? mesa = null,
+            bool enviaMensajesMasivos = false)
         {
             int? idTerritorioFinal = idTerritorio;
             int? idUsuarioSupervisorFinal = idUsuarioSupervisor;
@@ -105,7 +106,7 @@ namespace Application.Usuario
             }
 
             string claveHash = BCrypt.Net.BCrypt.HashPassword(clave);
-            return _data.Insertar(idRol, idTerritorioFinal, idUsuarioSupervisorFinal, usuario.Trim(), claveHash, nombreCompleto, ci, celular, email, idUsuarioCreador, idRecinto, mesa);
+            return _data.Insertar(idRol, idTerritorioFinal, idUsuarioSupervisorFinal, usuario.Trim(), claveHash, nombreCompleto, ci, celular, email, idUsuarioCreador, idRecinto, mesa, enviaMensajesMasivos);
         }
 
         public DataTable Actualizar(
@@ -123,7 +124,8 @@ namespace Application.Usuario
             string rolCaller,
             string? motivo,
             string? idRecinto = null,
-            string? mesa = null)
+            string? mesa = null,
+            bool? enviaMensajesMasivos = null)
         {
             ValidarOwnership(idUsuario, idUsuarioCaller, idTerritorioCaller, rolCaller);
 
@@ -149,7 +151,7 @@ namespace Application.Usuario
                 }
             }
 
-            return _data.Actualizar(idUsuario, idRol, idTerritorioFinal, idUsuarioSupervisorFinal, nombreCompleto, ci, celular, email, activo, idUsuarioCaller, motivo, idRecinto, mesa);
+            return _data.Actualizar(idUsuario, idRol, idTerritorioFinal, idUsuarioSupervisorFinal, nombreCompleto, ci, celular, email, activo, idUsuarioCaller, motivo, idRecinto, mesa, enviaMensajesMasivos);
         }
 
         public DataTable CambiarClave(int idUsuario, string nuevaClave, int idUsuarioCaller, int? idTerritorioCaller, string rolCaller, string? motivo)

@@ -19,5 +19,6 @@ namespace Dtos.Usuario
         public string? Email { get; set; }
         public string? IdRecinto { get; set; }
         public string? Mesa { get; set; }
+        public bool EnviaMensajesMasivos { get; set; } = false;
     }
 }

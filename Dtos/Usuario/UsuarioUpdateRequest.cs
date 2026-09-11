@@ -20,5 +20,6 @@ namespace Dtos.Usuario
         public string? Motivo { get; set; }
         public string? IdRecinto { get; set; }
         public string? Mesa { get; set; }
+        public bool? EnviaMensajesMasivos { get; set; }
     }
 }

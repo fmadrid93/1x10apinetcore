@@ -26,6 +26,17 @@ namespace Application.PersonaMovilizada
 
         private void ValidarMetaMaxima(int idUsuarioMovilizador)
         {
+            var dtUsuario = _usuarios.ObtenerPorId(idUsuarioMovilizador);
+            if (dtUsuario != null && dtUsuario.Rows.Count > 0 && dtUsuario.Columns.Contains("EnviaMensajesMasivos"))
+            {
+                var val = dtUsuario.Rows[0]["EnviaMensajesMasivos"];
+                if (val != DBNull.Value && Convert.ToBoolean(val))
+                {
+                    // Movilizador con auto-envío de mensajes masivos: se permite registrar más de 20 personas sin tope de meta
+                    return;
+                }
+            }
+
             var (metaObjetivo, totalRegistrados) = _metaData.ObtenerMetaYTotalPersonas(idUsuarioMovilizador);
             if (totalRegistrados >= metaObjetivo)
             {

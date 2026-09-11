@@ -54,7 +54,8 @@ namespace ApiWeb.Controllers
                     ObtenerIdTerritorioActual(),
                     ObtenerRolActual(),
                     request.IdRecinto,
-                    request.Mesa
+                    request.Mesa,
+                    request.EnviaMensajesMasivos
                 );
 
                 return Ok(new { exito = 1, dato = ds, status = "ok" });
@@ -89,7 +90,8 @@ namespace ApiWeb.Controllers
                     ObtenerRolActual(),
                     request.Motivo,
                     request.IdRecinto,
-                    request.Mesa
+                    request.Mesa,
+                    request.EnviaMensajesMasivos
                 );
 
                 return Ok(new { exito = 1, dato = ds, status = "ok" });
