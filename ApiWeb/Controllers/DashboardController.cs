@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Application.Dashboard;
 using Application.Reportes;
 using Domain;
@@ -7,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ApiWeb.Controllers
 {
-   // [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class DashboardController : ControllerBase
@@ -15,12 +15,36 @@ namespace ApiWeb.Controllers
         private readonly DashboardService _service = new DashboardService();
         private readonly Application.Reportes.IExcelExportService _excelExportService = new ExcelExportService();
 
+        private int ObtenerIdUsuarioActual()
+        {
+            var val = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return int.TryParse(val, out int id) ? id : 0;
+        }
+
+        private int? ObtenerIdTerritorioActual()
+        {
+            var valor = User.FindFirstValue("idTerritorio");
+            return string.IsNullOrEmpty(valor) ? (int?)null : int.Parse(valor);
+        }
+
+        private string ObtenerRolActual()
+        {
+            return User.FindFirstValue(ClaimTypes.Role) ?? string.Empty;
+        }
+
+        private string ResolverIdUsuario(string? idUsuarioParam)
+        {
+            if (!string.IsNullOrWhiteSpace(idUsuarioParam)) return idUsuarioParam.Trim();
+            int id = ObtenerIdUsuarioActual();
+            return id > 0 ? id.ToString() : "";
+        }
+
         [HttpGet("admin-kpis")]
-        public IActionResult AdminKpis(string idUsuario)
+        public IActionResult AdminKpis([FromQuery] string? idUsuario)
         {
             try
             {
-                var ds = _service.AdminKpis( idUsuario);
+                var ds = _service.AdminKpis(ResolverIdUsuario(idUsuario));
                 return Ok(new { exito = 1, dato = ds, status = "ok" });
             }
             catch (Exception ex)
@@ -60,11 +84,11 @@ namespace ApiWeb.Controllers
         }
 
         [HttpGet("admin-ranking-movilizadores")]
-        public IActionResult AdminRankingMovilizadores(string idUsuario)
+        public IActionResult AdminRankingMovilizadores([FromQuery] string? idUsuario)
         {
             try
             {
-                var ds = _service.AdminRankingMovilizadores(idUsuario);
+                var ds = _service.AdminRankingMovilizadores(ResolverIdUsuario(idUsuario));
                 return Ok(new { exito = 1, dato = ds, status = "ok" });
             }
             catch (Exception ex)
@@ -74,11 +98,11 @@ namespace ApiWeb.Controllers
         }
 
         [HttpGet("admin-ranking-zonas")]
-        public IActionResult AdminRankingZonas(string idUsuario)
+        public IActionResult AdminRankingZonas([FromQuery] string? idUsuario)
         {
             try
             {
-                var ds = _service.AdminRankingZonas( idUsuario);
+                var ds = _service.AdminRankingZonas(ResolverIdUsuario(idUsuario));
                 return Ok(new { exito = 1, dato = ds, status = "ok" });
             }
             catch (Exception ex)
@@ -88,11 +112,11 @@ namespace ApiWeb.Controllers
         }
 
         [HttpGet("admin-diad-por-zona")]
-        public IActionResult AdminDiaDPorZona(string idUsuario)
+        public IActionResult AdminDiaDPorZona([FromQuery] string? idUsuario)
         {
             try
             {
-                var ds = _service.AdminDiaDPorZona( idUsuario);
+                var ds = _service.AdminDiaDPorZona(ResolverIdUsuario(idUsuario));
                 return Ok(new { exito = 1, dato = ds, status = "ok" });
             }
             catch (Exception ex)
@@ -106,7 +130,8 @@ namespace ApiWeb.Controllers
         {
             try
             {
-                var ds = _service.GerenteKpis(idGerente);
+                int targetGerente = idGerente > 0 ? idGerente : ObtenerIdUsuarioActual();
+                var ds = _service.GerenteKpis(targetGerente);
                 return Ok(new { exito = 1, dato = ds, status = "ok" });
             }
             catch (Exception ex)
@@ -120,7 +145,8 @@ namespace ApiWeb.Controllers
         {
             try
             {
-                var ds = _service.GerenteRankingMovilizadores(idGerente);
+                int targetGerente = idGerente > 0 ? idGerente : ObtenerIdUsuarioActual();
+                var ds = _service.GerenteRankingMovilizadores(targetGerente);
                 return Ok(new { exito = 1, dato = ds, status = "ok" });
             }
             catch (Exception ex)
@@ -134,7 +160,8 @@ namespace ApiWeb.Controllers
         {
             try
             {
-                var ds = _service.GerenteAlertas(idGerente);
+                int targetGerente = idGerente > 0 ? idGerente : ObtenerIdUsuarioActual();
+                var ds = _service.GerenteAlertas(targetGerente);
                 return Ok(new { exito = 1, dato = ds, status = "ok" });
             }
             catch (Exception ex)
@@ -204,11 +231,11 @@ namespace ApiWeb.Controllers
         }
         [HttpGet("admin-comparativo-zonas")]
         [Authorize(Roles = "ADMINISTRADOR")]
-        public IActionResult AdminComparativoZonas(string idUsuario)
+        public IActionResult AdminComparativoZonas([FromQuery] string? idUsuario)
         {
             try
             {
-                var ds = _service.AdminComparativoZonas( idUsuario);
+                var ds = _service.AdminComparativoZonas(ResolverIdUsuario(idUsuario));
 
                 return Ok(new
                 {
@@ -227,11 +254,11 @@ namespace ApiWeb.Controllers
         }
         [HttpGet("admin-comparativo-gerentes")]
         [Authorize(Roles = "ADMINISTRADOR")]
-        public IActionResult AdminComparativoGerentes(string idUsuario)
+        public IActionResult AdminComparativoGerentes([FromQuery] string? idUsuario)
         {
             try
             {
-                var ds = _service.AdminComparativoGerentes(idUsuario);
+                var ds = _service.AdminComparativoGerentes(ResolverIdUsuario(idUsuario));
 
                 return Ok(new
                 {
@@ -250,11 +277,11 @@ namespace ApiWeb.Controllers
         }
         [HttpGet("admin-ranking-zonas-excel")]
         [Authorize(Roles = "ADMINISTRADOR")]
-        public IActionResult AdminRankingZonasExcel(string idUsuario)
+        public IActionResult AdminRankingZonasExcel([FromQuery] string? idUsuario)
         {
             try
             {
-                var ds = _service.AdminRankingZonas( idUsuario);
+                var ds = _service.AdminRankingZonas(ResolverIdUsuario(idUsuario));
 
                 if (ds == null || ds.Rows.Count == 0)
                 {
@@ -290,11 +317,11 @@ namespace ApiWeb.Controllers
         }
         [HttpGet("admin-ranking-movilizadores-excel")]
         [Authorize(Roles = "ADMINISTRADOR")]
-        public IActionResult AdminRankingMovilizadoresExcel(string idUsuario)
+        public IActionResult AdminRankingMovilizadoresExcel([FromQuery] string? idUsuario)
         {
             try
             {
-                var ds = _service.AdminRankingMovilizadores( idUsuario);
+                var ds = _service.AdminRankingMovilizadores(ResolverIdUsuario(idUsuario));
 
                 if (ds == null || ds.Rows.Count == 0)
                 {
@@ -332,11 +359,11 @@ namespace ApiWeb.Controllers
         }
         [HttpGet("admin-diad-por-zona-excel")]
         [Authorize(Roles = "ADMINISTRADOR")]
-        public IActionResult AdminDiaDPorZonaExcel(string idUsuario)
+        public IActionResult AdminDiaDPorZonaExcel([FromQuery] string? idUsuario)
         {
             try
             {
-                var ds = _service.AdminDiaDPorZona( idUsuario);
+                var ds = _service.AdminDiaDPorZona(ResolverIdUsuario(idUsuario));
 
                 if (ds == null || ds.Rows.Count == 0)
                 {
@@ -377,7 +404,8 @@ namespace ApiWeb.Controllers
         {
             try
             {
-                var ds = _service.GerenteRankingMovilizadores(idGerente);
+                int targetGerente = idGerente > 0 ? idGerente : ObtenerIdUsuarioActual();
+                var ds = _service.GerenteRankingMovilizadores(targetGerente);
 
                 if (ds == null || ds.Rows.Count == 0)
                 {
@@ -419,7 +447,8 @@ namespace ApiWeb.Controllers
         {
             try
             {
-                var ds = _service.GerenteRankingMovilizadores(idGerente);
+                int targetGerente = idGerente > 0 ? idGerente : ObtenerIdUsuarioActual();
+                var ds = _service.GerenteRankingMovilizadores(targetGerente);
 
                 if (ds == null || ds.Rows.Count == 0)
                 {

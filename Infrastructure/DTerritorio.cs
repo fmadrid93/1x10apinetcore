@@ -115,6 +115,64 @@ namespace Infrastructure
             return ds.Tables.Count > 0 ? ds.Tables[0] : new DataTable();
         }
 
+        public DataTable ListarPorEstructura(int? idTerritorioCaller, string rolCaller, bool soloActivos = true)
+        {
+            AsegurarColumnaUrlWhatsApp();
+
+            if (!idTerritorioCaller.HasValue || (rolCaller ?? "").Trim().ToUpper() == "SUPERADMIN")
+            {
+                return Listar(soloActivos);
+            }
+
+            string sql = @"
+                WITH ArbolTerritorios AS (
+                    SELECT IdTerritorio
+                    FROM Territorio WITH (NOLOCK)
+                    WHERE IdTerritorio = @IdTerritorioCaller
+                    UNION ALL
+                    SELECT t.IdTerritorio
+                    FROM Territorio t WITH (NOLOCK)
+                    INNER JOIN ArbolTerritorios a ON t.IdTerritorioPadre = a.IdTerritorio
+                )
+                SELECT 
+                    t.IdTerritorio,
+                    t.IdTerritorioPadre,
+                    t.Nombre,
+                    t.TipoTerritorio,
+                    t.Codigo,
+                    t.Activo,
+                    t.UrlServidorWhatsApp,
+                    tp.Nombre AS NombrePadre
+                FROM Territorio t WITH (NOLOCK)
+                LEFT JOIN Territorio tp WITH (NOLOCK) ON t.IdTerritorioPadre = tp.IdTerritorio
+                WHERE t.IdTerritorio IN (SELECT IdTerritorio FROM ArbolTerritorios)
+                  AND (@SoloActivos = 0 OR t.Activo = 1)
+                ORDER BY t.TipoTerritorio, t.Nombre";
+
+            DataSet ds = new DataSet();
+            try
+            {
+                abrirConexion();
+                using (SqlCommand cmd = new SqlCommand(sql, obtenerConexion()))
+                {
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandTimeout = 60;
+                    cmd.Parameters.Add(new SqlParameter("@IdTerritorioCaller", SqlDbType.Int) { Value = idTerritorioCaller.Value });
+                    cmd.Parameters.Add(new SqlParameter("@SoloActivos", SqlDbType.Bit) { Value = soloActivos });
+                    using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                    {
+                        da.Fill(ds);
+                    }
+                }
+            }
+            finally
+            {
+                cerrarConexion();
+            }
+
+            return ds.Tables.Count > 0 ? ds.Tables[0] : new DataTable();
+        }
+
         public DataTable ObtenerPorId(int idTerritorio)
         {
             AsegurarColumnaUrlWhatsApp();

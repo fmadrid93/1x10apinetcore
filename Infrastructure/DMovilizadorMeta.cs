@@ -111,17 +111,9 @@ namespace Infrastructure
             var dt = EjecutarPA(
                 "pa_movilizador_meta_guardar",
                 new SqlParameter("@IdUsuarioMovilizador", SqlDbType.Int) { Value = idUsuarioMovilizador },
-                new SqlParameter("@MetaObjetivo", SqlDbType.Int) { Value = metaObjetivo }
+                new SqlParameter("@MetaObjetivo", SqlDbType.Int) { Value = metaObjetivo },
+                new SqlParameter("@EnviaMensajesMasivos", SqlDbType.Bit) { Value = (object?)enviaMensajesMasivos ?? DBNull.Value }
             );
-
-            if (enviaMensajesMasivos.HasValue)
-            {
-                string sqlUsuario = "UPDATE Usuario SET EnviaMensajesMasivos = @EnviaMensajesMasivos WHERE IdUsuario = @IdUsuarioMovilizador";
-                EjecutarSQL(sqlUsuario,
-                    new SqlParameter("@EnviaMensajesMasivos", SqlDbType.Bit) { Value = enviaMensajesMasivos.Value },
-                    new SqlParameter("@IdUsuarioMovilizador", SqlDbType.Int) { Value = idUsuarioMovilizador }
-                );
-            }
 
             return dt;
         }

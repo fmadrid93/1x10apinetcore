@@ -27,20 +27,28 @@ namespace Application.PersonaMovilizada
         private void ValidarMetaMaxima(int idUsuarioMovilizador)
         {
             var dtUsuario = _usuarios.ObtenerPorId(idUsuarioMovilizador);
+            bool enviaMasivosPropio = false;
             if (dtUsuario != null && dtUsuario.Rows.Count > 0 && dtUsuario.Columns.Contains("EnviaMensajesMasivos"))
             {
                 var val = dtUsuario.Rows[0]["EnviaMensajesMasivos"];
                 if (val != DBNull.Value && Convert.ToBoolean(val))
                 {
-                    // Movilizador con auto-envío de mensajes masivos: se permite registrar más de 20 personas sin tope de meta
-                    return;
+                    enviaMasivosPropio = true;
                 }
             }
 
             var (metaObjetivo, totalRegistrados) = _metaData.ObtenerMetaYTotalPersonas(idUsuarioMovilizador);
-            if (totalRegistrados >= metaObjetivo)
+
+            // Si la opción está deshabilitada (por defecto), el límite máximo es 20 (o su meta si es menor a 20).
+            int metaLimite = enviaMasivosPropio ? metaObjetivo : Math.Min(metaObjetivo, 20);
+
+            if (totalRegistrados >= metaLimite)
             {
-                throw new Exception($"El movilizador ya alcanzó su meta máxima permitida de {metaObjetivo} votantes registrados.");
+                if (!enviaMasivosPropio && totalRegistrados >= 20)
+                {
+                    throw new Exception("El movilizador alcanzó el cupo máximo de 20 votantes. Para registrar más de 20 personas, debe habilitar la opción de auto-envío propio (ampliar a más de 20).");
+                }
+                throw new Exception($"El movilizador ya alcanzó su meta máxima permitida de {metaLimite} votantes registrados.");
             }
         }
 

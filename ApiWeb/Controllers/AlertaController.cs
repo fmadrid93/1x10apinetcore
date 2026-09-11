@@ -1,4 +1,5 @@
-﻿using Application.Alerta;
+using System.Security.Claims;
+using Application.Alerta;
 using Application.Reportes;
 using Dtos.Alerta;
 using Microsoft.AspNetCore.Authorization;
@@ -13,6 +14,12 @@ namespace ApiWeb.Controllers
     {
         private readonly AlertaService _service = new AlertaService();
 		private readonly Application.Reportes.IExcelExportService _excelExportService = new ExcelExportService();
+
+        private int ObtenerIdUsuarioActual()
+        {
+            var val = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return int.TryParse(val, out int id) ? id : 0;
+        }
 
 		[HttpPost("generar-meta-baja")]
         public IActionResult GenerarMetaBaja()
@@ -47,7 +54,8 @@ namespace ApiWeb.Controllers
         {
             try
             {
-                var ds = _service.ListarPorUsuario(idUsuario);
+                int targetUser = idUsuario > 0 ? idUsuario : ObtenerIdUsuarioActual();
+                var ds = _service.ListarPorUsuario(targetUser);
                 return Ok(new { exito = 1, dato = ds, status = "ok" });
             }
             catch (Exception ex)
@@ -132,7 +140,8 @@ namespace ApiWeb.Controllers
 		{
 			try
 			{
-				var ds = _service.ListarPorUsuario(idUsuario);
+				int targetUser = idUsuario > 0 ? idUsuario : ObtenerIdUsuarioActual();
+				var ds = _service.ListarPorUsuario(targetUser);
 
 				if (ds == null || ds.Rows.Count == 0)
 				{
@@ -173,7 +182,8 @@ namespace ApiWeb.Controllers
         {
             try
             {
-                var ds = _service.ListarPorUsuario(idUsuario);
+                int targetUser = idUsuario > 0 ? idUsuario : ObtenerIdUsuarioActual();
+                var ds = _service.ListarPorUsuario(targetUser);
 
                 if (ds == null || ds.Rows.Count == 0)
                 {

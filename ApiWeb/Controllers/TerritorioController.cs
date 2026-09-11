@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Application.Reportes;
 using Application.Territorio;
 using Dtos.Territorio;
@@ -13,6 +14,17 @@ namespace ApiWeb.Controllers
     {
         private readonly TerritorioService _service = new TerritorioService();
 		private readonly Application.Reportes.IExcelExportService _excelExportService = new ExcelExportService(); 
+
+        private int? ObtenerIdTerritorioActual()
+        {
+            var valor = User.FindFirstValue("idTerritorio");
+            return string.IsNullOrEmpty(valor) ? (int?)null : int.Parse(valor);
+        }
+
+        private string ObtenerRolActual()
+        {
+            return User.FindFirstValue(ClaimTypes.Role) ?? string.Empty;
+        }
 
 		[HttpPost("insertar")]
         public IActionResult Insertar([FromBody] TerritorioInsertRequest request)
@@ -73,7 +85,7 @@ namespace ApiWeb.Controllers
 		{
 			try
 			{
-				var ds = _service.Listar(soloActivos);
+				var ds = _service.ListarPorEstructura(ObtenerIdTerritorioActual(), ObtenerRolActual(), soloActivos);
 
 				if (ds == null || ds.Rows.Count == 0)
 				{
@@ -112,7 +124,7 @@ namespace ApiWeb.Controllers
         {
             try
             {
-                var ds = _service.Listar(soloActivos);
+                var ds = _service.ListarPorEstructura(ObtenerIdTerritorioActual(), ObtenerRolActual(), soloActivos);
 
                 if (ds == null || ds.Rows.Count == 0)
                 {

@@ -202,7 +202,7 @@ namespace Application.Usuario
                 return (null, null); // super admin
             }
 
-            var gerentesDs = _data.Listar(RolGerente, null, null, false, idUsuarioCaller, null, null);
+            var gerentesDs = _data.ListarGerentesDelAdmin(idUsuarioCaller, idTerritorioCaller.Value);
             var ids = new List<int> { idUsuarioCaller };
 
             if (gerentesDs != null)

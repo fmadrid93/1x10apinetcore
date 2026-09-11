@@ -176,5 +176,28 @@ namespace Infrastructure
                 new SqlParameter("@CI", SqlDbType.VarChar, 30) { Value = ci.Trim() },
                 new SqlParameter("@ExcludeId", SqlDbType.Int) { Value = (object?)excludeIdUsuario ?? DBNull.Value });
         }
+
+        public DataTable ListarGerentesDelAdmin(int idUsuarioCaller, int idTerritorioCaller)
+        {
+            string sql = @"
+                WITH ArbolTerritorios AS (
+                    SELECT IdTerritorio FROM Territorio WITH (NOLOCK) WHERE IdTerritorio = @IdTerritorioCaller
+                    UNION ALL
+                    SELECT t.IdTerritorio FROM Territorio t WITH (NOLOCK)
+                    INNER JOIN ArbolTerritorios a ON t.IdTerritorioPadre = a.IdTerritorio
+                )
+                SELECT IdUsuario FROM Usuario WITH (NOLOCK)
+                WHERE IdRol = 2 -- GERENTE
+                  AND (Activo IS NULL OR Activo = 1)
+                  AND (
+                      IdTerritorio IN (SELECT IdTerritorio FROM ArbolTerritorios)
+                      OR IdUsuarioSupervisor = @IdUsuarioCaller
+                      OR IdUsuarioCreate = @IdUsuarioCaller
+                  )";
+
+            return EjecutarSQL(sql,
+                new SqlParameter("@IdUsuarioCaller", SqlDbType.Int) { Value = idUsuarioCaller },
+                new SqlParameter("@IdTerritorioCaller", SqlDbType.Int) { Value = idTerritorioCaller });
+        }
     }
 }

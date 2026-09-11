@@ -17,6 +17,11 @@ namespace Application.Territorio
             return _data.Listar(soloActivos);
         }
 
+        public DataTable ListarPorEstructura(int? idTerritorioCaller, string rolCaller, bool soloActivos = true)
+        {
+            return _data.ListarPorEstructura(idTerritorioCaller, rolCaller, soloActivos);
+        }
+
         public DataTable ObtenerPorId(int idTerritorio)
         {
             return _data.ObtenerPorId(idTerritorio);
