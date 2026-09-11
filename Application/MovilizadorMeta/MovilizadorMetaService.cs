@@ -22,9 +22,9 @@ namespace Application.MovilizadorMeta
             return _data.Obtener(idUsuarioMovilizador);
         }
 
-        public DataTable Guardar(int idUsuarioMovilizador, int metaObjetivo)
+        public DataTable Guardar(int idUsuarioMovilizador, int metaObjetivo, bool? enviaMensajesMasivos = null)
         {
-            return _data.Guardar(idUsuarioMovilizador, metaObjetivo);
+            return _data.Guardar(idUsuarioMovilizador, metaObjetivo, enviaMensajesMasivos);
         }
 
         public DataTable ListarPorGerente(int idGerente)

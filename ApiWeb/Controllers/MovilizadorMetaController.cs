@@ -56,7 +56,7 @@ namespace ApiWeb.Controllers
         {
             try
             {
-                var ds = _service.Guardar(request.IdUsuarioMovilizador, request.MetaObjetivo);
+                var ds = _service.Guardar(request.IdUsuarioMovilizador, request.MetaObjetivo, request.EnviaMensajesMasivos);
                 return Ok(new { exito = 1, dato = ds, status = "ok" });
             }
             catch (Exception ex)

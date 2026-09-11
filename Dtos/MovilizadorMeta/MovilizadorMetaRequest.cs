@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,5 +10,6 @@ namespace Dtos.MovilizadorMeta
     {
         public int IdUsuarioMovilizador { get; set; }
         public int MetaObjetivo { get; set; }
+        public bool? EnviaMensajesMasivos { get; set; }
     }
 }

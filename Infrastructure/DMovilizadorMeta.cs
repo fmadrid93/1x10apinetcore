@@ -23,6 +23,7 @@ namespace Infrastructure
                         u.IdUsuario AS IdUsuarioMovilizador,
                         u.NombreCompleto AS Movilizador,
                         ISNULL(mm.MetaObjetivo, 10) AS MetaObjetivo,
+                        ISNULL(u.EnviaMensajesMasivos, 0) AS EnviaMensajesMasivos,
                         mm.FechaCreate,
                         mm.FechaUpdate,
                         ISNULL((SELECT COUNT(1) FROM PersonaMovilizada pm WITH (NOLOCK) WHERE pm.IdUsuarioMovilizador = u.IdUsuario AND (pm.Activo IS NULL OR pm.Activo = 1)), 0) AS TotalPersonas
@@ -54,6 +55,7 @@ namespace Infrastructure
                         u.IdUsuario AS IdUsuarioMovilizador,
                         u.NombreCompleto AS Movilizador,
                         ISNULL(mm.MetaObjetivo, 10) AS MetaObjetivo,
+                        ISNULL(u.EnviaMensajesMasivos, 0) AS EnviaMensajesMasivos,
                      --   mm.FechaCreate,
                       --  mm.FechaUpdate,
                         ISNULL((SELECT COUNT(1) FROM PersonaMovilizada pm WITH (NOLOCK) WHERE pm.IdUsuarioMovilizador = u.IdUsuario AND (pm.Activo IS NULL OR pm.Activo = 1)), 0) AS TotalPersonas
@@ -82,6 +84,7 @@ namespace Infrastructure
                         u.IdUsuario AS IdUsuarioMovilizador,
                         u.NombreCompleto AS Movilizador,
                         ISNULL(mm.MetaObjetivo, 10) AS MetaObjetivo,
+                        ISNULL(u.EnviaMensajesMasivos, 0) AS EnviaMensajesMasivos,
                         mm.FechaCreate,
                         mm.FechaUpdate,
                         ISNULL((SELECT COUNT(1) FROM PersonaMovilizada pm WITH (NOLOCK) WHERE pm.IdUsuarioMovilizador = u.IdUsuario AND (pm.Activo IS NULL OR pm.Activo = 1)), 0) AS TotalPersonas
@@ -103,13 +106,24 @@ namespace Infrastructure
             );
         }
 
-        public DataTable Guardar(int idUsuarioMovilizador, int metaObjetivo)
+        public DataTable Guardar(int idUsuarioMovilizador, int metaObjetivo, bool? enviaMensajesMasivos = null)
         {
-            return EjecutarPA(
+            var dt = EjecutarPA(
                 "pa_movilizador_meta_guardar",
                 new SqlParameter("@IdUsuarioMovilizador", SqlDbType.Int) { Value = idUsuarioMovilizador },
                 new SqlParameter("@MetaObjetivo", SqlDbType.Int) { Value = metaObjetivo }
             );
+
+            if (enviaMensajesMasivos.HasValue)
+            {
+                string sqlUsuario = "UPDATE Usuario SET EnviaMensajesMasivos = @EnviaMensajesMasivos WHERE IdUsuario = @IdUsuarioMovilizador";
+                EjecutarSQL(sqlUsuario,
+                    new SqlParameter("@EnviaMensajesMasivos", SqlDbType.Bit) { Value = enviaMensajesMasivos.Value },
+                    new SqlParameter("@IdUsuarioMovilizador", SqlDbType.Int) { Value = idUsuarioMovilizador }
+                );
+            }
+
+            return dt;
         }
 
         public DataTable ListarPorGerente(int idGerente)
@@ -120,6 +134,7 @@ namespace Infrastructure
                     u.IdUsuario AS IdUsuarioMovilizador,
                     u.NombreCompleto AS Movilizador,
                     ISNULL(mm.MetaObjetivo, 10) AS MetaObjetivo,
+                    ISNULL(u.EnviaMensajesMasivos, 0) AS EnviaMensajesMasivos,
                     mm.FechaCreate,
                     mm.FechaUpdate,
                     ISNULL((SELECT COUNT(1) FROM PersonaMovilizada pm WITH (NOLOCK) WHERE pm.IdUsuarioMovilizador = u.IdUsuario AND (pm.Activo IS NULL OR pm.Activo = 1)), 0) AS TotalPersonas
