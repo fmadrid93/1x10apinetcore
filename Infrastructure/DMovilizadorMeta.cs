@@ -24,8 +24,6 @@ namespace Infrastructure
                         u.NombreCompleto AS Movilizador,
                         ISNULL(mm.MetaObjetivo, 10) AS MetaObjetivo,
                         ISNULL(u.EnviaMensajesMasivos, 0) AS EnviaMensajesMasivos,
-                        mm.FechaCreate,
-                        mm.FechaUpdate,
                         ISNULL((SELECT COUNT(1) FROM PersonaMovilizada pm WITH (NOLOCK) WHERE pm.IdUsuarioMovilizador = u.IdUsuario AND (pm.Activo IS NULL OR pm.Activo = 1)), 0) AS TotalPersonas
                     FROM Usuario u WITH (NOLOCK)
                     LEFT JOIN MovilizadorMeta mm WITH (NOLOCK) ON u.IdUsuario = mm.IdUsuarioMovilizador
@@ -56,8 +54,6 @@ namespace Infrastructure
                         u.NombreCompleto AS Movilizador,
                         ISNULL(mm.MetaObjetivo, 10) AS MetaObjetivo,
                         ISNULL(u.EnviaMensajesMasivos, 0) AS EnviaMensajesMasivos,
-                     --   mm.FechaCreate,
-                      --  mm.FechaUpdate,
                         ISNULL((SELECT COUNT(1) FROM PersonaMovilizada pm WITH (NOLOCK) WHERE pm.IdUsuarioMovilizador = u.IdUsuario AND (pm.Activo IS NULL OR pm.Activo = 1)), 0) AS TotalPersonas
                     FROM Usuario u WITH (NOLOCK)
                     LEFT JOIN MovilizadorMeta mm WITH (NOLOCK) ON u.IdUsuario = mm.IdUsuarioMovilizador
@@ -85,8 +81,6 @@ namespace Infrastructure
                         u.NombreCompleto AS Movilizador,
                         ISNULL(mm.MetaObjetivo, 10) AS MetaObjetivo,
                         ISNULL(u.EnviaMensajesMasivos, 0) AS EnviaMensajesMasivos,
-                        mm.FechaCreate,
-                        mm.FechaUpdate,
                         ISNULL((SELECT COUNT(1) FROM PersonaMovilizada pm WITH (NOLOCK) WHERE pm.IdUsuarioMovilizador = u.IdUsuario AND (pm.Activo IS NULL OR pm.Activo = 1)), 0) AS TotalPersonas
                     FROM Usuario u WITH (NOLOCK)
                     LEFT JOIN MovilizadorMeta mm WITH (NOLOCK) ON u.IdUsuario = mm.IdUsuarioMovilizador
@@ -127,8 +121,6 @@ namespace Infrastructure
                     u.NombreCompleto AS Movilizador,
                     ISNULL(mm.MetaObjetivo, 10) AS MetaObjetivo,
                     ISNULL(u.EnviaMensajesMasivos, 0) AS EnviaMensajesMasivos,
-                    mm.FechaCreate,
-                    mm.FechaUpdate,
                     ISNULL((SELECT COUNT(1) FROM PersonaMovilizada pm WITH (NOLOCK) WHERE pm.IdUsuarioMovilizador = u.IdUsuario AND (pm.Activo IS NULL OR pm.Activo = 1)), 0) AS TotalPersonas
                 FROM Usuario u WITH (NOLOCK)
                 LEFT JOIN MovilizadorMeta mm WITH (NOLOCK) ON u.IdUsuario = mm.IdUsuarioMovilizador
