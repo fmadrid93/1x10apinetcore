@@ -1,4 +1,4 @@
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using Application.Dashboard;
 using Application.Reportes;
 using Domain;
@@ -184,11 +184,11 @@ namespace ApiWeb.Controllers
         }
         [HttpGet("admin-diad-resumen")]
         [Authorize(Roles = "ADMINISTRADOR")]
-        public IActionResult AdminDiaDResumen([FromQuery] int? horaInicio, [FromQuery] int? horaFin)
+        public IActionResult AdminDiaDResumen([FromQuery] string? idUsuario, [FromQuery] int? horaInicio, [FromQuery] int? horaFin)
         {
             try
             {
-                var ds = _service.AdminDiaDResumen(horaInicio, horaFin);
+                var ds = _service.AdminDiaDResumen(ResolverIdUsuario(idUsuario), horaInicio, horaFin);
 
                 return Ok(new
                 {

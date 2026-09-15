@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,8 +27,8 @@ namespace Application.Votante
         {
             var resultado = _data.MarcarYaVoto(idVotante, idUsuarioMarca, observacion);
 
-            // Sincronizar con PersonaMovilizada para que el dashboard/Día D (que lee
-            // de ahí, no de TB_Votante) refleje esta marca. Si el CI no está
+            // Sincronizar con PersonaMovilizada para que el dashboard/DÃ­a D (que lee
+            // de ahÃ­, no de TB_Votante) refleje esta marca. Si el CI no estÃ¡
             // registrado como PersonaMovilizada, simplemente no hay nada que
             // sincronizar (0 filas afectadas) y no es un error.
             try
@@ -41,8 +41,8 @@ namespace Application.Votante
             }
             catch
             {
-                // No se deja que un fallo de sincronización tumbe la marca en el
-                // padrón oficial, que ya se guardó correctamente arriba.
+                // No se deja que un fallo de sincronizaciÃ³n tumbe la marca en el
+                // padrÃ³n oficial, que ya se guardÃ³ correctamente arriba.
             }
 
             return resultado;
@@ -55,6 +55,31 @@ namespace Application.Votante
             dt.Columns.Add("FilasAfectadas", typeof(int));
             dt.Rows.Add(filas);
             return dt;
+        }
+
+                public DataTable RecintoDiadConteos(string idRecinto, int? idAdmin = null, string? nroMesa = null)
+        {
+            return _data.RecintoDiadConteos(idRecinto, idAdmin, nroMesa);
+        }
+
+        public DataTable RecintoPadronFaltan(string idRecinto, string? nroMesa = null, string? texto = null, int offset = 0, int limit = 100)
+        {
+            return _data.RecintoPadronFaltan(idRecinto, nroMesa, texto, offset, limit);
+        }
+
+        public DataTable RecintoVotaronNoRegistrados(string idRecinto, string? nroMesa = null, string? texto = null, int offset = 0, int limit = 100)
+        {
+            return _data.RecintoVotaronNoRegistrados(idRecinto, nroMesa, texto, offset, limit);
+        }
+
+        public DataTable RecintoRegistradosFaltan(string idRecinto, int? idAdmin = null, string? nroMesa = null, string? texto = null, int offset = 0, int limit = 100)
+        {
+            return _data.RecintoRegistradosFaltan(idRecinto, idAdmin, nroMesa, texto, offset, limit);
+        }
+
+        public DataTable RecintoMesas(string idRecinto)
+        {
+            return _data.RecintoMesas(idRecinto);
         }
 
         public DataTable ObtenerTop10(int? idTerritorio = null)

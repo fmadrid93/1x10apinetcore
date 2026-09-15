@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Data;
 using Application.Votante;
 using Dtos.Votante;
@@ -99,6 +99,142 @@ public class VotanteController : ControllerBase
             {
                 exito = 1,
                 dato = ds,
+                status = "ok"
+            });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new
+            {
+                exito = 0,
+                dato = (object?)null,
+                status = ex.Message
+            });
+        }
+    }
+
+        [HttpGet("recinto-monitoreo-conteos")]
+    public IActionResult RecintoDiadConteos([FromQuery] string idRecinto, [FromQuery] int? idAdmin = null, [FromQuery] string? nroMesa = null)
+    {
+        try
+        {
+            var ds = _service.RecintoDiadConteos(idRecinto, idAdmin, nroMesa);
+            return Ok(new
+            {
+                exito = 1,
+                dato = ds,
+                status = "ok"
+            });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new
+            {
+                exito = 0,
+                dato = (object?)null,
+                status = ex.Message
+            });
+        }
+    }
+
+    [HttpGet("recinto-padron-faltan")]
+    public IActionResult RecintoPadronFaltan(
+        [FromQuery] string idRecinto,
+        [FromQuery] string? nroMesa = null,
+        [FromQuery] string? texto = null,
+        [FromQuery] int offset = 0,
+        [FromQuery] int limit = 100)
+    {
+        try
+        {
+            var dt = _service.RecintoPadronFaltan(idRecinto, nroMesa, texto, offset, limit);
+            return Ok(new
+            {
+                exito = 1,
+                dato = dt,
+                status = "ok"
+            });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new
+            {
+                exito = 0,
+                dato = (object?)null,
+                status = ex.Message
+            });
+        }
+    }
+
+    [HttpGet("recinto-votaron-no-registrados")]
+    public IActionResult RecintoVotaronNoRegistrados(
+        [FromQuery] string idRecinto,
+        [FromQuery] string? nroMesa = null,
+        [FromQuery] string? texto = null,
+        [FromQuery] int offset = 0,
+        [FromQuery] int limit = 100)
+    {
+        try
+        {
+            var dt = _service.RecintoVotaronNoRegistrados(idRecinto, nroMesa, texto, offset, limit);
+            return Ok(new
+            {
+                exito = 1,
+                dato = dt,
+                status = "ok"
+            });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new
+            {
+                exito = 0,
+                dato = (object?)null,
+                status = ex.Message
+            });
+        }
+    }
+
+    [HttpGet("recinto-registrados-faltan")]
+    public IActionResult RecintoRegistradosFaltan(
+        [FromQuery] string idRecinto,
+        [FromQuery] int? idAdmin = null,
+        [FromQuery] string? nroMesa = null,
+        [FromQuery] string? texto = null,
+        [FromQuery] int offset = 0,
+        [FromQuery] int limit = 100)
+    {
+        try
+        {
+            var dt = _service.RecintoRegistradosFaltan(idRecinto, idAdmin, nroMesa, texto, offset, limit);
+            return Ok(new
+            {
+                exito = 1,
+                dato = dt,
+                status = "ok"
+            });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new
+            {
+                exito = 0,
+                dato = (object?)null,
+                status = ex.Message
+            });
+        }
+    }
+
+    [HttpGet("recinto-mesas/{idRecinto}")]
+    public IActionResult RecintoMesas(string idRecinto)
+    {
+        try
+        {
+            var dt = _service.RecintoMesas(idRecinto);
+            return Ok(new
+            {
+                exito = 1,
+                dato = dt,
                 status = "ok"
             });
         }

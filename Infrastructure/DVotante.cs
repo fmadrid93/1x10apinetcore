@@ -1,4 +1,4 @@
-using Infrastructure;
+﻿using Infrastructure;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Data;
@@ -8,8 +8,8 @@ public class DVotante : DbHelper
     private static bool _columnasPasoPCVerificadas = false;
 
     /// <summary>
-    /// Auto-migración perezosa (mismo patrón que DConfiguracion/DTerritorio):
-    /// agrega las columnas de "Pasó por el PC" a TB_Votante la primera vez que
+    /// Auto-migraciÃ³n perezosa (mismo patrÃ³n que DConfiguracion/DTerritorio):
+    /// agrega las columnas de "PasÃ³ por el PC" a TB_Votante la primera vez que
     /// se necesitan, sin requerir un script manual aparte.
     /// </summary>
     private void AsegurarColumnasPasoPorElPC()
@@ -76,7 +76,7 @@ public class DVotante : DbHelper
     }
 
     /// <summary>
-    /// Marca "Pasó por el PC" (checkpoint distinto de "Ya Votó"): no pisa
+    /// Marca "PasÃ³ por el PC" (checkpoint distinto de "Ya VotÃ³"): no pisa
     /// EstadoDiaD, queda en columnas propias para no mezclar los dos conceptos.
     /// </summary>
     public int MarcarPasoPorElPC(string idVotante, int idUsuarioMarca)
@@ -121,6 +121,66 @@ public class DVotante : DbHelper
             return string.IsNullOrEmpty(ci) ? null : ci;
         }
         return null;
+    }
+
+        public DataTable RecintoDiadConteos(string idRecinto, int? idAdmin = null, string? nroMesa = null)
+    {
+        return EjecutarPA(
+            "PA_RECINTO_DIAD_MONITOREO",
+            new SqlParameter("@Operacion", SqlDbType.VarChar, 30) { Value = "CONTEOS" },
+            new SqlParameter("@IdRecinto", SqlDbType.VarChar, 150) { Value = idRecinto.Trim() },
+            new SqlParameter("@IdAdmin", SqlDbType.Int) { Value = (object?)idAdmin ?? DBNull.Value },
+            new SqlParameter("@NroMesa", SqlDbType.VarChar, 50) { Value = (object?)nroMesa?.Trim() ?? DBNull.Value }
+        );
+    }
+
+    public DataTable RecintoPadronFaltan(string idRecinto, string? nroMesa = null, string? texto = null, int offset = 0, int limit = 100)
+    {
+        return EjecutarPA(
+            "PA_RECINTO_DIAD_MONITOREO",
+            new SqlParameter("@Operacion", SqlDbType.VarChar, 30) { Value = "FALTAN_VOTAR_PADRON" },
+            new SqlParameter("@IdRecinto", SqlDbType.VarChar, 150) { Value = idRecinto.Trim() },
+            new SqlParameter("@NroMesa", SqlDbType.VarChar, 50) { Value = (object?)nroMesa?.Trim() ?? DBNull.Value },
+            new SqlParameter("@Texto", SqlDbType.VarChar, 100) { Value = (object?)texto?.Trim() ?? DBNull.Value },
+            new SqlParameter("@Offset", SqlDbType.Int) { Value = offset },
+            new SqlParameter("@Limit", SqlDbType.Int) { Value = limit }
+        );
+    }
+
+    public DataTable RecintoVotaronNoRegistrados(string idRecinto, string? nroMesa = null, string? texto = null, int offset = 0, int limit = 100)
+    {
+        return EjecutarPA(
+            "PA_RECINTO_DIAD_MONITOREO",
+            new SqlParameter("@Operacion", SqlDbType.VarChar, 30) { Value = "VOTARON_NO_REGISTRADOS" },
+            new SqlParameter("@IdRecinto", SqlDbType.VarChar, 150) { Value = idRecinto.Trim() },
+            new SqlParameter("@NroMesa", SqlDbType.VarChar, 50) { Value = (object?)nroMesa?.Trim() ?? DBNull.Value },
+            new SqlParameter("@Texto", SqlDbType.VarChar, 100) { Value = (object?)texto?.Trim() ?? DBNull.Value },
+            new SqlParameter("@Offset", SqlDbType.Int) { Value = offset },
+            new SqlParameter("@Limit", SqlDbType.Int) { Value = limit }
+        );
+    }
+
+    public DataTable RecintoRegistradosFaltan(string idRecinto, int? idAdmin = null, string? nroMesa = null, string? texto = null, int offset = 0, int limit = 100)
+    {
+        return EjecutarPA(
+            "PA_RECINTO_DIAD_MONITOREO",
+            new SqlParameter("@Operacion", SqlDbType.VarChar, 30) { Value = "REGISTRADOS_FALTAN" },
+            new SqlParameter("@IdRecinto", SqlDbType.VarChar, 150) { Value = idRecinto.Trim() },
+            new SqlParameter("@IdAdmin", SqlDbType.Int) { Value = (object?)idAdmin ?? DBNull.Value },
+            new SqlParameter("@NroMesa", SqlDbType.VarChar, 50) { Value = (object?)nroMesa?.Trim() ?? DBNull.Value },
+            new SqlParameter("@Texto", SqlDbType.VarChar, 100) { Value = (object?)texto?.Trim() ?? DBNull.Value },
+            new SqlParameter("@Offset", SqlDbType.Int) { Value = offset },
+            new SqlParameter("@Limit", SqlDbType.Int) { Value = limit }
+        );
+    }
+
+    public DataTable RecintoMesas(string idRecinto)
+    {
+        return EjecutarPA(
+            "PA_RECINTO_DIAD_MONITOREO",
+            new SqlParameter("@Operacion", SqlDbType.VarChar, 30) { Value = "MESAS" },
+            new SqlParameter("@IdRecinto", SqlDbType.VarChar, 150) { Value = idRecinto.Trim() }
+        );
     }
 
     public DataTable ObtenerTop10(int? idTerritorio = null)

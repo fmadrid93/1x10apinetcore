@@ -1,4 +1,4 @@
-using System.Data;
+﻿using System.Data;
 using Microsoft.Data.SqlClient;
 
 namespace Infrastructure
@@ -59,12 +59,13 @@ namespace Infrastructure
                 new SqlParameter("@IdTerritorio", SqlDbType.Int) { Value = idTerritorio }
             );
         }
-        public DataSet AdminDiaDResumen(int? horaInicio=null, int? horaFin=null)
+        public DataSet AdminDiaDResumen(string? idUsuario = null, int? horaInicio = null, int? horaFin = null)
         {
             return EjecutarPA_DS(
                 "PA_DASHBOARD_DIAD_RESUMEN",
-                new SqlParameter("@HoraInicio", SqlDbType.Int) { Value = horaInicio },
-                new SqlParameter("@HoraFin", SqlDbType.Int) { Value = horaFin }
+                new SqlParameter("@IdUsuario", SqlDbType.VarChar, 50) { Value = (object?)idUsuario ?? DBNull.Value },
+                new SqlParameter("@HoraInicio", SqlDbType.Int) { Value = (object?)horaInicio ?? DBNull.Value },
+                new SqlParameter("@HoraFin", SqlDbType.Int) { Value = (object?)horaFin ?? DBNull.Value }
             );
         }
         public DataSet GerenteDiaDResumen(int idGerente, int? horaInicio = null, int? horaFin = null)
