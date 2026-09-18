@@ -151,6 +151,17 @@ namespace Infrastructure
             );
         }
 
+        public DataTable CIDuplicados(int? idUsuario, int? idRol, int? idTerritorio, string? texto)
+        {
+            return EjecutarPA(
+                "pa_persona_movilizada_ci_duplicados",
+                new SqlParameter("@IdUsuario", SqlDbType.Int) { Value = (object?)idUsuario ?? DBNull.Value },
+                new SqlParameter("@IdRol", SqlDbType.Int) { Value = (object?)idRol ?? DBNull.Value },
+                new SqlParameter("@IdTerritorio", SqlDbType.Int) { Value = (object?)idTerritorio ?? DBNull.Value },
+                new SqlParameter("@Texto", SqlDbType.VarChar, 100) { Value = (object?)texto ?? DBNull.Value }
+            );
+        }
+
         public DataTable VerificarExisteCI(string ci, int? excludeIdPersona = null)
         {
             string sql = @"

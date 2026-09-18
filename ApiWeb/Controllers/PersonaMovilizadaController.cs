@@ -1,4 +1,5 @@
-﻿using Application.PersonaMovilizada;
+using System.Security.Claims;
+using Application.PersonaMovilizada;
 using Application.Reportes;
 using Dtos.PersonaMovilizada;
 using Microsoft.AspNetCore.Authorization;
@@ -229,6 +230,157 @@ namespace ApiWeb.Controllers
                 var bytes = Application.Reportes.ReportePdfService.GenerarPdfPersonasMovilizador(table);
 
                 return File(bytes, "application/pdf", "mis_personas.pdf");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    exito = 0,
+                    dato = (object?)null,
+                    status = ex.Message
+                });
+            }
+        }
+
+        private int ObtenerIdUsuarioActual()
+        {
+            var val = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return int.TryParse(val, out int id) ? id : 0;
+        }
+
+        private int? ObtenerIdTerritorioActual()
+        {
+            var valor = User.FindFirstValue("idTerritorio");
+            return string.IsNullOrEmpty(valor) ? (int?)null : int.Parse(valor);
+        }
+
+        private string ObtenerRolActual()
+        {
+            return User.FindFirstValue(ClaimTypes.Role) ?? string.Empty;
+        }
+
+        private int ResolverIdRol(string rol)
+        {
+            var r = rol.ToUpperInvariant().Trim();
+            if (r.Contains("SUPERADMIN") || r.Contains("ADMIN")) return 1;
+            if (r.Contains("GERENTE")) return 2;
+            if (r.Contains("MOVILIZADOR")) return 3;
+            if (r.Contains("VERIFICADOR")) return 4;
+            return 0;
+        }
+
+        [HttpGet("ci-duplicados")]
+        public IActionResult CIDuplicados([FromQuery] int? idTerritorio, [FromQuery] int? idUsuario, [FromQuery] string? texto)
+        {
+            try
+            {
+                int idUsuarioToken = ObtenerIdUsuarioActual();
+                string rolToken = ObtenerRolActual();
+                int idRolToken = ResolverIdRol(rolToken);
+                int? idTerritorioToken = ObtenerIdTerritorioActual();
+
+                int? queryIdUsuario = idUsuarioToken;
+                int? queryIdRol = idRolToken > 0 ? idRolToken : (int?)null;
+                int? queryIdTerritorio = idTerritorioToken;
+
+                if (idRolToken == 1)
+                {
+                    if (idTerritorioToken == null) // SuperAdmin
+                    {
+                        queryIdUsuario = idUsuario > 0 ? idUsuario : null;
+                        queryIdRol = idUsuario > 0 ? null : (int?)1;
+                        queryIdTerritorio = idTerritorio;
+                    }
+                    else // Admin Territorial
+                    {
+                        queryIdTerritorio = idTerritorioToken;
+                        queryIdUsuario = idUsuario > 0 ? idUsuario : idUsuarioToken;
+                    }
+                }
+                else
+                {
+                    // Gerente o Movilizador siempre filtran estrictamente por su propio IdUsuario
+                    queryIdUsuario = idUsuarioToken;
+                    queryIdRol = idRolToken;
+                    queryIdTerritorio = idTerritorioToken;
+                }
+
+                var ds = _service.CIDuplicados(queryIdUsuario, queryIdRol, queryIdTerritorio, texto);
+                return Ok(new { exito = 1, dato = ds, status = "ok" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { exito = 0, dato = (object?)null, status = ex.Message });
+            }
+        }
+
+        [HttpGet("ci-duplicados-excel")]
+        public IActionResult CIDuplicadosExcel([FromQuery] int? idTerritorio, [FromQuery] int? idUsuario, [FromQuery] string? texto)
+        {
+            try
+            {
+                int idUsuarioToken = ObtenerIdUsuarioActual();
+                string rolToken = ObtenerRolActual();
+                int idRolToken = ResolverIdRol(rolToken);
+                int? idTerritorioToken = ObtenerIdTerritorioActual();
+
+                int? queryIdUsuario = idUsuarioToken;
+                int? queryIdRol = idRolToken > 0 ? idRolToken : (int?)null;
+                int? queryIdTerritorio = idTerritorioToken;
+
+                if (idRolToken == 1)
+                {
+                    if (idTerritorioToken == null)
+                    {
+                        queryIdUsuario = idUsuario > 0 ? idUsuario : null;
+                        queryIdRol = idUsuario > 0 ? null : (int?)1;
+                        queryIdTerritorio = idTerritorio;
+                    }
+                    else
+                    {
+                        queryIdTerritorio = idTerritorioToken;
+                        queryIdUsuario = idUsuario > 0 ? idUsuario : idUsuarioToken;
+                    }
+                }
+                else
+                {
+                    queryIdUsuario = idUsuarioToken;
+                    queryIdRol = idRolToken;
+                    queryIdTerritorio = idTerritorioToken;
+                }
+
+                var ds = _service.CIDuplicados(queryIdUsuario, queryIdRol, queryIdTerritorio, texto);
+
+                if (ds == null || ds.Rows.Count == 0)
+                {
+                    return BadRequest(new
+                    {
+                        exito = 0,
+                        dato = (object?)null,
+                        status = "No hay registros de CIs duplicados para exportar"
+                    });
+                }
+
+                return _excelExportService.ExportarXlsx(
+                    ds,
+                    "CIs Duplicados",
+                    "ci_duplicados.xlsx",
+                    ("CI", "CI"),
+                    ("NombreCompleto", "Votante"),
+                    ("Celular", "Celular Votante"),
+                    ("RecintoVotacion", "Recinto"),
+                    ("NroMesa", "Mesa"),
+                    ("NroOrden", "Orden"),
+                    ("NombreMovilizador", "Movilizador"),
+                    ("CelularMovilizador", "Celular Movilizador"),
+                    ("NombreGerente", "Gerente"),
+                    ("CelularGerente", "Celular Gerente"),
+                    ("NombreTerritorio", "Territorio"),
+                    ("EstadoDiaD", "Estado Dia D"),
+                    ("EstadoApoyo", "Estado Apoyo"),
+                    ("TotalRepeticiones", "Repeticiones"),
+                    ("FechaRegistro", "Fecha Registro")
+                );
             }
             catch (Exception ex)
             {

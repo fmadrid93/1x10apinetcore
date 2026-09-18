@@ -20,16 +20,11 @@ namespace Application.Configuracion
                 : ClavePermitirDuplicadosBase;
         }
 
-        /// <param name="idTerritorio">Territorio del Admin que consulta (viene del JWT). Null = SuperAdmin.</param>
-        public bool ObtenerPermitirDuplicados(int? idTerritorio)
+        /// <param name="idTerritorio">Territorio del Admin que consulta (viene del JWT) o del votante/movilizador. Null = SuperAdmin.</param>
+        /// <param name="idUsuario">IdUsuario del movilizador o consultante para heredar la config de su supervisor/Admin.</param>
+        public bool ObtenerPermitirDuplicados(int? idTerritorio, int? idUsuario = null)
         {
-            // Un territorio que nunca configuró nada propio hereda el default global del
-            // SuperAdmin (que si tampoco fue tocado, es "no permitir", igual que antes).
-            string valorPorDefecto = idTerritorio.HasValue
-                ? _data.ObtenerValor(ClavePermitirDuplicadosBase, "0")
-                : "0";
-
-            string valor = _data.ObtenerValor(ClavePermitirDuplicados(idTerritorio), valorPorDefecto);
+            string valor = _data.ObtenerValorConHerencia(ClavePermitirDuplicadosBase, idTerritorio, idUsuario, "0");
             return valor == "1" || valor.Equals("true", StringComparison.OrdinalIgnoreCase);
         }
 
@@ -56,23 +51,17 @@ namespace Application.Configuracion
         }
 
         /// <param name="idTerritorio">
-        /// Territorio del Admin que consulta (viene del JWT). Null = SuperAdmin.
+        /// Territorio del Admin que consulta (viene del JWT) o del votante/movilizador. Null = SuperAdmin.
         /// </param>
-        public List<string> ObtenerCamposObligatorios(int? idTerritorio)
+        /// <param name="idUsuario">IdUsuario para herencia por supervisor.</param>
+        public List<string> ObtenerCamposObligatorios(int? idTerritorio, int? idUsuario = null)
         {
             string todosLosCampos = string.Join(
                 ",",
                 CamposVotanteCatalogo.CamposConfigurables.Select(c => c.Codigo)
             );
 
-            // El default de "todos obligatorios" aplica siempre que no exista una config
-            // explícita. Un territorio que nunca configuró nada propio hereda el default
-            // global del SuperAdmin (que a su vez, si tampoco fue tocado, es "todos").
-            string valorPorDefecto = idTerritorio.HasValue
-                ? _data.ObtenerValor(ClaveCamposObligatoriosBase, todosLosCampos)
-                : todosLosCampos;
-
-            string valor = _data.ObtenerValor(ClaveCamposObligatorios(idTerritorio), valorPorDefecto);
+            string valor = _data.ObtenerValorConHerencia(ClaveCamposObligatoriosBase, idTerritorio, idUsuario, todosLosCampos);
             if (string.IsNullOrWhiteSpace(valor)) return new List<string>();
 
             return valor

@@ -54,6 +54,59 @@ namespace Infrastructure
             return valorPorDefecto;
         }
 
+        public string ObtenerValorConHerencia(string prefijoClave, int? idTerritorio, int? idUsuario = null, string valorPorDefecto = "")
+        {
+            GarantizarTabla();
+            try
+            {
+                string sql = @"
+                    ;WITH Jerarquia AS (
+                        SELECT u.IdUsuario, u.IdUsuarioSupervisor, u.IdTerritorio, 1 AS Nivel
+                        FROM Usuario u WITH (NOLOCK)
+                        WHERE u.IdUsuario = @IdUsuario AND @IdUsuario IS NOT NULL
+                        UNION ALL
+                        SELECT sup.IdUsuario, sup.IdUsuarioSupervisor, sup.IdTerritorio, j.Nivel + 1
+                        FROM Usuario sup WITH (NOLOCK)
+                        INNER JOIN Jerarquia j ON sup.IdUsuario = j.IdUsuarioSupervisor
+                    ),
+                    TerritoriosJerarquia AS (
+                        SELECT IdTerritorio, Nivel FROM Jerarquia WHERE IdTerritorio IS NOT NULL
+                        UNION
+                        SELECT @IdTerritorio, 0 WHERE @IdTerritorio IS NOT NULL
+                    ),
+                    ArbolPadres AS (
+                        SELECT tj.IdTerritorio, t.IdTerritorioPadre, tj.Nivel
+                        FROM TerritoriosJerarquia tj
+                        INNER JOIN Territorio t WITH (NOLOCK) ON t.IdTerritorio = tj.IdTerritorio
+                        UNION ALL
+                        SELECT tp.IdTerritorio, tp.IdTerritorioPadre, a.Nivel + 1
+                        FROM Territorio tp WITH (NOLOCK)
+                        INNER JOIN ArbolPadres a ON tp.IdTerritorio = a.IdTerritorioPadre
+                    )
+                    SELECT TOP 1 cg.Valor
+                    FROM ArbolPadres a
+                    INNER JOIN ConfiguracionGeneral cg WITH (NOLOCK) ON cg.Clave = @PrefijoClave + '_' + CAST(a.IdTerritorio AS VARCHAR)
+                    ORDER BY a.Nivel ASC";
+
+                var parametros = new System.Collections.Generic.List<SqlParameter>
+                {
+                    new SqlParameter("@PrefijoClave", SqlDbType.VarChar, 100) { Value = prefijoClave },
+                    new SqlParameter("@IdTerritorio", SqlDbType.Int) { Value = (object?)idTerritorio ?? DBNull.Value },
+                    new SqlParameter("@IdUsuario", SqlDbType.Int) { Value = (object?)idUsuario ?? DBNull.Value }
+                };
+
+                var dt = EjecutarSQL(sql, parametros.ToArray());
+                if (dt != null && dt.Rows.Count > 0 && dt.Rows[0]["Valor"] != DBNull.Value)
+                {
+                    return dt.Rows[0]["Valor"].ToString() ?? valorPorDefecto;
+                }
+            }
+            catch { }
+
+            // Fallback a la clave global base
+            return ObtenerValor(prefijoClave, valorPorDefecto);
+        }
+
         public bool GuardarValor(string clave, string valor, string? descripcion = null)
         {
             GarantizarTabla();

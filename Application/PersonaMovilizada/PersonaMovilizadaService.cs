@@ -55,6 +55,7 @@ namespace Application.PersonaMovilizada
 
         private void ValidarCamposObligatorios(
             int? idTerritorio,
+            int idUsuarioMovilizador,
             string? celular,
             string? direccionReferencia,
             string? sexo,
@@ -67,10 +68,8 @@ namespace Application.PersonaMovilizada
             decimal? longitud)
         {
             // Cada Admin Territorial tiene su propia configuración de campos obligatorios;
-            // se usa el territorio de la persona que se está registrando (no el del caller,
-            // que acá no está disponible: movilizador/gerente heredan el territorio del
-            // Admin dueño de su estructura al crearse, ver UsuarioService.Insertar).
-            var obligatorios = _configuracionService.ObtenerCamposObligatorios(idTerritorio);
+            // hereda hacia abajo por árbol territorial o por jerarquía de supervisores.
+            var obligatorios = _configuracionService.ObtenerCamposObligatorios(idTerritorio, idUsuarioMovilizador);
             if (obligatorios.Count == 0) return;
 
             var valores = new Dictionary<string, bool>
@@ -112,15 +111,11 @@ namespace Application.PersonaMovilizada
             }
         }
 
-        private const int MaxDuplicadosPermitidos = 2;
-
         /// <summary>
         /// Reglas de CI duplicado:
-        ///  - Dentro del MISMO movilizador nunca se permite, esté o no habilitado
-        ///    "permitir duplicados" a nivel de territorio.
-        ///  - Entre movilizadores distintos: si el territorio no permite duplicados,
-        ///    se bloquea igual que antes; si sí los permite, se tolera hasta
-        ///    MaxDuplicadosPermitidos copias del mismo CI y se bloquea de ahí en más.
+        ///  - Dentro del MISMO movilizador nunca se permite duplicar en su propia lista.
+        ///  - Entre movilizadores distintos: si el territorio/estructura no permite duplicados,
+        ///    se bloquea; si sí los permite (por herencia de territorio o supervisor), se tolera.
         /// </summary>
         private void ValidarDuplicadoCI(string? ci, int idUsuarioMovilizador, int? idTerritorio, int? excludeIdPersona)
         {
@@ -133,17 +128,13 @@ namespace Application.PersonaMovilizada
                 throw new Exception($"El CI '{ci.Trim()}' ya está registrado en tu propia lista. No se puede duplicar dentro del mismo movilizador.");
             }
 
-            bool permitirDuplicados = _configuracionService.ObtenerPermitirDuplicados(idTerritorio);
+            bool permitirDuplicados = _configuracionService.ObtenerPermitirDuplicados(idTerritorio, idUsuarioMovilizador);
             if (!permitirDuplicados)
             {
                 if (total > 0)
                 {
                     throw new Exception($"El CI '{ci.Trim()}' ya fue registrado por otra persona. No se permiten votantes duplicados.");
                 }
-            }
-            else if (total >= MaxDuplicadosPermitidos)
-            {
-                throw new Exception($"El CI '{ci.Trim()}' ya alcanzó el máximo de {MaxDuplicadosPermitidos} registros permitidos entre distintos movilizadores.");
             }
         }
 
@@ -172,6 +163,7 @@ namespace Application.PersonaMovilizada
 
             ValidarCamposObligatorios(
                 idTerritorio,
+                idUsuarioMovilizador,
                 celular, direccionReferencia, sexo, rangoEdad,
                 recintoVotacion, idRecinto, nivelCompromiso, observaciones,
                 latitud, longitud);
@@ -262,6 +254,7 @@ namespace Application.PersonaMovilizada
 
             ValidarCamposObligatorios(
                 idTerritorio,
+                idUsuarioMovilizador,
                 celular, direccionReferencia, sexo, rangoEdad,
                 recintoVotacion, idRecinto, nivelCompromiso, observaciones,
                 latitud, longitud);
@@ -315,6 +308,11 @@ namespace Application.PersonaMovilizada
         public DataTable CelularesRepetidos(int? idTerritorio, int? idUsuarioMovilizador)
         {
             return _data.CelularesRepetidos(idTerritorio, idUsuarioMovilizador);
+        }
+
+        public DataTable CIDuplicados(int? idUsuario, int? idRol, int? idTerritorio, string? texto)
+        {
+            return _data.CIDuplicados(idUsuario, idRol, idTerritorio, texto);
         }
     }
 }
