@@ -19,13 +19,18 @@ namespace Application.Reportes
             params (string Header, string ColumnName)[] columns)
         {
             using var workbook = new XLWorkbook();
-            var ws = workbook.Worksheets.Add(sheetName);
+            var ws = workbook.Worksheets.Add(string.IsNullOrWhiteSpace(sheetName) ? "Datos" : sheetName);
 
-            // Encabezados
+            // Estilo Encabezados
             for (int i = 0; i < columns.Length; i++)
             {
-                ws.Cell(1, i + 1).Value = columns[i].Header;
-                ws.Cell(1, i + 1).Style.Font.Bold = true;
+                var cell = ws.Cell(1, i + 1);
+                cell.Value = columns[i].Header;
+                cell.Style.Font.Bold = true;
+                cell.Style.Font.FontColor = XLColor.White;
+                cell.Style.Fill.BackgroundColor = XLColor.FromHtml("#1E3A8A");
+                cell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                cell.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
             }
 
             // Datos
@@ -34,16 +39,30 @@ namespace Application.Reportes
             {
                 for (int i = 0; i < columns.Length; i++)
                 {
-                    var value = row[columns[i].ColumnName];
-                    ws.Cell(fila, i + 1).Value = value == DBNull.Value ? "" : value.ToString();
+                    var colName = columns[i].ColumnName;
+                    var value = (dt.Columns.Contains(colName) && row[colName] != DBNull.Value) 
+                        ? row[colName].ToString() 
+                        : "";
+                    
+                    var cell = ws.Cell(fila, i + 1);
+                    cell.Value = value;
+                    cell.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+                    if (fila % 2 == 1)
+                    {
+                        cell.Style.Fill.BackgroundColor = XLColor.FromHtml("#F8FAFC");
+                    }
                 }
                 fila++;
             }
 
-            // Formato tabla
-            var totalFilas = Math.Max(dt.Rows.Count + 1, 2);
-            var rango = ws.Range(1, 1, totalFilas, columns.Length);
-            rango.CreateTable();
+            // Ajustar anchos y bordes limpios sin CreateTable para máxima compatibilidad móvil/web
+            var totalFilas = Math.Max(dt.Rows.Count + 1, 1);
+            var rangoTotal = ws.Range(1, 1, totalFilas, Math.Max(columns.Length, 1));
+            rangoTotal.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+            rangoTotal.Style.Border.OutsideBorderColor = XLColor.FromHtml("#CBD5E1");
+            rangoTotal.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+            rangoTotal.Style.Border.InsideBorderColor = XLColor.FromHtml("#E2E8F0");
+
             ws.Columns().AdjustToContents();
 
             using var stream = new MemoryStream();

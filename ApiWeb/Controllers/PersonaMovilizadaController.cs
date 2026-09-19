@@ -142,6 +142,20 @@ namespace ApiWeb.Controllers
             }
         }
 
+        [HttpGet("exportar-jerarquia")]
+        public IActionResult ExportarJerarquia([FromQuery] int? idAdmin, [FromQuery] int? idGerente, [FromQuery] int? idUsuarioMovilizador, [FromQuery] int? idTerritorio, [FromQuery] string? texto, [FromQuery] string? estadoDiaD, [FromQuery] string? estadoApoyo)
+        {
+            try
+            {
+                var ds = _service.ExportarJerarquia(idAdmin, idGerente, idUsuarioMovilizador, idTerritorio, texto, estadoDiaD, estadoApoyo);
+                return Ok(new { exito = 1, dato = ds, status = "ok" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { exito = 0, dato = (object?)null, status = ex.Message });
+            }
+        }
+
         [HttpGet("celulares-repetidos")]
         public IActionResult CelularesRepetidos([FromQuery] int? idTerritorio, [FromQuery] int? idUsuarioMovilizador)
         {

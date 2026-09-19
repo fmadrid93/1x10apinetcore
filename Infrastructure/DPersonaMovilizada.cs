@@ -134,6 +134,20 @@ namespace Infrastructure
             );
         }
 
+        public DataTable ExportarJerarquia(int? idAdmin, int? idGerente, int? idUsuarioMovilizador, int? idTerritorio, string? texto, string? estadoDiaD, string? estadoApoyo = null)
+        {
+            return EjecutarPA(
+                "pa_persona_movilizada_exportar_jerarquia",
+                new SqlParameter("@IdAdmin", SqlDbType.Int) { Value = (object?)idAdmin ?? DBNull.Value },
+                new SqlParameter("@IdGerente", SqlDbType.Int) { Value = (object?)idGerente ?? DBNull.Value },
+                new SqlParameter("@IdUsuarioMovilizador", SqlDbType.Int) { Value = (object?)idUsuarioMovilizador ?? DBNull.Value },
+                new SqlParameter("@IdTerritorio", SqlDbType.Int) { Value = (object?)idTerritorio ?? DBNull.Value },
+                new SqlParameter("@Texto", SqlDbType.VarChar, 150) { Value = (object?)texto ?? DBNull.Value },
+                new SqlParameter("@EstadoDiaD", SqlDbType.VarChar, 30) { Value = (object?)estadoDiaD ?? DBNull.Value },
+                new SqlParameter("@EstadoApoyo", SqlDbType.VarChar, 30) { Value = (object?)estadoApoyo ?? DBNull.Value }
+            );
+        }
+
         public DataTable ResumenMovilizador(int idUsuarioMovilizador)
         {
             return EjecutarPA(

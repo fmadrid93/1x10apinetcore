@@ -300,6 +300,11 @@ namespace Application.PersonaMovilizada
             return _data.BuscarGeneral(idTerritorio, idUsuarioMovilizador, texto, estadoDiaD, estadoApoyo);
         }
 
+        public DataTable ExportarJerarquia(int? idAdmin, int? idGerente, int? idUsuarioMovilizador, int? idTerritorio, string? texto, string? estadoDiaD, string? estadoApoyo = null)
+        {
+            return _data.ExportarJerarquia(idAdmin, idGerente, idUsuarioMovilizador, idTerritorio, texto, estadoDiaD, estadoApoyo);
+        }
+
         public DataTable ResumenMovilizador(int idUsuarioMovilizador)
         {
             return _data.ResumenMovilizador(idUsuarioMovilizador);
