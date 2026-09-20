@@ -106,6 +106,16 @@ namespace Application.Auth
                 catch { }
             }
 
+            string? supervisor = row.Table.Columns.Contains("Supervisor") && row["Supervisor"] != DBNull.Value
+                ? row["Supervisor"].ToString()
+                : null;
+            string? celularSupervisor = row.Table.Columns.Contains("CelularSupervisor") && row["CelularSupervisor"] != DBNull.Value
+                ? row["CelularSupervisor"].ToString()
+                : null;
+            string? rolSupervisor = row.Table.Columns.Contains("RolSupervisor") && row["RolSupervisor"] != DBNull.Value
+                ? row["RolSupervisor"].ToString()
+                : null;
+
             var dato = new
             {
                 IdUsuario = idUsuario,
@@ -118,6 +128,9 @@ namespace Application.Auth
                 Municipio = municipio,
                 Zona = zona,
                 IdUsuarioSupervisor = row["IdUsuarioSupervisor"] == DBNull.Value ? (int?)null : Convert.ToInt32(row["IdUsuarioSupervisor"]),
+                Supervisor = supervisor,
+                CelularSupervisor = celularSupervisor,
+                RolSupervisor = rolSupervisor,
                 IdRecinto = idRecinto,
                 RecintoAsignado = recintoAsignado,
                 Mesa = mesa,

@@ -1,4 +1,4 @@
-﻿using Infrastructure;
+using Infrastructure;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Data;
@@ -186,5 +186,38 @@ public class DVotante : DbHelper
     public DataTable ObtenerTop10(int? idTerritorio = null)
     {
         return BuscarPadronGlobal("", null, null);
+    }
+
+    public DataTable VeedoresRendimientoResumen(int? idTerritorio = null, int? idAdmin = null, int? idGerente = null)
+    {
+        return EjecutarPA(
+            "pa_veedor_rendimiento_resumen",
+            new SqlParameter("@IdTerritorio", SqlDbType.Int) { Value = (object?)idTerritorio ?? DBNull.Value },
+            new SqlParameter("@IdAdmin", SqlDbType.Int) { Value = (object?)idAdmin ?? DBNull.Value },
+            new SqlParameter("@IdGerente", SqlDbType.Int) { Value = (object?)idGerente ?? DBNull.Value }
+        );
+    }
+
+    public DataTable VotantesMarcadosListar(
+        int? idUsuarioMarca = null,
+        string? tipoMarca = null,
+        int? idTerritorio = null,
+        int? idAdmin = null,
+        int? idGerente = null,
+        string? texto = null,
+        int offset = 0,
+        int limit = 100)
+    {
+        return EjecutarPA(
+            "pa_veedor_votantes_marcados_listar",
+            new SqlParameter("@IdUsuarioMarca", SqlDbType.Int) { Value = (object?)idUsuarioMarca ?? DBNull.Value },
+            new SqlParameter("@TipoMarca", SqlDbType.VarChar, 20) { Value = (object?)tipoMarca ?? DBNull.Value },
+            new SqlParameter("@IdTerritorio", SqlDbType.Int) { Value = (object?)idTerritorio ?? DBNull.Value },
+            new SqlParameter("@IdAdmin", SqlDbType.Int) { Value = (object?)idAdmin ?? DBNull.Value },
+            new SqlParameter("@IdGerente", SqlDbType.Int) { Value = (object?)idGerente ?? DBNull.Value },
+            new SqlParameter("@Texto", SqlDbType.VarChar, 100) { Value = (object?)texto ?? DBNull.Value },
+            new SqlParameter("@Offset", SqlDbType.Int) { Value = offset },
+            new SqlParameter("@Limit", SqlDbType.Int) { Value = limit }
+        );
     }
 }

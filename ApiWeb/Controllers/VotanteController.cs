@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using Application.Votante;
 using Dtos.Votante;
@@ -292,6 +292,65 @@ public class VotanteController : ControllerBase
             {
                 exito = 1,
                 dato = ds,
+                status = "ok"
+            });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new
+            {
+                exito = 0,
+                dato = (object?)null,
+                status = ex.Message
+            });
+        }
+    }
+
+    [HttpGet("veedores-rendimiento")]
+    public IActionResult VeedoresRendimiento(
+        [FromQuery] int? idTerritorio = null,
+        [FromQuery] int? idAdmin = null,
+        [FromQuery] int? idGerente = null)
+    {
+        try
+        {
+            var dt = _service.VeedoresRendimientoResumen(idTerritorio, idAdmin, idGerente);
+            return Ok(new
+            {
+                exito = 1,
+                dato = dt,
+                status = "ok"
+            });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new
+            {
+                exito = 0,
+                dato = (object?)null,
+                status = ex.Message
+            });
+        }
+    }
+
+    [HttpGet("votantes-marcados")]
+    public IActionResult VotantesMarcados(
+        [FromQuery] int? idUsuarioMarca = null,
+        [FromQuery] string? tipoMarca = null,
+        [FromQuery] int? idTerritorio = null,
+        [FromQuery] int? idAdmin = null,
+        [FromQuery] int? idGerente = null,
+        [FromQuery] string? texto = null,
+        [FromQuery] int offset = 0,
+        [FromQuery] int limit = 100)
+    {
+        try
+        {
+            var dt = _service.VotantesMarcadosListar(idUsuarioMarca, tipoMarca, idTerritorio, idAdmin, idGerente, texto, offset, limit);
+            return Ok(new
+            {
+                exito = 1,
+                dato = dt,
                 status = "ok"
             });
         }

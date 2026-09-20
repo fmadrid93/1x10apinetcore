@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -90,6 +90,24 @@ namespace Application.Votante
         public DataTable ObtenerTop50(int? idTerritorio = null)
         {
             return _data.ObtenerTop10(idTerritorio);
+        }
+
+        public DataTable VeedoresRendimientoResumen(int? idTerritorio = null, int? idAdmin = null, int? idGerente = null)
+        {
+            return _data.VeedoresRendimientoResumen(idTerritorio, idAdmin, idGerente);
+        }
+
+        public DataTable VotantesMarcadosListar(
+            int? idUsuarioMarca = null,
+            string? tipoMarca = null,
+            int? idTerritorio = null,
+            int? idAdmin = null,
+            int? idGerente = null,
+            string? texto = null,
+            int offset = 0,
+            int limit = 100)
+        {
+            return _data.VotantesMarcadosListar(idUsuarioMarca, tipoMarca, idTerritorio, idAdmin, idGerente, texto, offset, limit);
         }
     }
 }
