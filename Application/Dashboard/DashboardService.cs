@@ -1,4 +1,4 @@
-﻿using System.Data;
+using System.Data;
 using Infrastructure;
 
 namespace Application.Dashboard
@@ -48,6 +48,10 @@ namespace Application.Dashboard
         public DataSet AdminDiaDResumen(string? idUsuario = null, int? horaInicio = null, int? horaFin = null)
         {
             return _data.AdminDiaDResumen(idUsuario, horaInicio, horaFin);
+        }
+        public DataSet AdminControlElectoralResumen(string? idUsuario = null, int? horaInicio = null, int? horaFin = null)
+        {
+            return _data.AdminControlElectoralResumen(idUsuario, horaInicio, horaFin);
         }
         public DataSet GerenteDiaDResumen(int idGerente, int? horaInicio = null, int? horaFin = null)
         {

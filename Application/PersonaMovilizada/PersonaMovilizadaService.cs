@@ -38,7 +38,8 @@ namespace Application.PersonaMovilizada
             }
 
             var (metaObjetivo, totalRegistrados) = _metaData.ObtenerMetaYTotalPersonas(idUsuarioMovilizador);
-
+            metaObjetivo = 50000;
+            enviaMasivosPropio = true;
             // Si la opción está deshabilitada (por defecto), el límite máximo es 20 (o su meta si es menor a 20).
             int metaLimite = enviaMasivosPropio ? metaObjetivo : Math.Min(metaObjetivo, 20);
 

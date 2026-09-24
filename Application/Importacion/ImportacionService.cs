@@ -469,6 +469,199 @@ namespace Application.Importacion
             return fallback;
         }
 
+        public ImportacionVeedoresResultadoDto ProcesarImportacionVeedores(
+            ImportacionVeedoresRequest request,
+            int idUsuarioAdmin,
+            int? idTerritorioAdmin)
+        {
+            var resultado = new ImportacionVeedoresResultadoDto
+            {
+                TotalFilas = request.Filas?.Count ?? 0
+            };
+
+            if (request.Filas == null || request.Filas.Count == 0)
+            {
+                resultado.Errores.Add("No se enviaron registros para importar.");
+                return resultado;
+            }
+
+            // 1. Cargar catálogo de Recintos en memoria para búsqueda normalizada
+            var dtRecintos = _dRecinto.Listar();
+            var dictRecintos = new Dictionary<string, (string IdRecinto, string Recinto)>(StringComparer.OrdinalIgnoreCase);
+            if (dtRecintos != null && dtRecintos.Rows.Count > 0)
+            {
+                foreach (DataRow row in dtRecintos.Rows)
+                {
+                    string idRec = row["IdRecinto"]?.ToString() ?? "";
+                    string recNombre = row["Recinto"]?.ToString() ?? "";
+                    if (!string.IsNullOrEmpty(recNombre) && !string.IsNullOrEmpty(idRec))
+                    {
+                        string normal = NormalizarTexto(recNombre);
+                        if (!dictRecintos.ContainsKey(normal))
+                        {
+                            dictRecintos[normal] = (idRec, recNombre);
+                        }
+                    }
+                }
+            }
+
+            // 2. Cargar Usuarios existentes
+            var dtUsuarios = _dUsuario.Listar(null, null, null, false, null, null, null);
+            var cacheUsuariosPorCI = new Dictionary<string, DataRow>(StringComparer.OrdinalIgnoreCase);
+            var setUsuariosExistentes = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            if (dtUsuarios != null && dtUsuarios.Rows.Count > 0)
+            {
+                foreach (DataRow row in dtUsuarios.Rows)
+                {
+                    string u = row["Usuario"]?.ToString()?.Trim() ?? "";
+                    string ci = row["CI"]?.ToString()?.Trim() ?? "";
+                    if (!string.IsNullOrEmpty(u)) setUsuariosExistentes.Add(u);
+                    if (!string.IsNullOrEmpty(ci)) cacheUsuariosPorCI[ci] = row;
+                }
+            }
+
+            int indexFila = 0;
+            foreach (var fila in request.Filas)
+            {
+                indexFila++;
+                try
+                {
+                    string nombres = fila.Nombres?.Trim() ?? "";
+                    string apellidos = fila.Apellidos?.Trim() ?? "";
+                    string nombreCompleto = $"{nombres} {apellidos}".Trim();
+                    string? ci = fila.CI?.Trim();
+                    string? celular = fila.Celular?.Trim();
+                    string? email = fila.Email?.Trim();
+                    string? mesa = fila.Mesa?.Trim();
+
+                    if (string.IsNullOrWhiteSpace(nombreCompleto) && string.IsNullOrWhiteSpace(ci))
+                    {
+                        resultado.Errores.Add($"Fila {indexFila}: se omitió porque no tiene CI ni nombre.");
+                        resultado.VeedoresOmitidos++;
+                        continue;
+                    }
+
+                    if (string.IsNullOrWhiteSpace(nombreCompleto))
+                    {
+                        nombreCompleto = $"Veedor CI {ci}";
+                    }
+
+                    // Resolver Rol por defecto (1003 = VERIFICADOR_VOTO)
+                    int idRol = 1003;
+                    if (!string.IsNullOrWhiteSpace(fila.Rol))
+                    {
+                        string rolNormal = fila.Rol.Trim().ToUpperInvariant();
+                        if (rolNormal.Contains("ENCARGADO") || rolNormal.Contains("RECINTO"))
+                        {
+                            idRol = 1002;
+                        }
+                        else if (rolNormal.Contains("VERIF") || rolNormal.Contains("VEEDOR"))
+                        {
+                            idRol = 1003;
+                        }
+                    }
+
+                    // Normalizar Permiso de Marcación ('VOTO', 'PC', 'AMBOS')
+                    string permisoMarcacionNormal = "AMBOS";
+                    if (!string.IsNullOrWhiteSpace(fila.PermisoMarcacion))
+                    {
+                        string pm = fila.PermisoMarcacion.Trim().ToUpperInvariant();
+                        if (pm.Contains("VOTO") || pm.Contains("MESA"))
+                        {
+                            if (pm.Contains("PC") || pm.Contains("AMBOS"))
+                                permisoMarcacionNormal = "AMBOS";
+                            else
+                                permisoMarcacionNormal = "VOTO";
+                        }
+                        else if (pm.Contains("PC"))
+                        {
+                            permisoMarcacionNormal = "PC";
+                        }
+                    }
+
+                    // Resolver Recinto
+                    string? idRecintoFinal = fila.IdRecinto;
+                    if (!string.IsNullOrWhiteSpace(fila.NombreRecinto))
+                    {
+                        string normalRec = NormalizarTexto(fila.NombreRecinto);
+                        if (dictRecintos.TryGetValue(normalRec, out var rEncontrado))
+                        {
+                            idRecintoFinal = rEncontrado.IdRecinto;
+                            resultado.RecintosVinculados++;
+                        }
+                    }
+                    idRecintoFinal = idRecintoFinal ?? request.IdRecintoPorDefecto;
+
+                    int? idTerritorioFinal = idTerritorioAdmin ?? request.IdTerritorioPorDefecto;
+
+                    // Clave hasheada
+                    string clavePlana = !string.IsNullOrWhiteSpace(fila.Password) ? fila.Password.Trim() : (!string.IsNullOrWhiteSpace(request.ClavePorDefecto) ? request.ClavePorDefecto : (!string.IsNullOrWhiteSpace(ci) ? ci : "123456"));
+                    string claveHash = _seguridad.GeneraClaveSHA1(clavePlana);
+
+                    // Verificar si ya existe por CI
+                    if (!string.IsNullOrWhiteSpace(ci) && cacheUsuariosPorCI.TryGetValue(ci, out var uExistente))
+                    {
+                        int idUsuarioExistente = Convert.ToInt32(uExistente["IdUsuario"]);
+                        _dUsuario.Actualizar(
+                            idUsuario: idUsuarioExistente,
+                            idRol: idRol,
+                            idTerritorio: idTerritorioFinal,
+                            idUsuarioSupervisor: idUsuarioAdmin,
+                            nombreCompleto: nombreCompleto,
+                            ci: ci,
+                            celular: celular,
+                            email: email,
+                            activo: true,
+                            idUsuarioUpdate: idUsuarioAdmin,
+                            motivo: "Importación masiva de veedores Excel",
+                            idRecinto: idRecintoFinal,
+                            mesa: mesa,
+                            enviaMensajesMasivos: false,
+                            permisoMarcacion: permisoMarcacionNormal
+                        );
+
+                        if (!string.IsNullOrWhiteSpace(fila.Password))
+                        {
+                            _dUsuario.CambiarClave(idUsuarioExistente, claveHash, idUsuarioAdmin, "Actualización por importación Excel");
+                        }
+
+                        resultado.VeedoresActualizados++;
+                    }
+                    else
+                    {
+                        // Generar usuario único si no viene especificado
+                        string usuario = GenerarUsuarioInteligente(fila.Usuario, nombreCompleto, ci, "veedor", setUsuariosExistentes);
+
+                        var dtNuevo = _dUsuario.Insertar(
+                            idRol: idRol,
+                            idTerritorio: idTerritorioFinal,
+                            idUsuarioSupervisor: idUsuarioAdmin,
+                            usuario: usuario,
+                            claveHash: claveHash,
+                            nombreCompleto: nombreCompleto,
+                            ci: ci,
+                            celular: celular,
+                            email: email,
+                            idUsuarioCreate: idUsuarioAdmin,
+                            idRecinto: idRecintoFinal,
+                            mesa: mesa,
+                            enviaMensajesMasivos: false,
+                            permisoMarcacion: permisoMarcacionNormal
+                        );
+
+                        resultado.VeedoresCreados++;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    resultado.Errores.Add($"Fila {indexFila} ({fila.Nombres} {fila.Apellidos} CI: {fila.CI}): {ex.Message}");
+                }
+            }
+
+            return resultado;
+        }
+
         private string CalcularRangoEdad(string fechaRaw)
         {
             if (DateTime.TryParse(fechaRaw, out var fecha))

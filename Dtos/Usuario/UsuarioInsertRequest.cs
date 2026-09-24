@@ -20,5 +20,6 @@ namespace Dtos.Usuario
         public string? IdRecinto { get; set; }
         public string? Mesa { get; set; }
         public bool EnviaMensajesMasivos { get; set; } = false;
+        public string? PermisoMarcacion { get; set; } = "AMBOS";
     }
 }

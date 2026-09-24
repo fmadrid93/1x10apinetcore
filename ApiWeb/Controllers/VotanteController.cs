@@ -39,13 +39,13 @@ public class VotanteController : ControllerBase
         [FromQuery] string? texto,
         [FromQuery] string? recinto = null,
         [FromQuery] string? idRecinto = null,
-        [FromQuery] string? nroMesa = null)
+        [FromQuery] string? nroMesa = null,
+        [FromQuery] int? idTerritorio = null)
     {
         try
         {
             string? recintoFinal = !string.IsNullOrWhiteSpace(idRecinto) ? idRecinto.Trim() : (!string.IsNullOrWhiteSpace(recinto) ? recinto.Trim() : null);
-            var dt = _service.BuscarPadronGlobal(texto ?? "", recintoFinal, nroMesa);
-
+            var dt = _service.BuscarPadronGlobal(texto ?? "", recintoFinal, nroMesa, idTerritorio);
 
             return Ok(new
             {
@@ -340,13 +340,14 @@ public class VotanteController : ControllerBase
         [FromQuery] int? idTerritorio = null,
         [FromQuery] int? idAdmin = null,
         [FromQuery] int? idGerente = null,
+        [FromQuery] int? idMovilizador = null,
         [FromQuery] string? texto = null,
         [FromQuery] int offset = 0,
-        [FromQuery] int limit = 100)
+        [FromQuery] int limit = 1000)
     {
         try
         {
-            var dt = _service.VotantesMarcadosListar(idUsuarioMarca, tipoMarca, idTerritorio, idAdmin, idGerente, texto, offset, limit);
+            var dt = _service.VotantesMarcadosListar(idUsuarioMarca, tipoMarca, idTerritorio, idAdmin, idGerente, idMovilizador, texto, offset, limit);
             return Ok(new
             {
                 exito = 1,

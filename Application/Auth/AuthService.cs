@@ -115,6 +115,9 @@ namespace Application.Auth
             string? rolSupervisor = row.Table.Columns.Contains("RolSupervisor") && row["RolSupervisor"] != DBNull.Value
                 ? row["RolSupervisor"].ToString()
                 : null;
+            string permisoMarcacion = row.Table.Columns.Contains("PermisoMarcacion") && row["PermisoMarcacion"] != DBNull.Value
+                ? row["PermisoMarcacion"].ToString()!
+                : "AMBOS";
 
             var dato = new
             {
@@ -134,6 +137,7 @@ namespace Application.Auth
                 IdRecinto = idRecinto,
                 RecintoAsignado = recintoAsignado,
                 Mesa = mesa,
+                PermisoMarcacion = permisoMarcacion,
                 UrlServidorWhatsApp = urlServidorWhatsApp,
                 Token = token
             };

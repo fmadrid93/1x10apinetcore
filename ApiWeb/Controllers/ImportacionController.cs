@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ApiWeb.Controllers
 {
-    [Authorize(Roles = "ADMINISTRADOR")]
+    [Authorize(Roles = "ADMINISTRADOR,SUPERADMINISTRADOR,SUPERADMIN")]
     [ApiController]
     [Route("api/[controller]")]
     public class ImportacionController : ControllerBase
@@ -106,6 +106,82 @@ namespace ApiWeb.Controllers
                     exito = 0,
                     status = "error",
                     mensaje = $"Error al generar plantilla Excel: {ex.Message}"
+                });
+            }
+        }
+
+        [HttpPost("veedores-excel")]
+        public IActionResult ImportacionVeedoresExcel([FromBody] ImportacionVeedoresRequest request)
+        {
+            try
+            {
+                int idAdmin = ObtenerIdUsuarioActual();
+                int? idTerritorio = ObtenerIdTerritorioActual();
+
+                var res = _service.ProcesarImportacionVeedores(request, idAdmin, idTerritorio);
+                return Ok(new
+                {
+                    exito = res.Exito ? 1 : 0,
+                    dato = res,
+                    status = "ok",
+                    mensaje = $"Procesados {res.TotalFilas} filas: {res.VeedoresCreados} veedores creados, {res.VeedoresActualizados} actualizados, {res.RecintosVinculados} recintos vinculados."
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    exito = 0,
+                    status = "error",
+                    mensaje = $"Error en importación de veedores: {ex.Message}"
+                });
+            }
+        }
+
+        [HttpGet("plantilla-veedores-excel")]
+        public IActionResult DescargarPlantillaVeedoresExcel()
+        {
+            try
+            {
+                var dt = new DataTable("PlantillaVeedores");
+                dt.Columns.Add("CI", typeof(string));
+                dt.Columns.Add("Nombres", typeof(string));
+                dt.Columns.Add("Apellidos", typeof(string));
+                dt.Columns.Add("Celular", typeof(string));
+                dt.Columns.Add("Email", typeof(string));
+                dt.Columns.Add("Usuario", typeof(string));
+                dt.Columns.Add("Password", typeof(string));
+                dt.Columns.Add("NombreRecinto", typeof(string));
+                dt.Columns.Add("Mesa", typeof(string));
+                dt.Columns.Add("PermisoMarcacion", typeof(string));
+
+                dt.Rows.Add("1234567", "Juan", "Perez", "0981112233", "juan@gmail.com", "jperez", "123456", "COL. NAC. DE ENSEÑANZA MEDIA D. DR. EUSEBIO AYALA", "1", "VOTO");
+                dt.Rows.Add("2345678", "Maria", "Gomez", "0982334455", "maria@gmail.com", "mgomez", "123456", "COL. NAC. DE ENSEÑANZA MEDIA D. DR. EUSEBIO AYALA", "2", "PC");
+                dt.Rows.Add("3456789", "Pedro", "Lopez", "0983556677", "pedro@gmail.com", "plopez", "123456", "UNIDAD EDUC. JUAN B. ALBERDI", "1", "AMBOS");
+
+                return _excelExportService.ExportarXlsx(
+                    dt,
+                    "Plantilla Veedores",
+                    "plantilla_importacion_veedores.xlsx",
+                    ("CI", "CI"),
+                    ("Nombres", "Nombres"),
+                    ("Apellidos", "Apellidos"),
+                    ("Celular", "Celular"),
+                    ("Email", "Email"),
+                    ("Usuario", "Usuario"),
+                    ("Password", "Password"),
+                    ("NombreRecinto", "NombreRecinto"),
+                    ("Mesa", "Mesa"),
+                    ("PermisoMarcacion", "PermisoMarcacion")
+                );
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    exito = 0,
+                    status = "error",
+                    mensaje = $"Error al generar plantilla Excel de veedores: {ex.Message}"
                 });
             }
         }

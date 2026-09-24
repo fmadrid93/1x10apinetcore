@@ -21,7 +21,9 @@ namespace Application.Usuario
         private const int RolGerente = 2;
         private const int RolMovilizador = 3;
         private const int RolVerificadorVoto = 1003;
+        private const int RolEjecutivo = 1004;
         private const string NombreRolGerente = "GERENTE";
+        private const string NombreRolEjecutivo = "EJECUTIVO";
 
         private readonly DUsuario _data = new DUsuario();
 
@@ -40,12 +42,21 @@ namespace Application.Usuario
             string rolCreador,
             string? idRecinto = null,
             string? mesa = null,
-            bool enviaMensajesMasivos = false)
+            bool enviaMensajesMasivos = false,
+            string? permisoMarcacion = null)
         {
             int? idTerritorioFinal = idTerritorio;
             int? idUsuarioSupervisorFinal = idUsuarioSupervisor;
 
-            if (rolCreador == NombreRolGerente)
+            if (idRol == RolEjecutivo)
+            {
+                if (rolCreador != "ADMINISTRADOR" || idTerritorioCreador.HasValue)
+                {
+                    throw new AccesoDenegadoException("Solo el SuperAdministrador Nacional puede crear usuarios con perfil Ejecutivo.");
+                }
+                idUsuarioSupervisorFinal = null;
+            }
+            else if (rolCreador == NombreRolGerente)
             {
                 if (idRol != RolMovilizador && idRol != RolVerificadorVoto)
                 {
@@ -106,7 +117,7 @@ namespace Application.Usuario
             }
 
             string claveHash = BCrypt.Net.BCrypt.HashPassword(clave);
-            return _data.Insertar(idRol, idTerritorioFinal, idUsuarioSupervisorFinal, usuario.Trim(), claveHash, nombreCompleto, ci, celular, email, idUsuarioCreador, idRecinto, mesa, enviaMensajesMasivos);
+            return _data.Insertar(idRol, idTerritorioFinal, idUsuarioSupervisorFinal, usuario.Trim(), claveHash, nombreCompleto, ci, celular, email, idUsuarioCreador, idRecinto, mesa, enviaMensajesMasivos, permisoMarcacion);
         }
 
         public DataTable Actualizar(
@@ -125,14 +136,23 @@ namespace Application.Usuario
             string? motivo,
             string? idRecinto = null,
             string? mesa = null,
-            bool? enviaMensajesMasivos = null)
+            bool? enviaMensajesMasivos = null,
+            string? permisoMarcacion = null)
         {
             ValidarOwnership(idUsuario, idUsuarioCaller, idTerritorioCaller, rolCaller);
 
             int? idTerritorioFinal = idTerritorio;
             int? idUsuarioSupervisorFinal = idUsuarioSupervisor;
 
-            if (rolCaller == NombreRolGerente)
+            if (idRol == RolEjecutivo)
+            {
+                if (rolCaller != "ADMINISTRADOR" || idTerritorioCaller.HasValue)
+                {
+                    throw new AccesoDenegadoException("Solo el SuperAdministrador Nacional puede asignar el perfil Ejecutivo.");
+                }
+                idUsuarioSupervisorFinal = null;
+            }
+            else if (rolCaller == NombreRolGerente)
             {
                 idTerritorioFinal = idTerritorio ?? idTerritorioCaller;
                 idUsuarioSupervisorFinal = idRol == RolMovilizador ? idUsuarioCaller : (int?)null;
@@ -151,7 +171,7 @@ namespace Application.Usuario
                 }
             }
 
-            return _data.Actualizar(idUsuario, idRol, idTerritorioFinal, idUsuarioSupervisorFinal, nombreCompleto, ci, celular, email, activo, idUsuarioCaller, motivo, idRecinto, mesa, enviaMensajesMasivos);
+            return _data.Actualizar(idUsuario, idRol, idTerritorioFinal, idUsuarioSupervisorFinal, nombreCompleto, ci, celular, email, activo, idUsuarioCaller, motivo, idRecinto, mesa, enviaMensajesMasivos, permisoMarcacion);
         }
 
         public DataTable CambiarClave(int idUsuario, string nuevaClave, int idUsuarioCaller, int? idTerritorioCaller, string rolCaller, string? motivo)

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ApiWeb.Controllers
 {
-    [Authorize(Roles = "ADMINISTRADOR")]
+    [Authorize(Roles = "ADMINISTRADOR,EJECUTIVO")]
     [ApiController]
     [Route("api/[controller]")]
     public class TerritorioController : ControllerBase
@@ -27,6 +27,7 @@ namespace ApiWeb.Controllers
         }
 
 		[HttpPost("insertar")]
+        [Authorize(Roles = "ADMINISTRADOR")]
         public IActionResult Insertar([FromBody] TerritorioInsertRequest request)
         {
             try
@@ -40,6 +41,7 @@ namespace ApiWeb.Controllers
             }
         }
         [HttpPost("actualizar")]
+        [Authorize(Roles = "ADMINISTRADOR")]
         public IActionResult Actualizar([FromBody] TerritorioInsertRequest request)
         {
             try

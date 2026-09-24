@@ -185,7 +185,7 @@ namespace ApiWeb.Controllers
             }
         }
         [HttpGet("admin-diad-resumen")]
-        [Authorize(Roles = "ADMINISTRADOR")]
+        [Authorize(Roles = "ADMINISTRADOR,EJECUTIVO")]
         public IActionResult AdminDiaDResumen([FromQuery] string? idUsuario, [FromQuery] int? horaInicio, [FromQuery] int? horaFin)
         {
             try
@@ -208,8 +208,32 @@ namespace ApiWeb.Controllers
             }
         }
 
+        [HttpGet("admin-control-electoral-resumen")]
+        [Authorize(Roles = "ADMINISTRADOR,EJECUTIVO")]
+        public IActionResult AdminControlElectoralResumen([FromQuery] string? idUsuario, [FromQuery] int? horaInicio, [FromQuery] int? horaFin)
+        {
+            try
+            {
+                var ds = _service.AdminControlElectoralResumen(ResolverIdUsuario(idUsuario), horaInicio, horaFin);
+
+                return Ok(new
+                {
+                    exito = 1,
+                    dato = ds
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    exito = 0,
+                    status = ex.Message
+                });
+            }
+        }
+
         [HttpGet("gerente-diad-resumen/{idGerente}")]
-        [Authorize(Roles = "GERENTE,ADMINISTRADOR")]
+        [Authorize(Roles = "GERENTE,ADMINISTRADOR,EJECUTIVO")]
         public IActionResult GerenteDiaDResumen(int idGerente, [FromQuery] int? horaInicio, [FromQuery] int? horaFin)
         {
             try
@@ -232,7 +256,7 @@ namespace ApiWeb.Controllers
             }
         }
         [HttpGet("admin-comparativo-zonas")]
-        [Authorize(Roles = "ADMINISTRADOR")]
+        [Authorize(Roles = "ADMINISTRADOR,EJECUTIVO")]
         public IActionResult AdminComparativoZonas([FromQuery] string? idUsuario)
         {
             try
@@ -255,7 +279,7 @@ namespace ApiWeb.Controllers
             }
         }
         [HttpGet("admin-comparativo-gerentes")]
-        [Authorize(Roles = "ADMINISTRADOR")]
+        [Authorize(Roles = "ADMINISTRADOR,EJECUTIVO")]
         public IActionResult AdminComparativoGerentes([FromQuery] string? idUsuario)
         {
             try

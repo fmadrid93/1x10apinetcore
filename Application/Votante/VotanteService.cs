@@ -8,27 +8,27 @@ using Infrastructure;
 
 namespace Application.Votante
 {
-
-
     public class VotanteService
     {
         private readonly DVotante _data = new DVotante();
         private readonly DPersonaMovilizada _dPersonaMovilizada = new DPersonaMovilizada();
+
         public DataTable ObtenerVotante(string ci)
         {
             return _data.ObtenerVotante(ci);
         }
-        public DataTable BuscarPadronGlobal(string texto, string? idRecinto = null, string? nroMesa = null)
+
+        public DataTable BuscarPadronGlobal(string texto, string? idRecinto = null, string? nroMesa = null, int? idTerritorio = null)
         {
-            return _data.BuscarPadronGlobal(texto, idRecinto, nroMesa);
+            return _data.BuscarPadronGlobal(texto, idRecinto, nroMesa, idTerritorio);
         }
 
         public DataTable MarcarYaVoto(string idVotante, int idUsuarioMarca, string? observacion)
         {
             var resultado = _data.MarcarYaVoto(idVotante, idUsuarioMarca, observacion);
 
-            // Sincronizar con PersonaMovilizada para que el dashboard/DÃ­a D (que lee
-            // de ahÃ­, no de TB_Votante) refleje esta marca. Si el CI no estÃ¡
+            // Sincronizar con PersonaMovilizada para que el dashboard/Día D (que lee
+            // de ahí, no de TB_Votante) refleje esta marca. Si el CI no está
             // registrado como PersonaMovilizada, simplemente no hay nada que
             // sincronizar (0 filas afectadas) y no es un error.
             try
@@ -41,8 +41,8 @@ namespace Application.Votante
             }
             catch
             {
-                // No se deja que un fallo de sincronizaciÃ³n tumbe la marca en el
-                // padrÃ³n oficial, que ya se guardÃ³ correctamente arriba.
+                // No se deja que un fallo de sincronización tumbe la marca en el
+                // padrón oficial, que ya se guardó correctamente arriba.
             }
 
             return resultado;
@@ -57,7 +57,7 @@ namespace Application.Votante
             return dt;
         }
 
-                public DataTable RecintoDiadConteos(string idRecinto, int? idAdmin = null, string? nroMesa = null)
+        public DataTable RecintoDiadConteos(string idRecinto, int? idAdmin = null, string? nroMesa = null)
         {
             return _data.RecintoDiadConteos(idRecinto, idAdmin, nroMesa);
         }
@@ -103,11 +103,12 @@ namespace Application.Votante
             int? idTerritorio = null,
             int? idAdmin = null,
             int? idGerente = null,
+            int? idMovilizador = null,
             string? texto = null,
             int offset = 0,
-            int limit = 100)
+            int limit = 1000)
         {
-            return _data.VotantesMarcadosListar(idUsuarioMarca, tipoMarca, idTerritorio, idAdmin, idGerente, texto, offset, limit);
+            return _data.VotantesMarcadosListar(idUsuarioMarca, tipoMarca, idTerritorio, idAdmin, idGerente, idMovilizador, texto, offset, limit);
         }
     }
 }

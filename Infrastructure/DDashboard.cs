@@ -68,6 +68,15 @@ namespace Infrastructure
                 new SqlParameter("@HoraFin", SqlDbType.Int) { Value = (object?)horaFin ?? DBNull.Value }
             );
         }
+        public DataSet AdminControlElectoralResumen(string? idUsuario = null, int? horaInicio = null, int? horaFin = null)
+        {
+            return EjecutarPA_DS(
+                "PA_DASHBOARD_CONTROL_ELECTORAL_RESUMEN",
+                new SqlParameter("@IdUsuario", SqlDbType.VarChar, 50) { Value = (object?)idUsuario ?? DBNull.Value },
+                new SqlParameter("@HoraInicio", SqlDbType.Int) { Value = (object?)horaInicio ?? DBNull.Value },
+                new SqlParameter("@HoraFin", SqlDbType.Int) { Value = (object?)horaFin ?? DBNull.Value }
+            );
+        }
         public DataSet GerenteDiaDResumen(int idGerente, int? horaInicio = null, int? horaFin = null)
         {
             return EjecutarPA_DS(

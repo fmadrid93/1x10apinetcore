@@ -8,8 +8,8 @@ public class DVotante : DbHelper
     private static bool _columnasPasoPCVerificadas = false;
 
     /// <summary>
-    /// Auto-migraciÃ³n perezosa (mismo patrÃ³n que DConfiguracion/DTerritorio):
-    /// agrega las columnas de "PasÃ³ por el PC" a TB_Votante la primera vez que
+    /// Auto-migración perezosa:
+    /// agrega las columnas de "Pasó por el PC" a TB_Votante la primera vez que
     /// se necesitan, sin requerir un script manual aparte.
     /// </summary>
     private void AsegurarColumnasPasoPorElPC()
@@ -40,7 +40,7 @@ public class DVotante : DbHelper
         );
     }
 
-    public DataTable BuscarPadronGlobal(string texto, string? idRecinto = null, string? nroMesa = null)
+    public DataTable BuscarPadronGlobal(string texto, string? idRecinto = null, string? nroMesa = null, int? idTerritorio = null)
     {
         AsegurarColumnasPasoPorElPC();
         string t = (texto ?? "").Trim();
@@ -53,7 +53,8 @@ public class DVotante : DbHelper
                 "PA_VOTANTE_BUSCAR_PADRON_GLOBAL",
                 new SqlParameter("@Texto", SqlDbType.VarChar, 100) { Value = t },
                 new SqlParameter("@IdRecinto", SqlDbType.VarChar, 150) { Value = (object?)rec ?? DBNull.Value },
-                new SqlParameter("@NroMesa", SqlDbType.VarChar, 50) { Value = (object?)mesa ?? DBNull.Value }
+                new SqlParameter("@NroMesa", SqlDbType.VarChar, 50) { Value = (object?)mesa ?? DBNull.Value },
+                new SqlParameter("@IdTerritorio", SqlDbType.Int) { Value = (object?)idTerritorio ?? DBNull.Value }
             );
         }
         catch
@@ -76,7 +77,7 @@ public class DVotante : DbHelper
     }
 
     /// <summary>
-    /// Marca "PasÃ³ por el PC" (checkpoint distinto de "Ya VotÃ³"): no pisa
+    /// Marca "Pasó por el PC" (checkpoint distinto de "Ya Votó"): no pisa
     /// EstadoDiaD, queda en columnas propias para no mezclar los dos conceptos.
     /// </summary>
     public int MarcarPasoPorElPC(string idVotante, int idUsuarioMarca)
@@ -123,7 +124,7 @@ public class DVotante : DbHelper
         return null;
     }
 
-        public DataTable RecintoDiadConteos(string idRecinto, int? idAdmin = null, string? nroMesa = null)
+    public DataTable RecintoDiadConteos(string idRecinto, int? idAdmin = null, string? nroMesa = null)
     {
         return EjecutarPA(
             "PA_RECINTO_DIAD_MONITOREO",
@@ -185,7 +186,7 @@ public class DVotante : DbHelper
 
     public DataTable ObtenerTop10(int? idTerritorio = null)
     {
-        return BuscarPadronGlobal("", null, null);
+        return BuscarPadronGlobal("", null, null, idTerritorio);
     }
 
     public DataTable VeedoresRendimientoResumen(int? idTerritorio = null, int? idAdmin = null, int? idGerente = null)
@@ -204,9 +205,10 @@ public class DVotante : DbHelper
         int? idTerritorio = null,
         int? idAdmin = null,
         int? idGerente = null,
+        int? idMovilizador = null,
         string? texto = null,
         int offset = 0,
-        int limit = 100)
+        int limit = 1000)
     {
         return EjecutarPA(
             "pa_veedor_votantes_marcados_listar",
@@ -215,6 +217,7 @@ public class DVotante : DbHelper
             new SqlParameter("@IdTerritorio", SqlDbType.Int) { Value = (object?)idTerritorio ?? DBNull.Value },
             new SqlParameter("@IdAdmin", SqlDbType.Int) { Value = (object?)idAdmin ?? DBNull.Value },
             new SqlParameter("@IdGerente", SqlDbType.Int) { Value = (object?)idGerente ?? DBNull.Value },
+            new SqlParameter("@IdMovilizador", SqlDbType.Int) { Value = (object?)idMovilizador ?? DBNull.Value },
             new SqlParameter("@Texto", SqlDbType.VarChar, 100) { Value = (object?)texto ?? DBNull.Value },
             new SqlParameter("@Offset", SqlDbType.Int) { Value = offset },
             new SqlParameter("@Limit", SqlDbType.Int) { Value = limit }

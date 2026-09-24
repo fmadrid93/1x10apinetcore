@@ -19,7 +19,8 @@ namespace Infrastructure
             int? idUsuarioCreate,
             string? idRecinto = null,
             string? mesa = null,
-            bool enviaMensajesMasivos = false)
+            bool enviaMensajesMasivos = false,
+            string? permisoMarcacion = null)
         {
             return EjecutarPA(
                 "pa_usuario_insertar",
@@ -35,7 +36,8 @@ namespace Infrastructure
                 new SqlParameter("@IdUsuarioCreate", SqlDbType.Int) { Value = (object?)idUsuarioCreate ?? DBNull.Value },
                 new SqlParameter("@IdRecinto", SqlDbType.VarChar, 150) { Value = (object?)idRecinto ?? DBNull.Value },
                 new SqlParameter("@Mesa", SqlDbType.VarChar, 50) { Value = (object?)mesa ?? DBNull.Value },
-                new SqlParameter("@EnviaMensajesMasivos", SqlDbType.Bit) { Value = enviaMensajesMasivos }
+                new SqlParameter("@EnviaMensajesMasivos", SqlDbType.Bit) { Value = enviaMensajesMasivos },
+                new SqlParameter("@PermisoMarcacion", SqlDbType.VarChar, 20) { Value = (object?)permisoMarcacion ?? DBNull.Value }
             );
         }
 
@@ -53,7 +55,8 @@ namespace Infrastructure
             string? motivo,
             string? idRecinto = null,
             string? mesa = null,
-            bool? enviaMensajesMasivos = null)
+            bool? enviaMensajesMasivos = null,
+            string? permisoMarcacion = null)
         {
             return EjecutarPA(
                 "pa_usuario_actualizar",
@@ -70,7 +73,8 @@ namespace Infrastructure
                 new SqlParameter("@Motivo", SqlDbType.NVarChar, 300) { Value = (object?)motivo ?? DBNull.Value },
                 new SqlParameter("@IdRecinto", SqlDbType.VarChar, 150) { Value = (object?)idRecinto ?? DBNull.Value },
                 new SqlParameter("@Mesa", SqlDbType.VarChar, 50) { Value = (object?)mesa ?? DBNull.Value },
-                new SqlParameter("@EnviaMensajesMasivos", SqlDbType.Bit) { Value = (object?)enviaMensajesMasivos ?? DBNull.Value }
+                new SqlParameter("@EnviaMensajesMasivos", SqlDbType.Bit) { Value = (object?)enviaMensajesMasivos ?? DBNull.Value },
+                new SqlParameter("@PermisoMarcacion", SqlDbType.VarChar, 20) { Value = (object?)permisoMarcacion ?? DBNull.Value }
             );
         }
 

@@ -55,7 +55,8 @@ namespace ApiWeb.Controllers
                     ObtenerRolActual(),
                     request.IdRecinto,
                     request.Mesa,
-                    request.EnviaMensajesMasivos
+                    request.EnviaMensajesMasivos,
+                    request.PermisoMarcacion
                 );
 
                 return Ok(new { exito = 1, dato = ds, status = "ok" });
@@ -91,7 +92,8 @@ namespace ApiWeb.Controllers
                     request.Motivo,
                     request.IdRecinto,
                     request.Mesa,
-                    request.EnviaMensajesMasivos
+                    request.EnviaMensajesMasivos,
+                    request.PermisoMarcacion
                 );
 
                 return Ok(new { exito = 1, dato = ds, status = "ok" });
