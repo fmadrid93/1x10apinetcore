@@ -57,6 +57,15 @@ namespace Application.Votante
             return dt;
         }
 
+        public DataTable MarcarCombustible(string idVotante, int idUsuarioMarca, bool recibioCombustible)
+        {
+            int filas = _data.MarcarCombustible(idVotante, idUsuarioMarca, recibioCombustible);
+            var dt = new DataTable();
+            dt.Columns.Add("FilasAfectadas", typeof(int));
+            dt.Rows.Add(filas);
+            return dt;
+        }
+
         public DataTable RecintoDiadConteos(string idRecinto, int? idAdmin = null, string? nroMesa = null)
         {
             return _data.RecintoDiadConteos(idRecinto, idAdmin, nroMesa);

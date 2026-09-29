@@ -1,8 +1,11 @@
 -- =========================================================================
 -- Procedimiento: PA_VOTANTE_BUSCAR_PADRON_GLOBAL
--- Descripción: Búsqueda indexada en el padrón electoral con coincidencia
---              exacta por IdRecinto (TRIM) y Mesa (TRIM), además de
---              búsqueda flexible por CI, nombres y apellidos.
+-- Descripción: Búsqueda indexada en el padrón electoral con soporte para:
+--              1. Filtro por Recinto específico (GUID o legado) + Mesa opcional
+--              2. Filtro por Territorio (Municipio o Departamento) cuando todo lo demás llega nulo
+--              3. Búsqueda por CI (numérica exacta/prefijo) y por Nombre
+--              4. Fallback de otros recintos y cruce con estructura 1x10
+--              5. Auditoría completa: Quién marcó Ya Voto y Quién marcó Paso PC
 -- =========================================================================
 
 CREATE OR ALTER PROCEDURE dbo.PA_VOTANTE_BUSCAR_PADRON_GLOBAL
@@ -73,9 +76,9 @@ BEGIN
                     v.IdVotante, v.Nombres, v.Apellidos,
                     LTRIM(RTRIM(ISNULL(v.Nombres, ''))) + ' ' + LTRIM(RTRIM(ISNULL(v.Apellidos, ''))),
                     v.CI, v.EstadoRegistro, ISNULL(v.EstadoDiaD, 'PENDIENTE'),
-                    NULL, NULL, 0, v.Sexo,
-                    NULL, v.RecintoVotacion, NULL, NULL, v.NroMesa, v.OrdenMesa, v.IdRecintoOk,
-                    ISNULL(v.PasoPorElPC, 0), v.FechaPasoPorElPC, NULL,
+                    v.FechaRegistro, v.FechaMarcaDiaD, ISNULL(v.IdUsuarioMarcaDiaD, 0), v.Sexo,
+                    v.IdRecinto, v.RecintoVotacion, v.Distrito, v.Departamento, v.NroMesa, v.OrdenMesa, v.IdRecintoOk,
+                    ISNULL(v.PasoPorElPC, 0), v.FechaPasoPorElPC, v.IdUsuarioMarcaPasoPC,
                     0
                 FROM dbo.TB_Votante v WITH (INDEX(IX_TB_Votante_IdRecintoOk), NOLOCK)
                 WHERE v.IdRecintoOk = @IdRecintoGuid AND v.NroMesa = @NroMesa
@@ -89,9 +92,9 @@ BEGIN
                     v.IdVotante, v.Nombres, v.Apellidos,
                     LTRIM(RTRIM(ISNULL(v.Nombres, ''))) + ' ' + LTRIM(RTRIM(ISNULL(v.Apellidos, ''))),
                     v.CI, v.EstadoRegistro, ISNULL(v.EstadoDiaD, 'PENDIENTE'),
-                    NULL, NULL, 0, v.Sexo,
-                    NULL, v.RecintoVotacion, NULL, NULL, v.NroMesa, v.OrdenMesa, v.IdRecintoOk,
-                    ISNULL(v.PasoPorElPC, 0), v.FechaPasoPorElPC, NULL,
+                    v.FechaRegistro, v.FechaMarcaDiaD, ISNULL(v.IdUsuarioMarcaDiaD, 0), v.Sexo,
+                    v.IdRecinto, v.RecintoVotacion, v.Distrito, v.Departamento, v.NroMesa, v.OrdenMesa, v.IdRecintoOk,
+                    ISNULL(v.PasoPorElPC, 0), v.FechaPasoPorElPC, v.IdUsuarioMarcaPasoPC,
                     0
                 FROM dbo.TB_Votante v WITH (INDEX(IX_TB_Votante_IdRecintoOk), NOLOCK)
                 WHERE v.IdRecintoOk = @IdRecintoGuid
@@ -102,15 +105,14 @@ BEGIN
         -- 2. Búsqueda numérica (CI exacto/prefijo o Nro de Orden) en propio recinto
         ELSE IF (@EsNumero = 1)
         BEGIN
-            -- Búsqueda por CI exacto con índice de CI
             INSERT INTO #Resultados
             SELECT TOP 50
                 v.IdVotante, v.Nombres, v.Apellidos,
                 LTRIM(RTRIM(ISNULL(v.Nombres, ''))) + ' ' + LTRIM(RTRIM(ISNULL(v.Apellidos, ''))),
                 v.CI, v.EstadoRegistro, ISNULL(v.EstadoDiaD, 'PENDIENTE'),
-                NULL, NULL, 0, v.Sexo,
-                NULL, v.RecintoVotacion, v.Distrito, v.Departamento, v.NroMesa, v.OrdenMesa, v.IdRecintoOk,
-                ISNULL(v.PasoPorElPC, 0), v.FechaPasoPorElPC, NULL,
+                v.FechaRegistro, v.FechaMarcaDiaD, ISNULL(v.IdUsuarioMarcaDiaD, 0), v.Sexo,
+                v.IdRecinto, v.RecintoVotacion, v.Distrito, v.Departamento, v.NroMesa, v.OrdenMesa, v.IdRecintoOk,
+                ISNULL(v.PasoPorElPC, 0), v.FechaPasoPorElPC, v.IdUsuarioMarcaPasoPC,
                 0
             FROM dbo.TB_Votante v WITH (INDEX(IX_TB_Votante_CI), NOLOCK)
             WHERE v.CI = @Texto
@@ -118,7 +120,6 @@ BEGIN
               AND (@NroMesa IS NULL OR v.NroMesa = @NroMesa)
             OPTION (RECOMPILE);
 
-            -- Si no coincide exacto por CI, buscar por Orden o CI prefijo dentro del recinto
             IF NOT EXISTS (SELECT 1 FROM #Resultados)
             BEGIN
                 INSERT INTO #Resultados
@@ -126,9 +127,9 @@ BEGIN
                     v.IdVotante, v.Nombres, v.Apellidos,
                     LTRIM(RTRIM(ISNULL(v.Nombres, ''))) + ' ' + LTRIM(RTRIM(ISNULL(v.Apellidos, ''))),
                     v.CI, v.EstadoRegistro, ISNULL(v.EstadoDiaD, 'PENDIENTE'),
-                    NULL, NULL, 0, v.Sexo,
-                    NULL, v.RecintoVotacion, NULL, NULL, v.NroMesa, v.OrdenMesa, v.IdRecintoOk,
-                    ISNULL(v.PasoPorElPC, 0), v.FechaPasoPorElPC, NULL,
+                    v.FechaRegistro, v.FechaMarcaDiaD, ISNULL(v.IdUsuarioMarcaDiaD, 0), v.Sexo,
+                    v.IdRecinto, v.RecintoVotacion, v.Distrito, v.Departamento, v.NroMesa, v.OrdenMesa, v.IdRecintoOk,
+                    ISNULL(v.PasoPorElPC, 0), v.FechaPasoPorElPC, v.IdUsuarioMarcaPasoPC,
                     0
                 FROM dbo.TB_Votante v WITH (INDEX(IX_TB_Votante_IdRecintoOk), NOLOCK)
                 WHERE v.IdRecintoOk = @IdRecintoGuid
@@ -146,9 +147,9 @@ BEGIN
                 v.IdVotante, v.Nombres, v.Apellidos,
                 LTRIM(RTRIM(ISNULL(v.Nombres, ''))) + ' ' + LTRIM(RTRIM(ISNULL(v.Apellidos, ''))),
                 v.CI, v.EstadoRegistro, ISNULL(v.EstadoDiaD, 'PENDIENTE'),
-                NULL, NULL, 0, v.Sexo,
-                NULL, v.RecintoVotacion, NULL, NULL, v.NroMesa, v.OrdenMesa, v.IdRecintoOk,
-                ISNULL(v.PasoPorElPC, 0), v.FechaPasoPorElPC, NULL,
+                v.FechaRegistro, v.FechaMarcaDiaD, ISNULL(v.IdUsuarioMarcaDiaD, 0), v.Sexo,
+                v.IdRecinto, v.RecintoVotacion, v.Distrito, v.Departamento, v.NroMesa, v.OrdenMesa, v.IdRecintoOk,
+                ISNULL(v.PasoPorElPC, 0), v.FechaPasoPorElPC, v.IdUsuarioMarcaPasoPC,
                 0
             FROM dbo.TB_Votante v WITH (INDEX(IX_TB_Votante_IdRecintoOk), NOLOCK)
             WHERE v.IdRecintoOk = @IdRecintoGuid
@@ -158,8 +159,7 @@ BEGIN
             OPTION (RECOMPILE);
         END;
 
-        -- 4. SOLO SI NO SE ENCONTRÓ NADA EN MI RECINTO y es búsqueda numérica (CI):
-        -- Búsqueda estrictamente EXACTA por CI en otros recintos (sin LIKE)
+        -- 4. Fallback exacto en otros recintos si no se encontró en el propio
         IF NOT EXISTS (SELECT 1 FROM #Resultados) AND @Texto <> '' AND @EsNumero = 1
         BEGIN
             INSERT INTO #Resultados
@@ -167,9 +167,9 @@ BEGIN
                 v.IdVotante, v.Nombres, v.Apellidos,
                 LTRIM(RTRIM(ISNULL(v.Nombres, ''))) + ' ' + LTRIM(RTRIM(ISNULL(v.Apellidos, ''))),
                 v.CI, v.EstadoRegistro, ISNULL(v.EstadoDiaD, 'PENDIENTE'),
-                NULL, NULL, 0, v.Sexo,
+                v.FechaRegistro, v.FechaMarcaDiaD, ISNULL(v.IdUsuarioMarcaDiaD, 0), v.Sexo,
                 v.IdRecinto, v.RecintoVotacion, v.Distrito, v.Departamento, v.NroMesa, v.OrdenMesa, v.IdRecintoOk,
-                ISNULL(v.PasoPorElPC, 0), v.FechaPasoPorElPC, NULL,
+                ISNULL(v.PasoPorElPC, 0), v.FechaPasoPorElPC, v.IdUsuarioMarcaPasoPC,
                 1
             FROM dbo.TB_Votante v WITH (INDEX(IX_TB_Votante_CI), NOLOCK)
             WHERE v.CI = @Texto
@@ -188,9 +188,9 @@ BEGIN
                 v.IdVotante, v.Nombres, v.Apellidos,
                 LTRIM(RTRIM(ISNULL(v.Nombres, ''))) + ' ' + LTRIM(RTRIM(ISNULL(v.Apellidos, ''))),
                 v.CI, v.EstadoRegistro, ISNULL(v.EstadoDiaD, 'PENDIENTE'),
-                NULL, NULL, 0, v.Sexo,
-                v.IdRecinto, v.RecintoVotacion, NULL, NULL, v.NroMesa, v.OrdenMesa, v.IdRecintoOk,
-                ISNULL(v.PasoPorElPC, 0), v.FechaPasoPorElPC, NULL,
+                v.FechaRegistro, v.FechaMarcaDiaD, ISNULL(v.IdUsuarioMarcaDiaD, 0), v.Sexo,
+                v.IdRecinto, v.RecintoVotacion, v.Distrito, v.Departamento, v.NroMesa, v.OrdenMesa, v.IdRecintoOk,
+                ISNULL(v.PasoPorElPC, 0), v.FechaPasoPorElPC, v.IdUsuarioMarcaPasoPC,
                 0
             FROM dbo.TB_Votante v WITH (INDEX(IX_TB_Votante_IdRecinto), NOLOCK)
             WHERE v.IdRecinto = @IdRecintoLegado
@@ -205,9 +205,9 @@ BEGIN
                 v.IdVotante, v.Nombres, v.Apellidos,
                 LTRIM(RTRIM(ISNULL(v.Nombres, ''))) + ' ' + LTRIM(RTRIM(ISNULL(v.Apellidos, ''))),
                 v.CI, v.EstadoRegistro, ISNULL(v.EstadoDiaD, 'PENDIENTE'),
-                NULL, NULL, 0, v.Sexo,
+                v.FechaRegistro, v.FechaMarcaDiaD, ISNULL(v.IdUsuarioMarcaDiaD, 0), v.Sexo,
                 v.IdRecinto, v.RecintoVotacion, v.Distrito, v.Departamento, v.NroMesa, v.OrdenMesa, v.IdRecintoOk,
-                ISNULL(v.PasoPorElPC, 0), v.FechaPasoPorElPC, NULL,
+                ISNULL(v.PasoPorElPC, 0), v.FechaPasoPorElPC, v.IdUsuarioMarcaPasoPC,
                 0
             FROM dbo.TB_Votante v WITH (INDEX(IX_TB_Votante_CI), NOLOCK)
             WHERE v.CI = @Texto
@@ -222,9 +222,9 @@ BEGIN
                     v.IdVotante, v.Nombres, v.Apellidos,
                     LTRIM(RTRIM(ISNULL(v.Nombres, ''))) + ' ' + LTRIM(RTRIM(ISNULL(v.Apellidos, ''))),
                     v.CI, v.EstadoRegistro, ISNULL(v.EstadoDiaD, 'PENDIENTE'),
-                    NULL, NULL, 0, v.Sexo,
-                    v.IdRecinto, v.RecintoVotacion, NULL, NULL, v.NroMesa, v.OrdenMesa, v.IdRecintoOk,
-                    ISNULL(v.PasoPorElPC, 0), v.FechaPasoPorElPC, NULL,
+                    v.FechaRegistro, v.FechaMarcaDiaD, ISNULL(v.IdUsuarioMarcaDiaD, 0), v.Sexo,
+                    v.IdRecinto, v.RecintoVotacion, v.Distrito, v.Departamento, v.NroMesa, v.OrdenMesa, v.IdRecintoOk,
+                    ISNULL(v.PasoPorElPC, 0), v.FechaPasoPorElPC, v.IdUsuarioMarcaPasoPC,
                     0
                 FROM dbo.TB_Votante v WITH (INDEX(IX_TB_Votante_IdRecinto), NOLOCK)
                 WHERE v.IdRecinto = @IdRecintoLegado
@@ -241,9 +241,9 @@ BEGIN
                 v.IdVotante, v.Nombres, v.Apellidos,
                 LTRIM(RTRIM(ISNULL(v.Nombres, ''))) + ' ' + LTRIM(RTRIM(ISNULL(v.Apellidos, ''))),
                 v.CI, v.EstadoRegistro, ISNULL(v.EstadoDiaD, 'PENDIENTE'),
-                NULL, NULL, 0, v.Sexo,
-                v.IdRecinto, v.RecintoVotacion, NULL, NULL, v.NroMesa, v.OrdenMesa, v.IdRecintoOk,
-                ISNULL(v.PasoPorElPC, 0), v.FechaPasoPorElPC, NULL,
+                v.FechaRegistro, v.FechaMarcaDiaD, ISNULL(v.IdUsuarioMarcaDiaD, 0), v.Sexo,
+                v.IdRecinto, v.RecintoVotacion, v.Distrito, v.Departamento, v.NroMesa, v.OrdenMesa, v.IdRecintoOk,
+                ISNULL(v.PasoPorElPC, 0), v.FechaPasoPorElPC, v.IdUsuarioMarcaPasoPC,
                 0
             FROM dbo.TB_Votante v WITH (INDEX(IX_TB_Votante_IdRecinto), NOLOCK)
             WHERE v.IdRecinto = @IdRecintoLegado
@@ -253,7 +253,6 @@ BEGIN
             OPTION (RECOMPILE);
         END;
 
-        -- Fallback exacto en otros recintos
         IF NOT EXISTS (SELECT 1 FROM #Resultados) AND @Texto <> '' AND @EsNumero = 1
         BEGIN
             INSERT INTO #Resultados
@@ -261,9 +260,9 @@ BEGIN
                 v.IdVotante, v.Nombres, v.Apellidos,
                 LTRIM(RTRIM(ISNULL(v.Nombres, ''))) + ' ' + LTRIM(RTRIM(ISNULL(v.Apellidos, ''))),
                 v.CI, v.EstadoRegistro, ISNULL(v.EstadoDiaD, 'PENDIENTE'),
-                NULL, NULL, 0, v.Sexo,
+                v.FechaRegistro, v.FechaMarcaDiaD, ISNULL(v.IdUsuarioMarcaDiaD, 0), v.Sexo,
                 v.IdRecinto, v.RecintoVotacion, v.Distrito, v.Departamento, v.NroMesa, v.OrdenMesa, v.IdRecintoOk,
-                ISNULL(v.PasoPorElPC, 0), v.FechaPasoPorElPC, NULL,
+                ISNULL(v.PasoPorElPC, 0), v.FechaPasoPorElPC, v.IdUsuarioMarcaPasoPC,
                 1
             FROM dbo.TB_Votante v WITH (INDEX(IX_TB_Votante_CI), NOLOCK)
             WHERE v.CI = @Texto
@@ -271,7 +270,94 @@ BEGIN
         END;
     END
     -- ============================================================
-    -- CASO C: Búsqueda Global / Por Territorio (Sin recinto)
+    -- CASO C: Filtro por Territorio (Sin recinto específico)
+    -- ============================================================
+    ELSE IF (@IdTerritorio IS NOT NULL)
+    BEGIN
+        DECLARE @RecintosTerritorio TABLE (IdRecintoGuid VARCHAR(50) COLLATE Modern_Spanish_CI_AS PRIMARY KEY);
+        
+        INSERT INTO @RecintosTerritorio (IdRecintoGuid)
+        SELECT DISTINCT CAST(r.IdRecinto AS VARCHAR(50))
+        FROM dbo.TB_Recinto r WITH (NOLOCK)
+        LEFT JOIN dbo.Territorio t WITH (NOLOCK) ON t.IdTerritorio = r.IdMunicipio
+        WHERE r.IdRecinto IS NOT NULL 
+          AND (r.IdMunicipio = @IdTerritorio OR t.IdTerritorioPadre = @IdTerritorio);
+
+        -- C1. Todo nulo excepto IdTerritorio (Carga inicial del municipio o departamento)
+        IF (@Texto = '')
+        BEGIN
+            INSERT INTO #Resultados
+            SELECT TOP 300
+                v.IdVotante, v.Nombres, v.Apellidos,
+                LTRIM(RTRIM(ISNULL(v.Nombres, ''))) + ' ' + LTRIM(RTRIM(ISNULL(v.Apellidos, ''))),
+                v.CI, v.EstadoRegistro, ISNULL(v.EstadoDiaD, 'PENDIENTE'),
+                v.FechaRegistro, v.FechaMarcaDiaD, ISNULL(v.IdUsuarioMarcaDiaD, 0), v.Sexo,
+                v.IdRecinto, v.RecintoVotacion, v.Distrito, v.Departamento, v.NroMesa, v.OrdenMesa, v.IdRecintoOk,
+                ISNULL(v.PasoPorElPC, 0), v.FechaPasoPorElPC, v.IdUsuarioMarcaPasoPC,
+                0
+            FROM @RecintosTerritorio rec
+            CROSS APPLY (
+                SELECT TOP 100
+                    v.IdVotante, v.Nombres, v.Apellidos, v.CI, v.EstadoRegistro, v.EstadoDiaD,
+                    v.FechaRegistro, v.FechaMarcaDiaD, v.IdUsuarioMarcaDiaD,
+                    v.Sexo, v.IdRecinto, v.RecintoVotacion, v.Distrito, v.Departamento, v.NroMesa, v.OrdenMesa, v.IdRecintoOk,
+                    v.PasoPorElPC, v.FechaPasoPorElPC, v.IdUsuarioMarcaPasoPC
+                FROM dbo.TB_Votante v WITH (INDEX(IX_TB_Votante_IdRecintoOk), NOLOCK)
+                WHERE v.IdRecintoOk = rec.IdRecintoGuid
+                  AND (@NroMesa IS NULL OR v.NroMesa = @NroMesa)
+                ORDER BY v.NroMesa ASC, v.OrdenMesa ASC
+            ) v
+            ORDER BY v.RecintoVotacion ASC, TRY_CAST(v.NroMesa AS INT) ASC, v.OrdenMesa ASC
+            OPTION (RECOMPILE);
+        END
+        -- C2. Búsqueda numérica (CI) con territorio
+        ELSE IF (@EsNumero = 1)
+        BEGIN
+            INSERT INTO #Resultados
+            SELECT TOP 50
+                v.IdVotante, v.Nombres, v.Apellidos,
+                LTRIM(RTRIM(ISNULL(v.Nombres, ''))) + ' ' + LTRIM(RTRIM(ISNULL(v.Apellidos, ''))),
+                v.CI, v.EstadoRegistro, ISNULL(v.EstadoDiaD, 'PENDIENTE'),
+                v.FechaRegistro, v.FechaMarcaDiaD, ISNULL(v.IdUsuarioMarcaDiaD, 0), v.Sexo,
+                v.IdRecinto, v.RecintoVotacion, v.Distrito, v.Departamento, v.NroMesa, v.OrdenMesa, v.IdRecintoOk,
+                ISNULL(v.PasoPorElPC, 0), v.FechaPasoPorElPC, v.IdUsuarioMarcaPasoPC,
+                CASE WHEN rec.IdRecintoGuid IS NOT NULL THEN 0 ELSE 1 END
+            FROM dbo.TB_Votante v WITH (INDEX(IX_TB_Votante_CI), NOLOCK)
+            LEFT JOIN @RecintosTerritorio rec ON rec.IdRecintoGuid = v.IdRecintoOk
+            WHERE v.CI = @Texto OR v.CI LIKE @Texto + '%'
+            ORDER BY (CASE WHEN rec.IdRecintoGuid IS NOT NULL THEN 0 ELSE 1 END) ASC, v.CI ASC
+            OPTION (RECOMPILE);
+        END
+        -- C3. Búsqueda por texto (Nombres) dentro del territorio
+        ELSE
+        BEGIN
+            INSERT INTO #Resultados
+            SELECT TOP 100
+                v.IdVotante, v.Nombres, v.Apellidos,
+                LTRIM(RTRIM(ISNULL(v.Nombres, ''))) + ' ' + LTRIM(RTRIM(ISNULL(v.Apellidos, ''))),
+                v.CI, v.EstadoRegistro, ISNULL(v.EstadoDiaD, 'PENDIENTE'),
+                v.FechaRegistro, v.FechaMarcaDiaD, ISNULL(v.IdUsuarioMarcaDiaD, 0), v.Sexo,
+                v.IdRecinto, v.RecintoVotacion, v.Distrito, v.Departamento, v.NroMesa, v.OrdenMesa, v.IdRecintoOk,
+                ISNULL(v.PasoPorElPC, 0), v.FechaPasoPorElPC, v.IdUsuarioMarcaPasoPC,
+                0
+            FROM @RecintosTerritorio rec
+            CROSS APPLY (
+                SELECT TOP 50
+                    v.IdVotante, v.Nombres, v.Apellidos, v.CI, v.EstadoRegistro, v.EstadoDiaD,
+                    v.FechaRegistro, v.FechaMarcaDiaD, v.IdUsuarioMarcaDiaD,
+                    v.Sexo, v.IdRecinto, v.RecintoVotacion, v.Distrito, v.Departamento, v.NroMesa, v.OrdenMesa, v.IdRecintoOk,
+                    v.PasoPorElPC, v.FechaPasoPorElPC, v.IdUsuarioMarcaPasoPC
+                FROM dbo.TB_Votante v WITH (INDEX(IX_TB_Votante_IdRecintoOk), NOLOCK)
+                WHERE v.IdRecintoOk = rec.IdRecintoGuid
+                  AND (v.Nombres LIKE '%' + @Texto + '%' OR v.Apellidos LIKE '%' + @Texto + '%')
+                  AND (@NroMesa IS NULL OR v.NroMesa = @NroMesa)
+            ) v
+            ORDER BY v.RecintoVotacion ASC, TRY_CAST(v.NroMesa AS INT) ASC, v.OrdenMesa ASC
+            OPTION (RECOMPILE);
+        END;
+    END
+    -- ============================================================
+    -- CASO D: Búsqueda Global (Sin recinto ni territorio)
     -- ============================================================
     ELSE
     BEGIN
@@ -282,15 +368,11 @@ BEGIN
                 v.IdVotante, v.Nombres, v.Apellidos,
                 LTRIM(RTRIM(ISNULL(v.Nombres, ''))) + ' ' + LTRIM(RTRIM(ISNULL(v.Apellidos, ''))),
                 v.CI, v.EstadoRegistro, ISNULL(v.EstadoDiaD, 'PENDIENTE'),
-                NULL, NULL, 0, v.Sexo,
+                v.FechaRegistro, v.FechaMarcaDiaD, ISNULL(v.IdUsuarioMarcaDiaD, 0), v.Sexo,
                 v.IdRecinto, v.RecintoVotacion, v.Distrito, v.Departamento, v.NroMesa, v.OrdenMesa, v.IdRecintoOk,
-                ISNULL(v.PasoPorElPC, 0), v.FechaPasoPorElPC, NULL,
+                ISNULL(v.PasoPorElPC, 0), v.FechaPasoPorElPC, v.IdUsuarioMarcaPasoPC,
                 0
-            FROM dbo.TB_Votante v WITH (NOLOCK)
-            WHERE (
-                @IdTerritorio IS NULL 
-                OR v.IdRecintoOk IN (SELECT CAST(r.IdRecinto AS VARCHAR(50)) FROM dbo.TB_Recinto r WITH (NOLOCK) WHERE r.IdMunicipio = @IdTerritorio)
-            )
+            FROM dbo.TB_Votante v WITH (INDEX(IX_TB_Votante_CI), NOLOCK)
             ORDER BY v.CI ASC
             OPTION (RECOMPILE);
         END
@@ -301,12 +383,13 @@ BEGIN
                 v.IdVotante, v.Nombres, v.Apellidos,
                 LTRIM(RTRIM(ISNULL(v.Nombres, ''))) + ' ' + LTRIM(RTRIM(ISNULL(v.Apellidos, ''))),
                 v.CI, v.EstadoRegistro, ISNULL(v.EstadoDiaD, 'PENDIENTE'),
-                NULL, NULL, 0, v.Sexo,
+                v.FechaRegistro, v.FechaMarcaDiaD, ISNULL(v.IdUsuarioMarcaDiaD, 0), v.Sexo,
                 v.IdRecinto, v.RecintoVotacion, v.Distrito, v.Departamento, v.NroMesa, v.OrdenMesa, v.IdRecintoOk,
-                ISNULL(v.PasoPorElPC, 0), v.FechaPasoPorElPC, NULL,
+                ISNULL(v.PasoPorElPC, 0), v.FechaPasoPorElPC, v.IdUsuarioMarcaPasoPC,
                 0
             FROM dbo.TB_Votante v WITH (INDEX(IX_TB_Votante_CI), NOLOCK)
-            WHERE v.CI = @Texto
+            WHERE v.CI = @Texto OR v.CI LIKE @Texto + '%'
+            ORDER BY v.CI ASC
             OPTION (RECOMPILE);
         END
         ELSE
@@ -316,9 +399,9 @@ BEGIN
                 v.IdVotante, v.Nombres, v.Apellidos,
                 LTRIM(RTRIM(ISNULL(v.Nombres, ''))) + ' ' + LTRIM(RTRIM(ISNULL(v.Apellidos, ''))),
                 v.CI, v.EstadoRegistro, ISNULL(v.EstadoDiaD, 'PENDIENTE'),
-                NULL, NULL, 0, v.Sexo,
+                v.FechaRegistro, v.FechaMarcaDiaD, ISNULL(v.IdUsuarioMarcaDiaD, 0), v.Sexo,
                 v.IdRecinto, v.RecintoVotacion, v.Distrito, v.Departamento, v.NroMesa, v.OrdenMesa, v.IdRecintoOk,
-                ISNULL(v.PasoPorElPC, 0), v.FechaPasoPorElPC, NULL,
+                ISNULL(v.PasoPorElPC, 0), v.FechaPasoPorElPC, v.IdUsuarioMarcaPasoPC,
                 0
             FROM dbo.TB_Votante v WITH (NOLOCK)
             WHERE (v.Nombres LIKE '%' + @Texto + '%' OR v.Apellidos LIKE '%' + @Texto + '%')
@@ -381,41 +464,11 @@ BEGIN
     ORDER BY 
         u.PerteneceAOtroRecinto ASC,
         CASE WHEN pm.IdPersonaMovilizada IS NOT NULL THEN 0 ELSE 1 END ASC,
+        u.RecintoVotacion ASC,
         TRY_CAST(u.NroMesa AS INT) ASC, 
         u.NroOrden ASC
     OPTION (RECOMPILE);
 
     DROP TABLE #Resultados;
-END;
-GO
-
--- =========================================================================
--- Procedimiento: PA_ObtenerVotante
--- =========================================================================
-CREATE OR ALTER PROCEDURE dbo.PA_ObtenerVotante
-    @CI VARCHAR(100)
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    SET @CI = LTRIM(RTRIM(ISNULL(@CI, '')));
-
-    SELECT TOP 10
-        v.IdVotante,
-        v.Nombres,
-        v.Apellidos,
-        v.CI,
-        v.EstadoRegistro,
-        v.EstadoDiaD,
-        v.FechaRegistro,
-        v.FechaMarcaDiaD,
-        v.Sexo,
-        v.IdRecinto,
-        v.RecintoVotacion,
-        ISNULL(v.NroMesa, v.Mesa) AS NroMesa,
-        ISNULL(v.NroOrden, v.Orden) AS NroOrden
-    FROM dbo.Votante v WITH (NOLOCK)
-    WHERE v.CI = @CI OR v.CI LIKE @CI + '%'
-    ORDER BY v.IdVotante ASC;
 END;
 GO

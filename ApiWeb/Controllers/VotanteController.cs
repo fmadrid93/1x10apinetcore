@@ -306,6 +306,35 @@ public class VotanteController : ControllerBase
         }
     }
 
+    [HttpPost("marcar-combustible")]
+    public IActionResult MarcarCombustible([FromBody] VotanteMarcarCombustibleRequest request)
+    {
+        try
+        {
+            var ds = _service.MarcarCombustible(
+                request.IdVotante,
+                request.IdUsuarioMarca,
+                request.RecibioCombustible
+            );
+
+            return Ok(new
+            {
+                exito = 1,
+                dato = ds,
+                status = "ok"
+            });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new
+            {
+                exito = 0,
+                dato = (object?)null,
+                status = ex.Message
+            });
+        }
+    }
+
     [HttpGet("veedores-rendimiento")]
     public IActionResult VeedoresRendimiento(
         [FromQuery] int? idTerritorio = null,
