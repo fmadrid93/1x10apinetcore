@@ -377,7 +377,7 @@ public class VotanteController : ControllerBase
         [FromQuery] int? idMovilizador = null,
         [FromQuery] string? texto = null,
         [FromQuery] int offset = 0,
-        [FromQuery] int limit = 1000)
+        [FromQuery] int limit = 50000)
     {
         try
         {

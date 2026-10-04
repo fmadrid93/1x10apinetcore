@@ -74,7 +74,16 @@ namespace ApiWeb.Controllers
                         veedores = row.Table.Columns.Contains("Veedores") && row["Veedores"] != DBNull.Value ? Convert.ToInt32(row["Veedores"]) : 0,
                         personasMovilizadas = row["PersonasMovilizadas"] != DBNull.Value ? Convert.ToInt32(row["PersonasMovilizadas"]) : 0,
                         personasHoy = row.Table.Columns.Contains("PersonasHoy") && row["PersonasHoy"] != DBNull.Value ? Convert.ToInt32(row["PersonasHoy"]) : 0,
-                        personasAyer = row.Table.Columns.Contains("PersonasAyer") && row["PersonasAyer"] != DBNull.Value ? Convert.ToInt32(row["PersonasAyer"]) : 0
+                        personasAyer = row.Table.Columns.Contains("PersonasAyer") && row["PersonasAyer"] != DBNull.Value ? Convert.ToInt32(row["PersonasAyer"]) : 0,
+                        yaVoto = row.Table.Columns.Contains("YaVoto") && row["YaVoto"] != DBNull.Value ? Convert.ToInt32(row["YaVoto"]) : 0,
+                        noContactado = row.Table.Columns.Contains("NoContactado") && row["NoContactado"] != DBNull.Value ? Convert.ToInt32(row["NoContactado"]) : 0,
+                        votosPadronGeneral = row.Table.Columns.Contains("VotosPadronGeneral") && row["VotosPadronGeneral"] != DBNull.Value ? Convert.ToInt32(row["VotosPadronGeneral"]) : 0,
+                        totalPasoPC = row.Table.Columns.Contains("TotalPasoPC") && row["TotalPasoPC"] != DBNull.Value ? Convert.ToInt32(row["TotalPasoPC"]) : 0,
+                        totalPcNoVoto = row.Table.Columns.Contains("TotalPcNoVoto") && row["TotalPcNoVoto"] != DBNull.Value ? Convert.ToInt32(row["TotalPcNoVoto"]) : 0,
+                        totalPcSiVoto = row.Table.Columns.Contains("TotalPcSiVoto") && row["TotalPcSiVoto"] != DBNull.Value ? Convert.ToInt32(row["TotalPcSiVoto"]) : 0,
+                        totalCombustible = row.Table.Columns.Contains("TotalCombustible") && row["TotalCombustible"] != DBNull.Value ? Convert.ToInt32(row["TotalCombustible"]) : 0,
+                        totalDiaDMasPC = row.Table.Columns.Contains("TotalDiaDMasPC") && row["TotalDiaDMasPC"] != DBNull.Value ? Convert.ToInt32(row["TotalDiaDMasPC"]) : 0,
+                        idMunicipio = row.Table.Columns.Contains("IdMunicipio") && row["IdMunicipio"] != DBNull.Value ? Convert.ToInt32(row["IdMunicipio"]) : (int?)null
                     });
                 }
 
@@ -537,6 +546,9 @@ namespace ApiWeb.Controllers
                     ("No Contactado", "NoContactado"),
                     ("Votos Padrón General", "VotosPadronGeneral"),
                     ("Paso por PC", "TotalPasoPC"),
+                    ("PC No Votó (Pendiente)", "TotalPcNoVoto"),
+                    ("PC Ya Votó (Efectivo)", "TotalPcSiVoto"),
+                    ("Día D + PC (Únicos)", "TotalDiaDMasPC"),
                     ("Combustible", "TotalCombustible")
                 );
             }

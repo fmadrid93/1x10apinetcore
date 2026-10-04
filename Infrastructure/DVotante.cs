@@ -389,7 +389,7 @@ public class DVotante : DbHelper
         int? idMovilizador = null,
         string? texto = null,
         int offset = 0,
-        int limit = 1000)
+        int limit = 50000)
     {
         AsegurarColumnasPasoPorElPC();
         try

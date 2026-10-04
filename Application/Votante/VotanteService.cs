@@ -115,7 +115,7 @@ namespace Application.Votante
             int? idMovilizador = null,
             string? texto = null,
             int offset = 0,
-            int limit = 1000)
+            int limit = 50000)
         {
             return _data.VotantesMarcadosListar(idUsuarioMarca, tipoMarca, idTerritorio, idAdmin, idGerente, idMovilizador, texto, offset, limit);
         }

@@ -109,7 +109,10 @@ WITH VotantesDiaD AS (
         rec.IdMunicipio,
         SUM(CASE WHEN vot.EstadoDiaD = 'YA_VOTO' THEN 1 ELSE 0 END) AS VotosPadronGeneral,
         SUM(CASE WHEN vot.PasoPorElPC = 1 THEN 1 ELSE 0 END) AS TotalPasoPC,
-        SUM(CASE WHEN vot.Combustible = 1 THEN 1 ELSE 0 END) AS TotalCombustible
+        SUM(CASE WHEN vot.PasoPorElPC = 1 AND (vot.EstadoDiaD IS NULL OR vot.EstadoDiaD <> 'YA_VOTO') THEN 1 ELSE 0 END) AS TotalPcNoVoto,
+        SUM(CASE WHEN vot.PasoPorElPC = 1 AND vot.EstadoDiaD = 'YA_VOTO' THEN 1 ELSE 0 END) AS TotalPcSiVoto,
+        SUM(CASE WHEN vot.Combustible = 1 THEN 1 ELSE 0 END) AS TotalCombustible,
+        COUNT(DISTINCT CASE WHEN vot.EstadoDiaD = 'YA_VOTO' OR vot.PasoPorElPC = 1 THEN vot.CI ELSE NULL END) AS TotalDiaDMasPC
     FROM dbo.TB_Votante vot WITH (NOLOCK)
     INNER JOIN dbo.TB_Recinto rec WITH (NOLOCK) ON rec.IdRecinto = vot.IdRecintoOk
     WHERE vot.EstadoDiaD = 'YA_VOTO' OR vot.PasoPorElPC = 1 OR vot.Combustible = 1
@@ -166,7 +169,10 @@ select
      where g1.IdUsuarioSupervisor = u.IdUsuario and g1.Activo = 1 and g1.IdRol = 2 and pm.EstadoDiaD = 'NO_CONTACTADO') as NoContactado,
     ISNULL(vd.VotosPadronGeneral, 0) as VotosPadronGeneral,
     ISNULL(vd.TotalPasoPC, 0) as TotalPasoPC,
-    ISNULL(vd.TotalCombustible, 0) as TotalCombustible
+    ISNULL(vd.TotalPcNoVoto, 0) as TotalPcNoVoto,
+    ISNULL(vd.TotalPcSiVoto, 0) as TotalPcSiVoto,
+    ISNULL(vd.TotalCombustible, 0) as TotalCombustible,
+    ISNULL(vd.TotalDiaDMasPC, 0) as TotalDiaDMasPC
 from Usuario u with (nolock)
 join Territorio t with (nolock) on u.IdTerritorio = t.IdTerritorio and t.Activo = 1
 left join VotantesDiaD vd on vd.IdMunicipio = t.IdTerritorio
