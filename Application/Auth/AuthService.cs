@@ -42,9 +42,37 @@ namespace Application.Auth
                 };
             }
 
+            int idUsuario = Convert.ToInt32(row["IdUsuario"]);
             string claveHash = row["ClaveHash"]?.ToString() ?? string.Empty;
-           // string claveHash1 = BCrypt.Net.BCrypt.HashPassword(clave, workFactor: 11);
-            bool claveValida = BCrypt.Net.BCrypt.Verify(clave, claveHash);
+            bool claveValida = false;
+
+            try
+            {
+                if (!string.IsNullOrEmpty(claveHash) && claveHash.StartsWith("$2"))
+                {
+                    claveValida = BCrypt.Net.BCrypt.Verify(clave, claveHash);
+                }
+            }
+            catch
+            {
+                claveValida = false;
+            }
+
+            // Fallback para contraseñas heredadas en SHA1 (o importadas anteriormente): auto-migración transparente a BCrypt
+            if (!claveValida && !string.IsNullOrEmpty(claveHash))
+            {
+                string sha1 = new Domain.Seguridad().GeneraClaveSHA1(clave);
+                if (string.Equals(claveHash, sha1, StringComparison.OrdinalIgnoreCase))
+                {
+                    claveValida = true;
+                    try
+                    {
+                        string nuevoHashBCrypt = BCrypt.Net.BCrypt.HashPassword(clave);
+                        _dUsuario.CambiarClave(idUsuario, nuevoHashBCrypt, idUsuario, "Migración automática de SHA1 a BCrypt en Login");
+                    }
+                    catch { }
+                }
+            }
 
             if (!claveValida)
             {
@@ -55,8 +83,6 @@ namespace Application.Auth
                     status = "Credenciales inválidas"
                 };
             }
-
-            int idUsuario = Convert.ToInt32(row["IdUsuario"]);
             string usuarioDb = row["Usuario"]?.ToString() ?? "";
             string rol = row["Rol"]?.ToString() ?? "";
             int? idTerritorio = row["IdTerritorio"] == DBNull.Value ? (int?)null : Convert.ToInt32(row["IdTerritorio"]);

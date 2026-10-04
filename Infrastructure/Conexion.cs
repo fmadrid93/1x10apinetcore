@@ -15,15 +15,8 @@ namespace Infraestructure
 
         public Conexion()
         {
-            //   string cnString = "Data Source=localhost;Initial Catalog=EncuestaMadrid;User ID=sa;Password=Mo7oJob08o!684;TrustServerCertificate=True";
-            // string cnString = "Data Source=54.234.108.196;Initial Catalog=EncuestaMadrid;User ID=sa;Password=Mo7oJob08o!684;TrustServerCertificate=True";
-            //   string cnString = "Data Source=localhost,1433;Initial Catalog=EncuestaMadrid;User id=sa;Password=Mo7oJob08o!684;TrustServerCertificate=True";
-            //  string cnString = "Data Source=sqlserver,1433;Initial Catalog=EncuestaMadrid;User ID=sa;Password=Mo7oJob08o!684;TrustServerCertificate=True";
 
-            string cnString = "Data Source = db.contactmanager.net,1433; Initial Catalog = AppCampana1x10; User id = ti; Password = selectov2;TrustServerCertificate=True";
-          //  string cnString = "Data Source = 127.0.0.1; Initial Catalog = AppCampana1x10; User id = sa; Password = 12345;TrustServerCertificate=True";
-          //  string cnString = "Data Source = localhost; Initial Catalog = EncuestaMadrid-beni; User id = sa; Password = 210018501;TrustServerCertificate=True";
-            //  string cnString = "Data Source = localhost; Initial Catalog = EncuestaMadridDocker; User id = sa; Password = 210018501;TrustServerCertificate=True";
+            string cnString = "Data Source = db.contactmanager.net,1433; Initial Catalog = AppCampana1x10; User id = ti; Password = elnoble2026;TrustServerCertificate=True";
 
             cn = new SqlConnection(cnString);
         }

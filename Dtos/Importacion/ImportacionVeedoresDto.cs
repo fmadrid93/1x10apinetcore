@@ -34,6 +34,7 @@ namespace Dtos.Importacion
         public int VeedoresActualizados { get; set; }
         public int VeedoresOmitidos { get; set; }
         public int RecintosVinculados { get; set; }
+        public List<string> ResumenRecintos { get; set; } = new List<string>();
         public List<string> Errores { get; set; } = new List<string>();
         public bool Exito => Errores.Count == 0 || VeedoresCreados > 0 || VeedoresActualizados > 0;
     }

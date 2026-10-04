@@ -63,9 +63,9 @@ namespace Application.Usuario
                     throw new AccesoDenegadoException("Un gerente solo puede registrar movilizadores o verificadores.");
                 }
 
-                // El gerente es siempre "el encargado": no elige territorio ni supervisor.
+                // El gerente es siempre el supervisor de sus movilizadores y verificadores
                 idTerritorioFinal = idTerritorioCreador;
-                idUsuarioSupervisorFinal = idRol == RolMovilizador ? idUsuarioCreador : (int?)null;
+                idUsuarioSupervisorFinal = idUsuarioCreador;
             }
             else if (idTerritorioCreador.HasValue)
             {
@@ -79,13 +79,21 @@ namespace Application.Usuario
                 }
                 else if (idRol == RolVerificadorVoto)
                 {
-                    // El verificador nunca tiene supervisor.
-                    idUsuarioSupervisorFinal = null;
+                    // Si el admin asignó un concejal/gerente supervisor, se respeta;
+                    // si no se asignó ninguno, depende del admin creador.
+                    idUsuarioSupervisorFinal = idUsuarioSupervisor ?? idUsuarioCreador;
                 }
                 // Si idRol == RolMovilizador, el admin elige el gerente supervisor manualmente
                 // (idUsuarioSupervisorFinal ya viene del request tal cual).
             }
-            // Super admin (rolCreador == ADMINISTRADOR && idTerritorioCreador == null): libre, sin forzar nada.
+            else
+            {
+                // Super admin (rolCreador == ADMINISTRADOR && idTerritorioCreador == null):
+                if (idRol == RolVerificadorVoto)
+                {
+                    idUsuarioSupervisorFinal = idUsuarioSupervisor ?? idUsuarioCreador;
+                }
+            }
 
             if (string.IsNullOrWhiteSpace(usuario))
             {
@@ -155,7 +163,7 @@ namespace Application.Usuario
             else if (rolCaller == NombreRolGerente)
             {
                 idTerritorioFinal = idTerritorio ?? idTerritorioCaller;
-                idUsuarioSupervisorFinal = idRol == RolMovilizador ? idUsuarioCaller : (int?)null;
+                idUsuarioSupervisorFinal = idUsuarioCaller;
             }
             else
             {
@@ -167,7 +175,9 @@ namespace Application.Usuario
                 }
                 else if (idRol == RolVerificadorVoto)
                 {
-                    idUsuarioSupervisorFinal = null;
+                    // Si se indicó un supervisor (concejal/gerente), se respeta;
+                    // si viene null, se asigna al admin caller.
+                    idUsuarioSupervisorFinal = idUsuarioSupervisor ?? idUsuarioCaller;
                 }
             }
 

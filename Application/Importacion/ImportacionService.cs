@@ -208,7 +208,7 @@ namespace Application.Importacion
 
                             // Contraseña: El número de CI del Gerente (o clave por defecto si no tiene CI)
                             string claveGerenteTexto = !string.IsNullOrWhiteSpace(ciGerente) ? ciGerente : (request.ClavePorDefecto ?? "123456");
-                            string claveGerenteHash = _seguridad.GeneraClaveSHA1(claveGerenteTexto);
+                            string claveGerenteHash = BCrypt.Net.BCrypt.HashPassword(claveGerenteTexto);
 
                             var dtNuevoG = _dUsuario.Insertar(
                                 idRol: 2, // GERENTE
@@ -264,7 +264,7 @@ namespace Application.Importacion
 
                             // Contraseña: El número de CI del Movilizador (o clave por defecto si no tiene CI)
                             string claveMovilTexto = !string.IsNullOrWhiteSpace(ciMovil) ? ciMovil : (request.ClavePorDefecto ?? "123456");
-                            string claveMovilHash = _seguridad.GeneraClaveSHA1(claveMovilTexto);
+                            string claveMovilHash = BCrypt.Net.BCrypt.HashPassword(claveMovilTexto);
 
                             var dtNuevoM = _dUsuario.Insertar(
                                 idRol: 3, // MOVILIZADOR
@@ -485,25 +485,36 @@ namespace Application.Importacion
                 return resultado;
             }
 
-            // 1. Cargar catálogo de Recintos en memoria para búsqueda normalizada
+            // 1. Cargar catálogo de Recintos en memoria para búsqueda normalizada y por GUID
             var dtRecintos = _dRecinto.Listar();
-            var dictRecintos = new Dictionary<string, (string IdRecinto, string Recinto)>(StringComparer.OrdinalIgnoreCase);
+            var listaRecintos = new List<(string IdRecinto, string Recinto, string Normal)>();
+            var dictRecintosPorGuid = new Dictionary<string, (string IdRecinto, string Recinto)>(StringComparer.OrdinalIgnoreCase);
+            var dictRecintosExacto = new Dictionary<string, (string IdRecinto, string Recinto)>(StringComparer.OrdinalIgnoreCase);
+
             if (dtRecintos != null && dtRecintos.Rows.Count > 0)
             {
                 foreach (DataRow row in dtRecintos.Rows)
                 {
-                    string idRec = row["IdRecinto"]?.ToString() ?? "";
-                    string recNombre = row["Recinto"]?.ToString() ?? "";
-                    if (!string.IsNullOrEmpty(recNombre) && !string.IsNullOrEmpty(idRec))
+                    string idRec = row["IdRecinto"]?.ToString()?.Trim() ?? "";
+                    string recNombre = row["Recinto"]?.ToString()?.Trim() ?? "";
+                    if (!string.IsNullOrEmpty(idRec))
                     {
-                        string normal = NormalizarTexto(recNombre);
-                        if (!dictRecintos.ContainsKey(normal))
+                        dictRecintosPorGuid[idRec] = (idRec, recNombre);
+                        if (!string.IsNullOrEmpty(recNombre))
                         {
-                            dictRecintos[normal] = (idRec, recNombre);
+                            string normal = NormalizarTexto(recNombre);
+                            listaRecintos.Add((idRec, recNombre, normal));
+                            if (!dictRecintosExacto.ContainsKey(normal))
+                            {
+                                dictRecintosExacto[normal] = (idRec, recNombre);
+                            }
                         }
                     }
                 }
             }
+
+            // Contador de recintos para el resumen final
+            var resumenRecintosContador = new Dictionary<string, (string NombreOficial, int Conteo)>(StringComparer.OrdinalIgnoreCase);
 
             // 2. Cargar Usuarios existentes
             var dtUsuarios = _dUsuario.Listar(null, null, null, false, null, null, null);
@@ -580,24 +591,103 @@ namespace Application.Importacion
                         }
                     }
 
-                    // Resolver Recinto
-                    string? idRecintoFinal = fila.IdRecinto;
-                    if (!string.IsNullOrWhiteSpace(fila.NombreRecinto))
+                    // Resolver Recinto y obtener GUID
+                    string? idRecintoFinal = null;
+                    string? recintoEncontradoNombre = null;
+                    bool recintoMatch = false;
+
+                    // A) Si ya viene un IdRecinto válido
+                    if (!string.IsNullOrWhiteSpace(fila.IdRecinto) && dictRecintosPorGuid.TryGetValue(fila.IdRecinto.Trim(), out var rPorGuid))
+                    {
+                        idRecintoFinal = rPorGuid.IdRecinto;
+                        recintoEncontradoNombre = rPorGuid.Recinto;
+                        recintoMatch = true;
+                    }
+                    // B) Si el NombreRecinto es directamente un GUID existente
+                    else if (!string.IsNullOrWhiteSpace(fila.NombreRecinto) && dictRecintosPorGuid.TryGetValue(fila.NombreRecinto.Trim(), out var rNombreGuid))
+                    {
+                        idRecintoFinal = rNombreGuid.IdRecinto;
+                        recintoEncontradoNombre = rNombreGuid.Recinto;
+                        recintoMatch = true;
+                    }
+                    // C) Búsqueda por Nombre de Recinto
+                    else if (!string.IsNullOrWhiteSpace(fila.NombreRecinto))
                     {
                         string normalRec = NormalizarTexto(fila.NombreRecinto);
-                        if (dictRecintos.TryGetValue(normalRec, out var rEncontrado))
+                        // 1. Coincidencia exacta normalizada
+                        if (dictRecintosExacto.TryGetValue(normalRec, out var rExacto))
                         {
-                            idRecintoFinal = rEncontrado.IdRecinto;
-                            resultado.RecintosVinculados++;
+                            idRecintoFinal = rExacto.IdRecinto;
+                            recintoEncontradoNombre = rExacto.Recinto;
+                            recintoMatch = true;
+                        }
+                        else
+                        {
+                            // 2. Coincidencia parcial / contenida
+                            var matchParcial = listaRecintos.FirstOrDefault(r =>
+                                (!string.IsNullOrEmpty(r.Normal) && !string.IsNullOrEmpty(normalRec)) &&
+                                (r.Normal.Contains(normalRec) || normalRec.Contains(r.Normal)));
+
+                            if (!string.IsNullOrEmpty(matchParcial.IdRecinto))
+                            {
+                                idRecintoFinal = matchParcial.IdRecinto;
+                                recintoEncontradoNombre = matchParcial.Recinto;
+                                recintoMatch = true;
+                            }
+                            else
+                            {
+                                // 3. Coincidencia semántica / sinónimos (ej. "Municipalidad de Itagua" <-> "RECINTO MUNICIPAL - ITAUGUA")
+                                string SimplificarRecinto(string s) => NormalizarTexto(s)
+                                    .Replace("municipalidad", "municipal")
+                                    .Replace("itagua", "itaugua")
+                                    .Replace("colegio", "col")
+                                    .Replace("escuela", "esc")
+                                    .Replace("nacional", "nac");
+
+                                string simpFila = SimplificarRecinto(fila.NombreRecinto);
+                                var matchSemantico = listaRecintos.FirstOrDefault(r =>
+                                {
+                                    string simpR = SimplificarRecinto(r.Recinto);
+                                    return simpR.Contains(simpFila) || simpFila.Contains(simpR);
+                                });
+
+                                if (!string.IsNullOrEmpty(matchSemantico.IdRecinto))
+                                {
+                                    idRecintoFinal = matchSemantico.IdRecinto;
+                                    recintoEncontradoNombre = matchSemantico.Recinto;
+                                    recintoMatch = true;
+                                }
+                            }
                         }
                     }
-                    idRecintoFinal = idRecintoFinal ?? request.IdRecintoPorDefecto;
+
+                    if (recintoMatch && !string.IsNullOrEmpty(idRecintoFinal))
+                    {
+                        resultado.RecintosVinculados++;
+                        if (!resumenRecintosContador.ContainsKey(idRecintoFinal))
+                        {
+                            resumenRecintosContador[idRecintoFinal] = (recintoEncontradoNombre ?? idRecintoFinal, 0);
+                        }
+                        var itemActual = resumenRecintosContador[idRecintoFinal];
+                        resumenRecintosContador[idRecintoFinal] = (itemActual.NombreOficial, itemActual.Conteo + 1);
+                    }
+                    else if (!string.IsNullOrWhiteSpace(fila.NombreRecinto))
+                    {
+                        // Se especificó un nombre pero no se encontró ningún GUID
+                        resultado.Errores.Add($"⚠️ Fila {indexFila} ({nombreCompleto}): No se encontró GUID para el recinto '{fila.NombreRecinto}'.");
+                    }
+
+                    idRecintoFinal = idRecintoFinal ?? (!string.IsNullOrWhiteSpace(fila.IdRecinto) ? fila.IdRecinto : request.IdRecintoPorDefecto);
 
                     int? idTerritorioFinal = idTerritorioAdmin ?? request.IdTerritorioPorDefecto;
 
-                    // Clave hasheada
-                    string clavePlana = !string.IsNullOrWhiteSpace(fila.Password) ? fila.Password.Trim() : (!string.IsNullOrWhiteSpace(request.ClavePorDefecto) ? request.ClavePorDefecto : (!string.IsNullOrWhiteSpace(ci) ? ci : "123456"));
-                    string claveHash = _seguridad.GeneraClaveSHA1(clavePlana);
+                    // Clave hasheada con BCrypt
+                    string clavePlana = !string.IsNullOrWhiteSpace(fila.Password)
+                        ? fila.Password.Trim()
+                        : (!string.IsNullOrWhiteSpace(request.ClavePorDefecto)
+                            ? request.ClavePorDefecto.Trim()
+                            : (!string.IsNullOrWhiteSpace(ci) ? ci : "123456"));
+                    string claveHash = BCrypt.Net.BCrypt.HashPassword(clavePlana);
 
                     // Verificar si ya existe por CI
                     if (!string.IsNullOrWhiteSpace(ci) && cacheUsuariosPorCI.TryGetValue(ci, out var uExistente))
@@ -621,10 +711,8 @@ namespace Application.Importacion
                             permisoMarcacion: permisoMarcacionNormal
                         );
 
-                        if (!string.IsNullOrWhiteSpace(fila.Password))
-                        {
-                            _dUsuario.CambiarClave(idUsuarioExistente, claveHash, idUsuarioAdmin, "Actualización por importación Excel");
-                        }
+                        // Actualizar la clave con BCrypt al re-importar (corrige usuarios importados previamente)
+                        _dUsuario.CambiarClave(idUsuarioExistente, claveHash, idUsuarioAdmin, "Actualización por importación Excel");
 
                         resultado.VeedoresActualizados++;
                     }
@@ -657,6 +745,12 @@ namespace Application.Importacion
                 {
                     resultado.Errores.Add($"Fila {indexFila} ({fila.Nombres} {fila.Apellidos} CI: {fila.CI}): {ex.Message}");
                 }
+            }
+
+            // Construir resumen detallado de recintos vinculados con sus GUIDs
+            foreach (var kvp in resumenRecintosContador)
+            {
+                resultado.ResumenRecintos.Add($"GUID: {kvp.Key} | Recinto: {kvp.Value.NombreOficial} ({kvp.Value.Conteo} veedor/es)");
             }
 
             return resultado;

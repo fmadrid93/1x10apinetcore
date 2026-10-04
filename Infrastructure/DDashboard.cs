@@ -104,10 +104,22 @@ namespace Infrastructure
         public DataTable SuperAdminResumenMunicipios()
         {
             string sql = @"
+WITH VotantesDiaD AS (
+    SELECT 
+        rec.IdMunicipio,
+        SUM(CASE WHEN vot.EstadoDiaD = 'YA_VOTO' THEN 1 ELSE 0 END) AS VotosPadronGeneral,
+        SUM(CASE WHEN vot.PasoPorElPC = 1 THEN 1 ELSE 0 END) AS TotalPasoPC,
+        SUM(CASE WHEN vot.Combustible = 1 THEN 1 ELSE 0 END) AS TotalCombustible
+    FROM dbo.TB_Votante vot WITH (NOLOCK)
+    INNER JOIN dbo.TB_Recinto rec WITH (NOLOCK) ON rec.IdRecinto = vot.IdRecintoOk
+    WHERE vot.EstadoDiaD = 'YA_VOTO' OR vot.PasoPorElPC = 1 OR vot.Combustible = 1
+    GROUP BY rec.IdMunicipio
+)
 select 
     u.NombreCompleto as Administrador, 
     u.Celular as Celular,
     t.Nombre as Municipio,
+    t.IdTerritorio as IdMunicipio,
     (select count(*) 
      from Usuario g with (nolock) 
      where g.IdUsuarioSupervisor = u.IdUsuario and g.Activo = 1 and g.IdRol = 2) as Concejales,
@@ -115,6 +127,18 @@ select
      from Usuario g1 with (nolock) 
      join Usuario m with (nolock) on m.IdUsuarioSupervisor = g1.IdUsuario and m.Activo = 1 and m.IdRol = 3
      where g1.IdUsuarioSupervisor = u.IdUsuario and g1.Activo = 1 and g1.IdRol = 2) as Punteros,
+    (select count(distinct v.IdUsuario)
+     from Usuario v with (nolock)
+     left join Territorio tv with (nolock) on tv.IdTerritorio = v.IdTerritorio
+     left join Usuario gv with (nolock) on gv.IdUsuario = v.IdUsuarioSupervisor
+     where v.Activo = 1 and v.IdRol = 1003
+       and (
+           v.IdTerritorio = t.IdTerritorio 
+           OR tv.IdTerritorioPadre = t.IdTerritorio
+           OR v.IdUsuarioSupervisor = u.IdUsuario
+           OR gv.IdUsuarioSupervisor = u.IdUsuario
+           OR v.IdUsuarioCreate = u.IdUsuario
+       )) as Veedores,
     (select count(*) 
      from Usuario g1 with (nolock) 
      join Usuario m with (nolock) on m.IdUsuarioSupervisor = g1.IdUsuario and m.Activo = 1 and m.IdRol = 3
@@ -129,9 +153,23 @@ select
      from Usuario g1 with (nolock) 
      join Usuario m with (nolock) on m.IdUsuarioSupervisor = g1.IdUsuario and m.Activo = 1 and m.IdRol = 3
      join PersonaMovilizada pm with (nolock) on pm.IdUsuarioMovilizador = m.IdUsuario and (pm.Activo is null or pm.Activo = 1)
-     where g1.IdUsuarioSupervisor = u.IdUsuario and g1.Activo = 1 and g1.IdRol = 2 and cast(pm.FechaRegistro as date) = cast(dateadd(day, -1, getdate()) as date)) as PersonasAyer
+     where g1.IdUsuarioSupervisor = u.IdUsuario and g1.Activo = 1 and g1.IdRol = 2 and cast(pm.FechaRegistro as date) = cast(dateadd(day, -1, getdate()) as date)) as PersonasAyer,
+    (select count(*) 
+     from Usuario g1 with (nolock) 
+     join Usuario m with (nolock) on m.IdUsuarioSupervisor = g1.IdUsuario and m.Activo = 1 and m.IdRol = 3
+     join PersonaMovilizada pm with (nolock) on pm.IdUsuarioMovilizador = m.IdUsuario and (pm.Activo is null or pm.Activo = 1)
+     where g1.IdUsuarioSupervisor = u.IdUsuario and g1.Activo = 1 and g1.IdRol = 2 and pm.EstadoDiaD = 'YA_VOTO') as YaVoto,
+    (select count(*) 
+     from Usuario g1 with (nolock) 
+     join Usuario m with (nolock) on m.IdUsuarioSupervisor = g1.IdUsuario and m.Activo = 1 and m.IdRol = 3
+     join PersonaMovilizada pm with (nolock) on pm.IdUsuarioMovilizador = m.IdUsuario and (pm.Activo is null or pm.Activo = 1)
+     where g1.IdUsuarioSupervisor = u.IdUsuario and g1.Activo = 1 and g1.IdRol = 2 and pm.EstadoDiaD = 'NO_CONTACTADO') as NoContactado,
+    ISNULL(vd.VotosPadronGeneral, 0) as VotosPadronGeneral,
+    ISNULL(vd.TotalPasoPC, 0) as TotalPasoPC,
+    ISNULL(vd.TotalCombustible, 0) as TotalCombustible
 from Usuario u with (nolock)
 join Territorio t with (nolock) on u.IdTerritorio = t.IdTerritorio and t.Activo = 1
+left join VotantesDiaD vd on vd.IdMunicipio = t.IdTerritorio
 where u.Activo = 1 and u.IdRol = 1 and u.IdTerritorio is not null and u.NombreCompleto not like '%madrid%'
 order by t.Nombre, u.NombreCompleto";
 

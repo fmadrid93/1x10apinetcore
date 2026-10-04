@@ -71,6 +71,7 @@ namespace ApiWeb.Controllers
                         municipio = row["Municipio"] != DBNull.Value ? row["Municipio"].ToString() : "",
                         concejales = row["Concejales"] != DBNull.Value ? Convert.ToInt32(row["Concejales"]) : 0,
                         punteros = row["Punteros"] != DBNull.Value ? Convert.ToInt32(row["Punteros"]) : 0,
+                        veedores = row.Table.Columns.Contains("Veedores") && row["Veedores"] != DBNull.Value ? Convert.ToInt32(row["Veedores"]) : 0,
                         personasMovilizadas = row["PersonasMovilizadas"] != DBNull.Value ? Convert.ToInt32(row["PersonasMovilizadas"]) : 0,
                         personasHoy = row.Table.Columns.Contains("PersonasHoy") && row["PersonasHoy"] != DBNull.Value ? Convert.ToInt32(row["PersonasHoy"]) : 0,
                         personasAyer = row.Table.Columns.Contains("PersonasAyer") && row["PersonasAyer"] != DBNull.Value ? Convert.ToInt32(row["PersonasAyer"]) : 0
@@ -528,9 +529,15 @@ namespace ApiWeb.Controllers
                     ("Celular Administrador", "Celular"),
                     ("Concejales (Rol 2)", "Concejales"),
                     ("Punteros (Rol 3)", "Punteros"),
+                    ("Veedores", "Veedores"),
                     ("Votantes Ayer", "PersonasAyer"),
                     ("Votantes Hoy", "PersonasHoy"),
-                    ("Total Votantes", "PersonasMovilizadas")
+                    ("Total Votantes", "PersonasMovilizadas"),
+                    ("Ya Votó (1x10)", "YaVoto"),
+                    ("No Contactado", "NoContactado"),
+                    ("Votos Padrón General", "VotosPadronGeneral"),
+                    ("Paso por PC", "TotalPasoPC"),
+                    ("Combustible", "TotalCombustible")
                 );
             }
             catch (Exception ex)

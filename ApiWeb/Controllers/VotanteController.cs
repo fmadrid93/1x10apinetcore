@@ -113,12 +113,12 @@ public class VotanteController : ControllerBase
         }
     }
 
-        [HttpGet("recinto-monitoreo-conteos")]
-    public IActionResult RecintoDiadConteos([FromQuery] string idRecinto, [FromQuery] int? idAdmin = null, [FromQuery] string? nroMesa = null)
+    [HttpGet("recinto-monitoreo-conteos")]
+    public IActionResult RecintoDiadConteos([FromQuery] string? idRecinto = null, [FromQuery] int? idAdmin = null, [FromQuery] string? nroMesa = null, [FromQuery] int? idTerritorio = null)
     {
         try
         {
-            var ds = _service.RecintoDiadConteos(idRecinto, idAdmin, nroMesa);
+            var ds = _service.RecintoDiadConteos(idRecinto, idAdmin, nroMesa, idTerritorio);
             return Ok(new
             {
                 exito = 1,
@@ -139,15 +139,16 @@ public class VotanteController : ControllerBase
 
     [HttpGet("recinto-padron-faltan")]
     public IActionResult RecintoPadronFaltan(
-        [FromQuery] string idRecinto,
+        [FromQuery] string? idRecinto = null,
         [FromQuery] string? nroMesa = null,
         [FromQuery] string? texto = null,
         [FromQuery] int offset = 0,
-        [FromQuery] int limit = 100)
+        [FromQuery] int limit = 100,
+        [FromQuery] int? idTerritorio = null)
     {
         try
         {
-            var dt = _service.RecintoPadronFaltan(idRecinto, nroMesa, texto, offset, limit);
+            var dt = _service.RecintoPadronFaltan(idRecinto, nroMesa, texto, offset, limit, idTerritorio);
             return Ok(new
             {
                 exito = 1,
@@ -168,15 +169,16 @@ public class VotanteController : ControllerBase
 
     [HttpGet("recinto-votaron-no-registrados")]
     public IActionResult RecintoVotaronNoRegistrados(
-        [FromQuery] string idRecinto,
+        [FromQuery] string? idRecinto = null,
         [FromQuery] string? nroMesa = null,
         [FromQuery] string? texto = null,
         [FromQuery] int offset = 0,
-        [FromQuery] int limit = 100)
+        [FromQuery] int limit = 100,
+        [FromQuery] int? idTerritorio = null)
     {
         try
         {
-            var dt = _service.RecintoVotaronNoRegistrados(idRecinto, nroMesa, texto, offset, limit);
+            var dt = _service.RecintoVotaronNoRegistrados(idRecinto, nroMesa, texto, offset, limit, idTerritorio);
             return Ok(new
             {
                 exito = 1,
@@ -197,16 +199,17 @@ public class VotanteController : ControllerBase
 
     [HttpGet("recinto-registrados-faltan")]
     public IActionResult RecintoRegistradosFaltan(
-        [FromQuery] string idRecinto,
+        [FromQuery] string? idRecinto = null,
         [FromQuery] int? idAdmin = null,
         [FromQuery] string? nroMesa = null,
         [FromQuery] string? texto = null,
         [FromQuery] int offset = 0,
-        [FromQuery] int limit = 100)
+        [FromQuery] int limit = 100,
+        [FromQuery] int? idTerritorio = null)
     {
         try
         {
-            var dt = _service.RecintoRegistradosFaltan(idRecinto, idAdmin, nroMesa, texto, offset, limit);
+            var dt = _service.RecintoRegistradosFaltan(idRecinto, idAdmin, nroMesa, texto, offset, limit, idTerritorio);
             return Ok(new
             {
                 exito = 1,
@@ -225,12 +228,13 @@ public class VotanteController : ControllerBase
         }
     }
 
-    [HttpGet("recinto-mesas/{idRecinto}")]
-    public IActionResult RecintoMesas(string idRecinto)
+    [HttpGet("recinto-mesas/{idRecinto?}")]
+    [HttpGet("recinto-mesas")]
+    public IActionResult RecintoMesas(string? idRecinto = null, [FromQuery] int? idTerritorio = null)
     {
         try
         {
-            var dt = _service.RecintoMesas(idRecinto);
+            var dt = _service.RecintoMesas(idRecinto, idTerritorio);
             return Ok(new
             {
                 exito = 1,
@@ -285,7 +289,8 @@ public class VotanteController : ControllerBase
         {
             var ds = _service.MarcarPasoPorElPC(
                 request.IdVotante,
-                request.IdUsuarioMarca
+                request.IdUsuarioMarca,
+                request.Observacion
             );
 
             return Ok(new
@@ -382,6 +387,37 @@ public class VotanteController : ControllerBase
                 exito = 1,
                 dato = dt,
                 status = "ok"
+            });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new
+            {
+                exito = 0,
+                dato = (object?)null,
+                status = ex.Message
+            });
+        }
+    }
+
+    [HttpPost("superadmin-limpiar-marcas-diad")]
+    public IActionResult SuperAdminLimpiarMarcasDiaD([FromBody] SuperAdminLimpiarMarcasRequest request)
+    {
+        try
+        {
+            int total = _service.SuperAdminLimpiarMarcasDiaD(
+                request.LimpiarVoto,
+                request.LimpiarGasolina,
+                request.LimpiarPasoPC,
+                request.IdTerritorio
+            );
+
+            return Ok(new
+            {
+                exito = 1,
+                dato = new { totalAfectadas = total },
+                status = "ok",
+                mensaje = $"Se limpiaron correctamente las marcas del Día D ({total} registros actualizados)."
             });
         }
         catch (Exception ex)

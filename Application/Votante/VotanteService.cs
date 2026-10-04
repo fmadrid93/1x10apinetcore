@@ -48,9 +48,9 @@ namespace Application.Votante
             return resultado;
         }
 
-        public DataTable MarcarPasoPorElPC(string idVotante, int idUsuarioMarca)
+        public DataTable MarcarPasoPorElPC(string idVotante, int idUsuarioMarca, string? observacion = null)
         {
-            int filas = _data.MarcarPasoPorElPC(idVotante, idUsuarioMarca);
+            int filas = _data.MarcarPasoPorElPC(idVotante, idUsuarioMarca, observacion);
             var dt = new DataTable();
             dt.Columns.Add("FilasAfectadas", typeof(int));
             dt.Rows.Add(filas);
@@ -66,29 +66,29 @@ namespace Application.Votante
             return dt;
         }
 
-        public DataTable RecintoDiadConteos(string idRecinto, int? idAdmin = null, string? nroMesa = null)
+        public DataTable RecintoDiadConteos(string? idRecinto = null, int? idAdmin = null, string? nroMesa = null, int? idTerritorio = null)
         {
-            return _data.RecintoDiadConteos(idRecinto, idAdmin, nroMesa);
+            return _data.RecintoDiadConteos(idRecinto, idAdmin, nroMesa, idTerritorio);
         }
 
-        public DataTable RecintoPadronFaltan(string idRecinto, string? nroMesa = null, string? texto = null, int offset = 0, int limit = 100)
+        public DataTable RecintoPadronFaltan(string? idRecinto = null, string? nroMesa = null, string? texto = null, int offset = 0, int limit = 100, int? idTerritorio = null)
         {
-            return _data.RecintoPadronFaltan(idRecinto, nroMesa, texto, offset, limit);
+            return _data.RecintoPadronFaltan(idRecinto, nroMesa, texto, offset, limit, idTerritorio);
         }
 
-        public DataTable RecintoVotaronNoRegistrados(string idRecinto, string? nroMesa = null, string? texto = null, int offset = 0, int limit = 100)
+        public DataTable RecintoVotaronNoRegistrados(string? idRecinto = null, string? nroMesa = null, string? texto = null, int offset = 0, int limit = 100, int? idTerritorio = null)
         {
-            return _data.RecintoVotaronNoRegistrados(idRecinto, nroMesa, texto, offset, limit);
+            return _data.RecintoVotaronNoRegistrados(idRecinto, nroMesa, texto, offset, limit, idTerritorio);
         }
 
-        public DataTable RecintoRegistradosFaltan(string idRecinto, int? idAdmin = null, string? nroMesa = null, string? texto = null, int offset = 0, int limit = 100)
+        public DataTable RecintoRegistradosFaltan(string? idRecinto = null, int? idAdmin = null, string? nroMesa = null, string? texto = null, int offset = 0, int limit = 100, int? idTerritorio = null)
         {
-            return _data.RecintoRegistradosFaltan(idRecinto, idAdmin, nroMesa, texto, offset, limit);
+            return _data.RecintoRegistradosFaltan(idRecinto, idAdmin, nroMesa, texto, offset, limit, idTerritorio);
         }
 
-        public DataTable RecintoMesas(string idRecinto)
+        public DataTable RecintoMesas(string? idRecinto = null, int? idTerritorio = null)
         {
-            return _data.RecintoMesas(idRecinto);
+            return _data.RecintoMesas(idRecinto, idTerritorio);
         }
 
         public DataTable ObtenerTop10(int? idTerritorio = null)
@@ -118,6 +118,11 @@ namespace Application.Votante
             int limit = 1000)
         {
             return _data.VotantesMarcadosListar(idUsuarioMarca, tipoMarca, idTerritorio, idAdmin, idGerente, idMovilizador, texto, offset, limit);
+        }
+
+        public int SuperAdminLimpiarMarcasDiaD(bool limpiarVoto, bool limpiarGasolina, bool limpiarPasoPC, int? idTerritorio = null)
+        {
+            return _data.SuperAdminLimpiarMarcasDiaD(limpiarVoto, limpiarGasolina, limpiarPasoPC, idTerritorio);
         }
     }
 }

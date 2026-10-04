@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ApiWeb.Controllers
 {
-    [Authorize(Roles = "ADMINISTRADOR,SUPERADMINISTRADOR,SUPERADMIN")]
+    [Authorize(Roles = "ADMINISTRADOR,SUPERADMINISTRADOR,SUPERADMIN,GERENTE")]
     [ApiController]
     [Route("api/[controller]")]
     public class ImportacionController : ControllerBase
